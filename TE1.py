@@ -19,15 +19,30 @@ print("start")
 
 ORCA=r"C:\Orca\orca.exe"
 
-#resultsdir = os.path.join(os.getcwd(), datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
-resultsdir = r"results_"+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+
+
+
+
+
+
+working_dir=os.getcwd()
+
+file_geom=""
+
+
+for file_name in os.listdir(working_dir):
+    if file_name.endswith('.xyz'): 
+        file_geom=file_name
+        print(file_geom)
+               
+index_of_dot = file_geom.index(".") 
+file_geom_without_extension = file_geom[:index_of_dot]
+
+
+resultsdir = r"TE1_"+file_geom_without_extension+r"_"+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
 print(resultsdir)
 #os.makedirs(mydir)
-
-
-#working_dir=r"C:\Users\menjle\Desktop\python3_anaconda\PortableGit\NEXAFS_code\gas"
-working_dir=os.getcwd()
 
 path_in=working_dir
 path_out=working_dir+r"\\"+resultsdir
@@ -67,6 +82,7 @@ with open(opt_input_file, "w") as opt_file:
         opt_file.writelines(["%s " %item])
 opt_file.close()
 
+'''
 # run Opt calculation
 opt_out=open(opt_output_file, "w") 
 opt_err=open(opt_error_file,"w") 
@@ -207,6 +223,8 @@ tddft_out.close()
 tddft_err.close()
 sp.Popen(['orca_mapspc',tddft_output_file,'ABS','-eV','-x0380','-x1410','-n500','-w0.6'])
 p_status=p.wait()
+
+'''
 
 stop = timeit.default_timer()
 running_time=(stop-start)/60
