@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 """
+Updated on Thu May 17 10:17:57 2018
 Written by: Laila Al-Madhagi
 fy11lham@leeds.ac.uk
-modifed by Jo Leng
-J.leng@leeds.ac.uk
-"""
 
+"""
 
 import timeit
 start = timeit.default_timer()
@@ -46,31 +45,25 @@ freq_output_file=path_out+r"\freq.out"
 tddft_input_file=path_out+r"\TDDFT.inp"
 tddft_output_file=path_out+r"\TDDFT.out"
 opt_error_file=path_out+r"\opt_error.txt"
-orbital_energies_file=path_out+r"\orbital_energies.txt"
 freq_error_file=path_out+r"\freq_error.txt"
 tddft_error_file=path_out+r"\TDDFT_error.txt"
 
+orbital_energies_array=np.array([])
+
 
 #generate input file for Opt calculation
-opt_file=open(opt_input_file,"w")
-opt_file.write("!")
-opt_file.write(" B3LYP")
-opt_file.write(" 6-31G*")
-opt_file.write(" TIGHTSCF")
-opt_file.write(" Grid3 FinalGrid5")
-opt_file.write(" Opt ")
-opt_file.write("\n")
-#print_block="!NormalPrint" "\ %output \n Print[P_Basis] 2 \n Print[P_MOS] 1 \n"
-line1="!NormalPrint"
-line2="%output"
-line3="Print[P_Basis] 2"
-line4="Print[P_MOS] 1"
-line5="end"
-print_block="%s \n%s \n%s \n%s \n%s \n" % (line1, line2, line3, line4,line5)
-opt_file.write(print_block)
-opt_file.write("*xyzfile 0 1 "+str(geom_file)+"\n")
-opt_file.close()
+opt_keywords_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
+print_array=np.array(["\n!NormalPrint","%output","Print[P_Basis] 2","Print[P_MOS] 1","end"])
+geom_array=np.array(["*xyzfile","0","1",str(geom_file)])
 
+with open(opt_input_file, "w") as opt_file:
+    for item in opt_keywords_array:
+        opt_file.writelines(["%s " %item])
+    for item in print_array:
+        opt_file.writelines(["%s \n" %item])
+    for item in geom_array:
+        opt_file.writelines(["%s " %item])
+opt_file.close()
 
 # run Opt calculation
 opt_out=open(opt_output_file, "w") 
@@ -103,64 +96,56 @@ while (finding==-1):
                 with open (opt_error_file,"w") as opt_err:
                     p=sp.Popen(['ORCA',opt_input_file], stdout=opt_output_file, stderr=opt_err)
                     p_status=p.wait()
-                    opt_err.close()
+                    opt_err.close()           
             else:
                 print('Geometry optimized successfully')
-                with open (orbital_energies_file,"w") as orb_eng:
-                    copy=False
-                    for line in opt_output_file:
-                        if line.strip()=="ORBITAL ENERGIES":
-                            copy=True
-                        elif line.strip()=="MOLECULAR ORBITALS":
-                            copy=False
-                        elif copy:
-                            orb_eng.write(line)
-                orb_eng.close()
-                with open (orbital_energies_file,"r+") as orb_eng:
-                    columns=[]
-                    for row in orb_eng:
-                        a=row.split()
-                        if len(a)==4:
-                            columns.append(a)
-                    occ_columns=[]
-                    x=int(len(columns)/2)
-                    for x in range(int(len(columns)/2),len(columns)-1): #this is not true, I need to find a better way to choose the final orbiral energy
-                        if columns[x][1]=="0.0000":
-                            pass
-                        else:
-                            occ_columns.append(columns[x])
-                        x+=1
-                    orb_eng.seek(0)
-                    orb_eng.truncate()
-                    orb_eng.write("%s \n" %occ_columns) 
-                orb_eng.close() 
-                
+                copy=False
+                for line in opt_output_file:
+                    if line.strip()=="ORBITAL ENERGIES":
+                        copy=True
+                    elif line.strip()=="MOLECULAR ORBITALS":
+                        copy=False
+                    elif copy:
+                        line=line.split()
+                        if len(line)==4:
+                            orbital_energies_array=np.append(orbital_energies_array,line)
+                orbital_energies_array=orbital_energies_array.reshape(int(len(orbital_energies_array)/4),4)
+                orbital_energies_array=np.delete(orbital_energies_array, np.s_[0:int(len(orbital_energies_array)/2)],0)             
+                unocc_orbitals=[]
+                for x in range (0, int(len(orbital_energies_array)-1)):
+                    if orbital_energies_array[x][1]==np.str("0.0000"):
+                        unocc_orbitals.append(x)
+                    x+=1
+                orbital_energies_array=np.delete(orbital_energies_array, np.s_[unocc_orbitals[0]:],0)            
         else:
             print("error")                         
         opt_out.close()
         opt_output_file.close()
+        
 #generate input file for Freq calculation
-with open(opt_input_file) as opt_file, open(freq_input_file, 'w') as Freq_file:
-    for line in opt_file:
-        line=line.replace("Opt","Freq")
-        for part in line.split():
-            if ("xyzfile") in part:
-                line=line.strip()
-                line=line.replace(line,"*xyzfile 0 1 "+str(opt_geom_file)+"\n")
-        Freq_file.write(line)
-    opt_file.close()
-    Freq_file.close()
+freq_keywords_array=[s.replace('Opt' , 'Freq') for s in opt_keywords_array]
+freq_geom_array=[s.replace(str(geom_file) , str(opt_geom_file)) for s in geom_array]
+
+with open(freq_input_file, "w") as freq_file:
+    for item in freq_keywords_array:
+        freq_file.writelines(["%s " %item])
+    for item in print_array:
+        freq_file.writelines(["%s \n" %item])
+    for item in freq_geom_array:
+        freq_file.writelines(["%s " %item])
+freq_file.close()  
 
 #run Freq calc
-Freq_out=open(freq_output_file, "w") 
-Freq_err=open(freq_error_file,"w") 
-p=sp.Popen(['ORCA',freq_input_file], stdout=Freq_out, stderr=Freq_err)
+freq_out=open(freq_output_file, "w") 
+freq_err=open(freq_error_file,"w") 
+p=sp.Popen(['ORCA',freq_input_file], stdout=freq_out, stderr=freq_err)
 p_status=p.wait()
-Freq_out.close()
-Freq_err.close()
+freq_out.close()
+freq_err.close()
+
 #check Freq calc
-with open(freq_output_file, 'rb', 0) as freq_output_file, \
-     mmap.mmap(freq_output_file.fileno(), 0, access=mmap.ACCESS_READ) as s:
+with open(freq_output_file, 'rb', 0) as freq_out, \
+mmap.mmap(freq_out.fileno(), 0, access=mmap.ACCESS_READ) as s:
     if s.find(b'imaginary mode') != -1:
         print('Optimized geom not at minimum')
         with open(opt_geom_file) as f:
@@ -172,30 +157,24 @@ with open(freq_output_file, 'rb', 0) as freq_output_file, \
             f.close()
     else:
         print('Optimized geom is at global minimum')
-freq_output_file.close()
+freq_out.close()
 
 #generate TDDFT input file
-with open(freq_input_file,"r") as Freq_file, open(tddft_input_file, 'w') as tddft_file:
-    for line in Freq_file:
-        line=line.replace("Freq","")
-        tddft_file.write(line)
-with open(tddft_input_file,"r+") as tddft_file:
-    a=tddft_file.readlines()
-    index=0
-    for item in a:
-        if item.startswith("!Normal"):
-            tddft_line1="\n%tddft"
-            tddft_line2="orbwin[0]=0,1,-1,-1"
-            tddft_line3="nroots=20"
-            tddft_line4="maxdim=200"
-            tddft_line5="end"
-            a.insert(index,"%s \n%s \n%s \n%s \n%s \n" % (tddft_line1, tddft_line2, tddft_line3, tddft_line4, tddft_line5))
-            break
-        index+=1
-    tddft_file.seek(0)
-    tddft_file.truncate()
-    for line in a:
-        tddft_file.write(line)
+index=np.argwhere(opt_keywords_array=='Opt')
+tddft_keywords_array=np.delete(opt_keywords_array,index)
+tddft_calc_array=np.array(["\n%tddft","orbwin[0]=0,1,-1,-1","nroots=20","maxdim=200","end"])
+
+with open(tddft_input_file, "w") as tddft_input:
+    for item in tddft_keywords_array:
+        tddft_input.writelines(["%s " %item])
+    for item in print_array:
+        tddft_input.writelines(["%s \n" %item])
+    for item in tddft_calc_array:
+        tddft_input.writelines(["%s \n" %item])
+    for item in freq_geom_array:
+        tddft_input.writelines(["%s " %item])
+tddft_input.close()
+
 #run tddft calc
 tddft_out=open(tddft_output_file, "w") 
 tddft_err=open(tddft_error_file,"w") 
@@ -205,7 +184,6 @@ tddft_out.close()
 tddft_err.close()
 sp.Popen(['orca_mapspc',tddft_output_file,'ABS','-eV','-x0380','-x1410','-n500','-w0.6'])
 p_status=p.wait()
-
 
 stop = timeit.default_timer()
 running_time=(stop-start)/60
