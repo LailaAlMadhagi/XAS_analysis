@@ -19,12 +19,6 @@ print("start")
 
 ORCA=r"C:\Orca\orca.exe"
 
-
-
-
-
-
-
 working_dir=os.getcwd()
 
 file_geom=""
@@ -82,7 +76,6 @@ with open(opt_input_file, "w") as opt_file:
         opt_file.writelines(["%s " %item])
 opt_file.close()
 
-'''
 # run Opt calculation
 opt_out=open(opt_output_file, "w") 
 opt_err=open(opt_error_file,"w") 
@@ -224,7 +217,7 @@ tddft_err.close()
 sp.Popen(['orca_mapspc',tddft_output_file,'ABS','-eV','-x0380','-x1410','-n500','-w0.6'])
 p_status=p.wait()
 
-'''
+
 
 stop = timeit.default_timer()
 running_time=(stop-start)/60
