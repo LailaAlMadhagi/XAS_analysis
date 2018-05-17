@@ -1,8 +1,8 @@
 XAS_analysis
 
-This is created by Laila Al-Madhagi (fy11lham@leeds.ac.uk) for her PhD project on the 2018/05/17 The code license should be CC-BY-NC. GitHub does not support this license type and it will be added later
+This is created by Laila Al-Madhagi (fy11lham@leeds.ac.uk) for her PhD project on the 2018/05/17. The code license should be CC-BY-NC. GitHub does not support this license type and it will be added later
 
-This program was developed with Python 3.5.2 with modules: subprocess, mmap, numpy(version 1.13.1) and timeit
+This program was developed with Python 3.5.2 with modules: subprocess, mmap, numpy(version 1.13.1) and timeit. It was developed on a windows system using Anaconda.
 
 This program was developed with work with the software ORCA version 4.0.1.2 which can be downloaded after you have registered at the ORCA forum:
 https://orcaforum.cec.mpg.de/
