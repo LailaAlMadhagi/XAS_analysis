@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Updated on Thu May 17 10:17:57 2018
-
+Updated on Thu May 17 10:17:57 2018 by Laila
 Written by: Laila Al-Madhagi
 fy11lham@leeds.ac.uk
+Modified by Joanna Leng on May 16 2018
+j.leng@leeds.ac.uk
 """
 
 import timeit
