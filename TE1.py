@@ -14,6 +14,7 @@ import mmap
 import numpy as np
 import os
 import datetime
+from collections import defaultdict
 
 print("start")
 
@@ -52,11 +53,9 @@ opt_geom_file=path_out+r"\opt.xyz"
 opt_2_file=path_out+r"\opt_2.xyz"
 freq_input_file=path_out+r"\freq.inp"
 freq_output_file=path_out+r"\freq.out"
-tddft_input_file=path_out+r"\TDDFT.inp"
-tddft_output_file=path_out+r"\TDDFT.out"
 opt_error_file=path_out+r"\opt_error.txt"
 freq_error_file=path_out+r"\freq_error.txt"
-tddft_error_file=path_out+r"\TDDFT_error.txt"
+
 
 orbital_energies_array=np.array([])
 orbital_window_array=[]
@@ -189,36 +188,45 @@ for k in range(0,len(edge)):
             if -orbital_energy[l] >= energy_theoretical_min[k] and -orbital_energy[l] <= energy_theoretical_max[k]:
                 sub_array=[]
                 sub_array.append(element[k])
-                sub_array.append(orbital_number[l])
+                sub_array.append(int(orbital_number[l]))
                 orbital_window_array.append(sub_array)
-                
+d=defaultdict(list)
+for lis in orbital_window_array:
+    d[lis[0]].append(lis[1],)
+orbital_window_array=[list(x for y in i for x in y) for i in d.items()]
+                      
 index=np.argwhere(opt_keywords_array=='Opt')
 tddft_keywords_array=np.delete(opt_keywords_array,index)
-tddft_calc_array=np.array(["\n%tddft","orbwin[0]=0,1,-1,-1","nroots=20","maxdim=200","end"])
-
-with open(tddft_input_file, "w") as tddft_input:
-    for item in tddft_keywords_array:
-        tddft_input.writelines(["%s " %item])
-    for item in print_array:
-        tddft_input.writelines(["%s \n" %item])
-    for item in tddft_calc_array:
-        tddft_input.writelines(["%s \n" %item])
-    for item in freq_geom_array:
-        tddft_input.writelines(["%s " %item])
-tddft_input.close()
-
-#run tddft calc
-tddft_out=open(tddft_output_file, "w") 
-tddft_err=open(tddft_error_file,"w") 
-p=sp.Popen([ORCA,tddft_input_file], stdout=tddft_out, stderr=tddft_err)
-p_status=p.wait()
-tddft_out.close()
-tddft_err.close()
-sp.Popen(['orca_mapspc',tddft_output_file,'ABS','-eV','-x0380','-x1410','-n500','-w0.6'])
-p_status=p.wait()
-
-
-
+for m in range(0,len(orbital_window_array)):
+    tddft_input_file=path_out+r"\TDDFT_%s-edge.inp" %orbital_window_array[m][0]
+    tddft_output_file=path_out+r"\TDDFT_%s-edge.out" %orbital_window_array[m][0]    
+    tddft_error_file=path_out+r"\TDDFT_%s-edge_error.txt" %orbital_window_array[m][0]
+    tddft_orbwin_string="orbwin[0]="        
+    orbitals=[]
+    orbitals.append(orbital_window_array[m][1])
+    orbitals.append(orbital_window_array[m][-1])
+    tddft_orbwin_string+="%s,%s" %(str(orbitals[0]),str(orbitals[1])) 
+    tddft_orbwin_string+=",-1,-1"
+    tddft_calc_array=["\n%tddft",tddft_orbwin_string,"nroots=20","maxdim=200","end"]
+    with open(tddft_input_file, "w") as tddft_input:
+        tddft_input.writelines("#This is %s K-edge calculation \n" %orbital_window_array[m][0])
+        for item in tddft_keywords_array:
+            tddft_input.writelines(["%s " %item])
+        for item in print_array:
+            tddft_input.writelines(["%s \n" %item])
+        for item in tddft_calc_array:
+            tddft_input.writelines(["%s \n" %item])
+        for item in freq_geom_array:
+            tddft_input.writelines(["%s " %item])
+        tddft_input.close()
+    #run tddft calculations
+    tddft_out=open(tddft_output_file, "w") 
+    tddft_err=open(tddft_error_file,"w") 
+    p=sp.Popen([ORCA,tddft_input_file], stdout=tddft_out, stderr=tddft_err)
+    p_status=p.wait()
+    tddft_out.close()
+    tddft_err.close()
+                            
 stop = timeit.default_timer()
 running_time=(stop-start)/60
 print ("Running time is: "+ str(round(running_time,3)) + "minutes") 
