@@ -157,7 +157,7 @@ opt_err.close()
 # check Opt.out file
 finding=-1
 while (finding==-1):
-    with open(opt_output_file, 'r+') as opt_output_file, mmap.mmap(opt_output_file.fileno(), 0, access=mmap.ACCESS_READ) as opt_out:
+    with open(opt_output_file, 'r+') as opt_out_file, mmap.mmap(opt_out_file.fileno(), 0, access=mmap.ACCESS_READ) as opt_out:
         if opt_out.find(b'ORCA TERMINATED NORMALLY') != -1:
             print ("ORCA TERMINATED NORMALLY")
             finding=opt_out.find(b'HURRAY')
@@ -181,7 +181,7 @@ while (finding==-1):
             else:
                 print('Geometry optimized successfully')
                 copy=False
-                for line in opt_output_file:
+                for line in opt_out_file:
                     if line.strip()=="ORBITAL ENERGIES":
                         copy=True
                     elif line.strip()=="MOLECULAR ORBITALS":
@@ -201,7 +201,9 @@ while (finding==-1):
         else:
             print("error")                         
         opt_out.close()
-        opt_output_file.close()
+        opt_out_file.close()
+        
+        
         
 #generate input file for Freq calculation
 freq_keywords_array=[s.replace('Opt' , 'Freq') for s in opt_keywords_array]
@@ -225,20 +227,33 @@ freq_out.close()
 freq_err.close()
 
 #check Freq calc
-with open(freq_output_file, 'rb', 0) as freq_out, \
-mmap.mmap(freq_out.fileno(), 0, access=mmap.ACCESS_READ) as s:
-    if s.find(b'imaginary mode') != -1:
-        print('Optimized geom not at minimum')
-        with open(opt_geom_file) as f:
-            lines=f.readlines()
-            lines=lines[2:]
-            with open(opt_2_file, "w") as f1:
-                f1.writelines(lines)
-            f1.close()
-            f.close()
-    else:
-        print('Optimized geom is at global minimum')
-freq_out.close()
+finding=-1
+while (finding==-1):
+    with open(freq_output_file, 'r') as freq_out_file, mmap.mmap(freq_out_file.fileno(), 0, access=mmap.ACCESS_READ) as freq_out:
+        finding=freq_out.find(b'imaginary mode')
+        if finding != -1:
+            print ('Optimized geom not at minimum')
+            with open(opt_input_file,'r+') as opt_file:
+                a=opt_file.readlines()
+                opt_file.seek(0)
+                opt_file.truncate()
+                for line in a:
+                    for part in line.split():
+                        if ("xyzfile") in part:
+                            line=line.strip()
+                            line=line.replace(line,"*xyzfile 0 1 "+str(opt_geom_file)+"\n")
+                    opt_file.write(line)
+                    opt_file.close()    
+            with open (opt_error_file,"w") as opt_err:
+                p=sp.Popen(['ORCA',opt_input_file], stdout=opt_output_file, stderr=opt_err)
+                p_status=p.wait()
+                opt_err.close()           
+        elif finding == -1:
+            print('Optimized geom is at global minimum')
+            break                        
+        freq_out.close()
+        freq_out_file.close()
+
 
 #generate TDDFT input file
 for i in orbital_energies_array [1:]:
