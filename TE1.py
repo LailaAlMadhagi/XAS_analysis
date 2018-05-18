@@ -21,7 +21,6 @@ import sys
 
 
 
-
 parser = argparse.ArgumentParser(description='TE1: Theoretical electron density function calulation')
 
 parser.add_argument('in_geom_file',
@@ -110,7 +109,8 @@ freq_error_file=path_out+r"\freq_error.txt"
 tddft_error_file=path_out+r"\TDDFT_error.txt"
 
 orbital_energies_array=np.array([])
-
+orbital_window_array=[]
+edge_data_array=np.array([['C','6','K','0','284.2'],['N','7','K','0','409.9']])
 
 #generate input file for Opt calculation
 opt_keywords_gas_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
@@ -143,6 +143,7 @@ with open(opt_input_file, "w") as opt_file:
     for item in geom_array:
         opt_file.writelines(["%s " %item])
 opt_file.close()
+
 
 
 # run Opt calculation
@@ -240,6 +241,27 @@ mmap.mmap(freq_out.fileno(), 0, access=mmap.ACCESS_READ) as s:
 freq_out.close()
 
 #generate TDDFT input file
+for i in orbital_energies_array [1:]:
+    orbital_number=np.array((orbital_energies_array[1:,0]).astype(np.float))
+    orbital_energy=np.array((orbital_energies_array[1:,3]).astype(np.float))
+
+for j in edge_data_array:
+    element=np.array(edge_data_array[:,0])
+    edge=np.array(edge_data_array[:,2])
+    energy_theoretical=np.array((edge_data_array[:,4]).astype(np.float))
+
+energy_theoretical_min=energy_theoretical-30
+energy_theoretical_max=energy_theoretical
+
+for k in range(0,len(edge)):
+    if edge[k]=='K':
+        for l in range(0,len(orbital_energy)):
+            if -orbital_energy[l] >= energy_theoretical_min[k] and -orbital_energy[l] <= energy_theoretical_max[k]:
+                sub_array=[]
+                sub_array.append(element[k])
+                sub_array.append(orbital_number[l])
+                orbital_window_array.append(sub_array)
+                
 index=np.argwhere(opt_keywords_array=='Opt')
 tddft_keywords_array=np.delete(opt_keywords_array,index)
 tddft_calc_array=np.array(["\n%tddft","orbwin[0]=0,1,-1,-1","nroots=20","maxdim=200","end"])
