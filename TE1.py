@@ -14,26 +14,69 @@ import mmap
 import numpy as np
 import os
 import datetime
+import argparse
+import sys
+#import scriptexit
 
-print("start")
+
+
+
+
+parser = argparse.ArgumentParser(description='TE1: Theoretical electron density function calulation')
+
+parser.add_argument('in_geom_file',
+    type=argparse.FileType('r'),
+    help="molecular geometry file to be read in",
+    default=sys.stdin, metavar="FILE")
+
+parser.add_argument('-op',
+    default="gas",
+    choices=['gas', 'solution'],
+    help="Select the default set of orca parameters for particular chemical states.")
+
+parser.add_argument("-opi", 
+                    dest="file_orca_params", 
+                    required=False,
+                    help="input file with orca optimation parameters. This over write any default orca optimisation parameters.", 
+                    metavar="FILE")
+
+
+args = parser.parse_args()
+
+file_geom_read=args.in_geom_file.name
+
+
+#print("~ Molecular geometry file details: {}".format(args.in_geom_file))
+print("~ Molecular geometry file: {}".format(file_geom_read))
+
+print("~ Orca parameter set : {}".format(args.op))
+
+print("~ Orca parameter file: {}".format(args.file_orca_params))
+
+
+print("\n\n")
+
+print("START")
 
 ORCA=r"C:\Orca\orca.exe"
 
 
+path, file_geom = os.path.split(file_geom_read)
 
+print(file_geom)
 
-
+print(path)
 
 
 working_dir=os.getcwd()
 
-file_geom=""
+#file_geom=""
 
 
-for file_name in os.listdir(working_dir):
-    if file_name.endswith('.xyz'): 
-        file_geom=file_name
-        print(file_geom)
+#for file_name in os.listdir(working_dir):
+if not file_geom.endswith('.xyz'): 
+    sys.exit("ERROR; The molecular geometry file does not have the expected .xyz file extension.")
+    
                
 index_of_dot = file_geom.index(".") 
 file_geom_without_extension = file_geom[:index_of_dot]
@@ -44,8 +87,10 @@ resultsdir = r"TE1_"+file_geom_without_extension+r"_"+datetime.datetime.now().st
 print(resultsdir)
 #os.makedirs(mydir)
 
-path_in=working_dir
-path_out=working_dir+r"\\"+resultsdir
+#path_in=working_dir
+path_in=path
+#path_out=working_dir+r"\\"+resultsdir
+path_out=path+r"\\"+resultsdir
 os.makedirs(path_out)
 
 # The is all the files we need to create
@@ -68,7 +113,25 @@ orbital_energies_array=np.array([])
 
 
 #generate input file for Opt calculation
-opt_keywords_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
+opt_keywords_gas_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
+opt_keywords_solution_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
+
+# default case
+opt_keywords_array=opt_keywords_gas_array
+
+
+
+if "gas" in args.op:
+    print("The default gas orca optimisation parameters are used.")
+
+if "solution" in args.op:
+    opt_keywords_array=opt_keywords_solution_array
+    print("The default solution orca optimisation parameters are used.")
+    
+#if "None" in args.file_orca_params:
+#    print("default orca optimisation parameters are used")
+
+#opt_keywords_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
 print_array=np.array(["\n!NormalPrint","%output","Print[P_Basis] 2","Print[P_MOS] 1","end"])
 geom_array=np.array(["*xyzfile","0","1",str(geom_file)])
 
@@ -81,7 +144,7 @@ with open(opt_input_file, "w") as opt_file:
         opt_file.writelines(["%s " %item])
 opt_file.close()
 
-'''
+
 # run Opt calculation
 opt_out=open(opt_output_file, "w") 
 opt_err=open(opt_error_file,"w") 
@@ -202,7 +265,7 @@ tddft_err.close()
 sp.Popen(['orca_mapspc',tddft_output_file,'ABS','-eV','-x0380','-x1410','-n500','-w0.6'])
 p_status=p.wait()
 
-'''
+
 
 stop = timeit.default_timer()
 running_time=(stop-start)/60

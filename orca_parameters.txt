@@ -1,0 +1,6 @@
+B3LYP 
+6-31G* 
+TIGHTSCF 
+Grid3 
+FinalGrid5 
+Opt 
