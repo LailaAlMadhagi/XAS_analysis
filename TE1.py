@@ -41,6 +41,12 @@ parser.add_argument("-opi",
                     help="input file with orca optimation parameters. This over write any default orca optimisation parameters.", 
                     metavar="FILE")
 
+parser.add_argument("-orca", 
+                    dest="orca_executable", 
+                    required=False,
+                    help="path to the orca executable; C:\Orca\orca.exe is the default path", 
+                    metavar="FILE")
+
 
 args = parser.parse_args()
 
@@ -54,12 +60,27 @@ print("~ Orca parameter set : {}".format(args.op))
 
 print("~ Orca parameter file: {}".format(args.file_orca_params))
 
+print("~ Orca executable: {}".format(args.orca_executable))
+
+print(args.orca_executable)
+print(type(args.orca_executable))
+
+args = parser.parse_args()
+print("args:",args)
+
 
 print("\n\n")
 
 print("START")
 
 ORCA=r"C:\Orca\orca.exe"
+
+if args.orca_executable is None:
+    print("The default path for orca, C:\Orca\orca.exe, is used.")
+
+if args.orca_executable is not None:
+    ORCA=args.orca_executable
+    print("This does not use the default path for orca, instead it used this path: ", ORCA)
 
 
 path, file_geom = os.path.split(file_geom_read)
@@ -129,7 +150,21 @@ if "solution" in args.op:
     print("The default solution orca optimisation parameters are used.")
     
 #if "None" in args.file_orca_params:
-#    print("default orca optimisation parameters are used")
+if args.file_orca_params is None:    
+    print("The default orca optimisation parameters are used from the -op flag.")
+
+opt_keywords_infile_array = ["!"]
+if args.file_orca_params is not None:    
+    array=[]
+    filename_desc=args.file_orca_params
+    with open(filename_desc) as f_in:
+        for line in f_in:
+            opt_keywords_infile_array.append(line.strip())
+            array.append(line.strip())
+    f_in.close()
+    opt_keywords_array=opt_keywords_infile_array
+    print("The default orca optimisation parameters from the -op flag are not used. The parameters from the orca parameters file are used and these are: ",array)
+#print(opt_keywords_infile_array)
 
 #opt_keywords_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
 print_array=np.array(["\n!NormalPrint","%output","Print[P_Basis] 2","Print[P_MOS] 1","end"])
@@ -297,7 +332,8 @@ for m in range(0,len(orbital_window_array)):
     p_status=p.wait()
     tddft_out.close()
     tddft_err.close()
-                            
+   
+                     
 stop = timeit.default_timer()
 running_time=(stop-start)/60
 print ("Running time is: "+ str(round(running_time,3)) + "minutes") 
