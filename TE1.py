@@ -17,18 +17,28 @@ import datetime
 from collections import defaultdict
 import argparse
 import sys
-#import scriptexit
+import socket
 
 
 
 
-
-parser = argparse.ArgumentParser(description='TE1: Theoretical electron density function calulation')
+# handle the input flags
+description='TE1: Theoretical electron density function calulation'
+parser = argparse.ArgumentParser(description)
 
 parser.add_argument('in_geom_file',
     type=argparse.FileType('r'),
     help="molecular geometry file to be read in",
     default=sys.stdin, metavar="FILE")
+
+'''parser.add_argument("-v", 
+                    "--verbose", 
+                    const=1, 
+                    default=0, 
+                    type=int, 
+                    nargs="?",
+                    help="increase verbosity: 0 = only warnings, 1 = info, 2 = debug, 3 = write to log file in results directory. No number means info. Default is no verbosity.")
+'''
 
 parser.add_argument('-op',
     default="gas",
@@ -48,74 +58,80 @@ parser.add_argument("-orca",
                     metavar="FILE")
 
 
+# all input argument have been read now we can process them
 args = parser.parse_args()
 
 file_geom_read=args.in_geom_file.name
 
+path, file_geom = os.path.split(file_geom_read)
 
-#print("~ Molecular geometry file details: {}".format(args.in_geom_file))
-print("~ Molecular geometry file: {}".format(file_geom_read))
 
-print("~ Orca parameter set : {}".format(args.op))
 
-print("~ Orca parameter file: {}".format(args.file_orca_params))
+if not file_geom.endswith('.xyz'): 
+    sys.exit("ERROR; The molecular geometry file does not have the expected .xyz file extension.")
+                   
+index_of_dot = file_geom.index(".") 
+file_geom_without_extension = file_geom[:index_of_dot]
 
-print("~ Orca executable: {}".format(args.orca_executable))
+date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+resultsdir = r"TE1_"+file_geom_without_extension+r"_"+date_time
 
-print(args.orca_executable)
-print(type(args.orca_executable))
+
+path_in=path
+path_out=path+r"\\"+resultsdir
+os.makedirs(path_out)
+
+log_file_name = path_out+r"\\log.txt"
+log_file=open(log_file_name, "w") 
+
+log_file.write(description+"\n\n")
+host=socket.gethostbyaddr(socket.gethostname())[0]
+log_file.write(r"This program ran at "+date_time+r" on the "+host+r" host system.")
+log_file.write("\n\n")
+
+
+
+
+print("\n~ Molecular geometry file details: {}".format(args.in_geom_file))
+log_file.write("\n\n~ Molecular geometry file details: {}".format(args.in_geom_file))
+
+
+print("\n~ Orca parameter set : {}".format(args.op))
+log_file.write("\n\n~ Orca parameter set : {}".format(args.op))
+
+
+print("\n~ Orca parameter file: {}".format(args.file_orca_params))
+log_file.write("\n\n~ Orca parameter file: {}".format(args.file_orca_params))
+
+print("\n~ Orca executable: {}".format(args.orca_executable))
+log_file.write("\n\n~ Orca executable: {}".format(args.orca_executable))
+
+
+#print(args.orca_executable)
+#print(type(args.orca_executable))
 
 args = parser.parse_args()
-print("args:",args)
+#args_text = "args:".join(args)
 
 
-print("\n\n")
-
-print("START")
+print("\n\nSTART: \n")
+log_file.write("\n\nSTART: \n")
+log_file.flush()
 
 ORCA=r"C:\Orca\orca.exe"
 
 if args.orca_executable is None:
     print("The default path for orca, C:\Orca\orca.exe, is used.")
+    log_file.write("\n\nThe default path for orca, C:\Orca\orca.exe, is used.")
 
 if args.orca_executable is not None:
     ORCA=args.orca_executable
     print("This does not use the default path for orca, instead it used this path: ", ORCA)
+    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: ", ORCA)
 
 
-path, file_geom = os.path.split(file_geom_read)
 
-print(file_geom)
-
-print(path)
-
-
-working_dir=os.getcwd()
-
-#file_geom=""
-
-
-#for file_name in os.listdir(working_dir):
-if not file_geom.endswith('.xyz'): 
-    sys.exit("ERROR; The molecular geometry file does not have the expected .xyz file extension.")
-    
-               
-index_of_dot = file_geom.index(".") 
-file_geom_without_extension = file_geom[:index_of_dot]
-
-
-resultsdir = r"TE1_"+file_geom_without_extension+r"_"+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-
-print(resultsdir)
-#os.makedirs(mydir)
-
-#path_in=working_dir
-path_in=path
-#path_out=working_dir+r"\\"+resultsdir
-path_out=path+r"\\"+resultsdir
-os.makedirs(path_out)
-
-# The is all the files we need to create
+# Here are all the files we need to create (except the log file which we are already using)
 geom_file=path_in+r"\geom.xyz"
 opt_input_file=path_out+r"\opt.inp"
 new_opt_input_file=path_out+r"\new_opt.inp"
@@ -144,14 +160,19 @@ opt_keywords_array=opt_keywords_gas_array
 
 if "gas" in args.op:
     print("The default gas orca optimisation parameters are used.")
+    log_file.write("\n\nThe default gas orca optimisation parameters are used.")
 
 if "solution" in args.op:
     opt_keywords_array=opt_keywords_solution_array
     print("The default solution orca optimisation parameters are used.")
+    log_file.write("\n\nThe default solution orca optimisation parameters are used.")
     
 #if "None" in args.file_orca_params:
 if args.file_orca_params is None:    
     print("The default orca optimisation parameters are used from the -op flag.")
+    log_file.write("\n\nThe default orca optimisation parameters are used from the -op flag.")
+log_file.flush()
+
 
 opt_keywords_infile_array = ["!"]
 if args.file_orca_params is not None:    
@@ -163,11 +184,15 @@ if args.file_orca_params is not None:
             array.append(line.strip())
     f_in.close()
     opt_keywords_array=opt_keywords_infile_array
-    print("The default orca optimisation parameters from the -op flag are not used. The parameters from the orca parameters file are used and these are: ",array)
-#print(opt_keywords_infile_array)
+    print("The default orca optimisation parameters from the -op flag are not used. Instead the parameters from the orca parameters file are used and these are: ")
+    print(array)
+    log_file.write("\n\nThe default orca optimisation parameters from the -op flag are not used. Instead the parameters from the orca parameters file are used and these are: \n")
+    log_file.write("\n".join(str(elem) for elem in array))
 
 #opt_keywords_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
 print_array=np.array(["\n!NormalPrint","%output","Print[P_Basis] 2","Print[P_MOS] 1","end"])
+print("\n")
+log_file.write("\n\n")
 geom_array=np.array(["*xyzfile","0","1",str(geom_file)])
 
 with open(opt_input_file, "w") as opt_file:
@@ -190,14 +215,20 @@ opt_out.close()
 opt_err.close()
 
 # check Opt.out file
+loop=1
 finding=-1
 while (finding==-1):
+    print(r"Loop count is "+str(loop)+r".")
+    log_file.write("\n\nLoop count is "+str(loop)+".\n\n")
+    loop+=1
     with open(opt_output_file, 'r+') as opt_out_file, mmap.mmap(opt_out_file.fileno(), 0, access=mmap.ACCESS_READ) as opt_out:
         if opt_out.find(b'ORCA TERMINATED NORMALLY') != -1:
             print ("ORCA TERMINATED NORMALLY")
+            log_file.write("ORCA TERMINATED NORMALLY\n")
             finding=opt_out.find(b'HURRAY')
             if finding==-1:
                 print('Geometry NOT optimized')
+                log_file.write('Geometry NOT optimized\n')
                 with open(opt_input_file,'r+') as opt_file:
                     a=opt_file.readlines()
                     opt_file.seek(0)
@@ -215,6 +246,7 @@ while (finding==-1):
                     opt_err.close()           
             else:
                 print('Geometry optimized successfully')
+                log_file.write('Geometry optimized successfully\n')
                 copy=False
                 for line in opt_out_file:
                     if line.strip()=="ORBITAL ENERGIES":
@@ -234,11 +266,15 @@ while (finding==-1):
                     x+=1
                 orbital_energies_array=np.delete(orbital_energies_array, np.s_[unocc_orbitals[0]:],0)            
         else:
-            print("error")                         
+            print("Error in optimisation loop.") 
+            log_file.write("Error in optimisation loop.\n")                        
         opt_out.close()
         opt_out_file.close()
+    print("\nEnd of Optimisation loop.\n\n ********************** \n")
+    log_file.write("\nEnd of Optimisation loop.\n\n ********************** \n")
+    log_file.flush()
         
-        
+opt_timer = timeit.default_timer()        
         
 #generate input file for Freq calculation
 freq_keywords_array=[s.replace('Opt' , 'Freq') for s in opt_keywords_array]
@@ -268,6 +304,7 @@ while (finding==-1):
         finding=freq_out.find(b'imaginary mode')
         if finding != -1:
             print ('Optimized geom not at minimum')
+            log_file.write('Optimized geom not at minimum\n')
             with open(opt_input_file,'r+') as opt_file:
                 a=opt_file.readlines()
                 opt_file.seek(0)
@@ -285,10 +322,13 @@ while (finding==-1):
                 opt_err.close()           
         elif finding == -1:
             print('Optimized geom is at global minimum')
+            log_file.write('Optimized geom is at global minimum\n')
             break                        
         freq_out.close()
         freq_out_file.close()
 
+freq_timer = timeit.default_timer() 
+log_file.flush()
 
 #generate TDDFT input file
 for i in orbital_energies_array [1:]:
@@ -347,8 +387,25 @@ for m in range(0,len(orbital_window_array)):
     p_status=p.wait()
     tddft_out.close()
     tddft_err.close()
-   
+
+log_file.flush()
                      
 stop = timeit.default_timer()
 running_time=(stop-start)/60
-print ("Running time is: "+ str(round(running_time,3)) + "minutes") 
+print ("\n\nEND: \nRunning time is: "+ str(round(running_time,3)) + " minutes") 
+
+log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
+
+opt_time=(opt_timer-start)/60
+freq_time=(freq_timer-opt_timer)/60
+tddft_time=(stop-freq_timer)/60
+
+print("\tOptimisation time is: "+ str(round(opt_time,3)) + " minutes")
+print("\tFrequency calculation time is: "+ str(round(freq_time,3)) + " minutes")
+print("\tTime-Dependent Density Functional Theory calculation time is: "+ str(round(tddft_time,3)) + " minutes")
+
+log_file.write("\n\tOptimisation time is: "+ str(round(opt_time,3)) + " minutes")
+log_file.write("\n\tFrequency calculation time is: "+ str(round(freq_time,3)) + " minutes")
+log_file.write("\n\tTime-Dependent Density Functional Theory calculation time is: "+ str(round(tddft_time,3)) + " minutes")
+
+log_file.close()
