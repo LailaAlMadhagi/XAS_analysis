@@ -7,7 +7,7 @@ This program was developed with Python 3.5.2 with modules: subprocess, mmap, num
 
 
 FILES INCLUDED 
-1,)README.md			This currently holds all the dicyumentation for
+1,)README.md			This currently holds all the documentation for
 						this repository
 2,) TE1.pyP 			Python source code for the theoretical
 						electronic structure calculations 
