@@ -6,6 +6,9 @@ This program was developed with Python 3.5.2 with modules: numpy(version
 1.13.1), scipy (version 0.19.1), matplotlib (version 2.0.2) and lmfit 
 (version 0.9.10).It was developed on a windows system using Anaconda
 
+to install lmfit, follow the instructions on this web page:
+https://anaconda.org/conda-forge/lmfit 
+
 Files included in this repository are: E2.py Python source code for peak 
 fitting, edge_data.txt text file containing edge data information and 
 1_5mM_kaucn4_h2o_1.nor file which is a file containing X-ray absorption 
