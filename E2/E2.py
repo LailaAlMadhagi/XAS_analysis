@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 from collections import OrderedDict
 import pandas as pd
 
-filename=r"N1s_Imidazole_ISEELS_Hitchcock_Norm_Athena.txt" #provided by user 
+filename=r"C1s_Imidazole_ISEELS_Hitchcock_Norm_Athena.txt" #provided by user 
 
 #resultsdir = r"E2_"+filename+r"_"+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 #working_dir=os.getcwd()
@@ -98,7 +98,7 @@ smooth_ydata=scipy.signal.savgol_filter(fit_ydata,11,2)
 dif2=np.diff(smooth_ydata)/np.diff(fit_xdata)
 e0_pos2=np.where(dif2==max(dif2))[0][0]
 posit=np.array((np.where((dif2[1:]<0)*(dif2[0:-1]>0))),dtype='int')+1
-posit=np.unique(np.sort(np.append(posit,np.array((np.where((dif2[1:]>0)*(dif2[0:-1]<0))),dtype='int')+1)))
+posit=np.unique(np.sort(np.append(posit,np.array((np.where((dif2[1:]>0)*(dif2[0:-1]<0))),dtype='int'))))
 posit=posit[posit>e0_pos2]
 funccenter=fit_xdata[posit]
 
