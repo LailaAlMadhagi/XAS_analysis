@@ -9,7 +9,7 @@ This program was developed with Python 3.5.2 with modules: subprocess, mmap, num
 FILES INCLUDED 
 1,)README.md			This currently holds all the documentation for
 						this repository
-2,) TE1.pyP 			Python source code for the theoretical
+2,) TE1.py  			Python source code for the theoretical
 						electronic structure calculations 
 3,) edge_data.txt		A text file containing edge data information
 						(derived from "Journal of Physics: Conference Series 712 (2016) 012070" which is taken from the X-ray Data Booklet)

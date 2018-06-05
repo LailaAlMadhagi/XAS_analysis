@@ -17,11 +17,11 @@ import matplotlib.pyplot as plt
 from collections import OrderedDict
 import pandas as pd
 
-filename=r"C1s_Imidazole_ISEELS_Hitchcock_Norm_Athena.txt" #provided by user 
+filename=r"N1s_Imidazole_ISEELS.txt" #provided by user 
 
 #resultsdir = r"E2_"+filename+r"_"+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-#working_dir=os.getcwd()
-working_dir=r"C:\Users\dmg81179\Desktop\Code_Development\2018-June_peak_fitting_E2\working_dir"
+working_dir=os.getcwd()
+#working_dir=r"C:\Users\dmg81179\Desktop\Code_Development\2018-June_peak_fitting_E2\working_dir"
 path_in=working_dir
 path_out=working_dir #+r"\\"+resultsdir
 #os.makedirs(path_out)
@@ -154,15 +154,17 @@ v=[]
 for param in out.params.values():
     v.append("%s:  %f" % (param.name, param.value))
     #param_values.append("%s:  %f +/- %f (init = %f)" % (param.name, param.value, param.stderr, param.init_value))
+param_keywords=["amplitude","sigma","center","fwhm","height"]
 param_values=[]
-for item in v:
-    param_values.append(item.split(":"))
+for m in param_keywords:
+    for item in v:
+        if m in item:
+            param_values.append(item.split(":"))
 function_keywords=["step"]
 d=OrderedDict([("step",[])])
 for i in range(1,funcnum+1):
     function_keywords.append("g%s"%i)
     d["g%s"%i]=[]
-param_keywords=["amplitude","sigma","center","fwhm","height",]
 for n in function_keywords:
     for c in range (0,len(param_values)):
         if n in param_values[c][0]:
@@ -176,6 +178,7 @@ for n in range(1,gaussnum):
         funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n+1)][2]))
         funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n)][2]))
         funccenter_new=np.unique(np.sort(funccenter_new))
+
 if any(t<0.5 for t in func_diff):
     # second fitting attempt, after peaks with same energy position removed
     gaussnum=len(funccenter_new)
@@ -215,15 +218,17 @@ if any(t<0.5 for t in func_diff):
     for param in out.params.values():
         v.append("%s:  %f" % (param.name, param.value))
         #param_values.append("%s:  %f +/- %f (init = %f)" % (param.name, param.value, param.stderr, param.init_value))
+    param_keywords=["amplitude","sigma","center","fwhm","height"]
     param_values=[]
-    for item in v:
-        param_values.append(item.split(":"))
+    for m in param_keywords:
+        for item in v:
+            if m in item:
+                param_values.append(item.split(":"))
     function_keywords=["step"]
     d=OrderedDict([("step",[])])
     for i in range(1,funcnum+1):
         function_keywords.append("g%s"%i)
         d["g%s"%i]=[]
-    param_keywords=["amplitude","sigma","center","fwhm","height",]
     for n in function_keywords:
         for c in range (0,len(param_values)):
             if n in param_values[c][0]:
