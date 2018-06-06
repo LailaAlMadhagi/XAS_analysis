@@ -13,12 +13,20 @@ import datetime
 import os
 import numpy as np
 import scipy.signal
+#import matplotlib 
+#matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
+
 from collections import OrderedDict
 import pandas as pd
 import argparse
 import sys
 import socket
+#import pillow
+
+# functions used for fitting
+# from lmfit.models import StepModel, PseudoVoigtModel, GaussianModel
+from lmfit.models import GaussianModel, StepModel
 
 
 
@@ -73,7 +81,7 @@ date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 resultsdir = r"E2_"+filename_without_extension+r"_"+date_time
 
 working_dir=os.getcwd()
-#path_in=path
+
 path_in=working_dir
 path_out=path+r"\\"+resultsdir
 os.makedirs(path_out)
@@ -108,7 +116,7 @@ log_file.write("\n\n~ Offset, number of lines to skip to get to the data: {}".fo
 
 ftype ="{}".format(args.file_type)
 
-
+# the value 38 is the default number of lines to skip in the Athena file in 2018
 skip = 38
 
 if "{}".format(args.file_type) == 'Athena':
@@ -129,11 +137,12 @@ if args.n_columns -1 < args.column_energy:
 if args.n_columns -1 < args.column_intensity:
     sys.exit("ERROR; There are not enough colums in the data for the intensity column to exist.")
 
+log_file.flush()
 
 
 edge_data_table=path_in+r"\edge_data.txt"
 
-data_file=file_and_path
+spectra_file=file_and_path
 fitted_peak=path_out+r"\fitted_peaks"
 peak_params=path_out+r"\peak_params.txt"
 
@@ -151,20 +160,20 @@ with open(edge_data_table,"r") as edge_data_table:
     edge_data=edge_data.reshape(int(len(edge_data)/5),5)
 edge_data_table.close()
 
-with open (data_file) as data_file:
-    lines_after_heading=data_file.readlines()[skip:]# 38 is default but it can change 
+with open (spectra_file) as spectra_file:
+    lines_after_heading=spectra_file.readlines()[skip:]# skip is provided through the command line
     for line in lines_after_heading:
         line=line.split()
         data=np.append(data,line)
-    data=data.reshape(int(len(data)/args.n_columns),args.n_columns)#6 is the number of columns and it can change 
-data_file.close()
+    data=data.reshape(int(len(data)/args.n_columns),args.n_columns)# number of columns is provided through the command line 
+spectra_file.close()
 
-#xdata and ydata
+# xdata (energy) and ydata (intensity)
 ycol=args.column_intensity
-xdata=data[:,args.column_energy].astype(float) #xdata is energy and is always the first column in Athena files
+xdata=data[:,args.column_energy].astype(float) # xdata is energy and is always the first column in Athena files in 2018
 ydata=data[:,ycol].astype(float) # ask user for the column where the intensity data, ydata as this is not always in the same place 
 
-#determine e0 
+# determine e0 
 dif1=np.diff(ydata)/np.diff(xdata)
 e0_pos=np.where(dif1==max(dif1))[0][0]
 e0=xdata[e0_pos]
@@ -185,7 +194,8 @@ post_pos_i_ls=abs(xdata-e0+fit_limits[2])
 post_pos_i=np.where(post_pos_i_ls==min(post_pos_i_ls))[0][0]
 post_pos_f=np.size(xdata)-fit_limits[3]-1
 """
-#determine fitting range
+
+# determine fitting range
 fit_range=[5,5]
 fit_pos_i_ls=abs(xdata-e0+fit_range[0])
 fit_pos_i=np.where(fit_pos_i_ls==min(fit_pos_i_ls))[0][0]
@@ -194,11 +204,9 @@ fit_pos_f=np.where(fit_pos_f_ls==min(fit_pos_f_ls))[0][0]
 fit_xdata=xdata[fit_pos_i:fit_pos_f].astype(float)
 fit_ydata=ydata[fit_pos_i:fit_pos_f].astype(float)
 
-#functions used for fitting
-#from lmfit.models import StepModel, PseudoVoigtModel, GaussianModel
-from lmfit.models import GaussianModel, StepModel
 
-#determination of number of gaussian and their initial position guesses
+
+# determination of number of gaussian and their initial position guesses
 smooth_ydata=scipy.signal.savgol_filter(fit_ydata,11,2)
 dif2=np.diff(smooth_ydata)/np.diff(fit_xdata)
 e0_pos2=np.where(dif2==max(dif2))[0][0]
@@ -208,7 +216,7 @@ posit=posit[posit>e0_pos2]
 funccenter=fit_xdata[posit]
 
 
-#remove extraneous peaks
+# remove extraneous peaks
 b=[]
 b_new=[]
 for i in range(0,len(funccenter)-1):
@@ -221,22 +229,26 @@ for j in b:
 funccenter=funccenter[b_new]
 
 
-##First fitting attempt 
+## First fitting attempt 
 gaussnum=len(funccenter)
 funcnum=gaussnum
-#initial guess x0F, lower bound lb, upper bound up
+
+# initial guess x0F, lower bound lb, upper bound up
 x0f=np.zeros((funcnum,4))
 lb=np.zeros((funcnum,4))
 ub=np.zeros((funcnum,4))
-#initial guess for error function
+
+# initial guess for error function
 step1=StepModel(form='arctan', prefix='step1_')
-#pars.update(step2.guess(y,x=x))
+
+# pars.update(step2.guess(y,x=x))
 pars=step1.make_params()
 pars['step1_center'].set(e0+4, min=e0+3, max=e0+6)
 pars['step1_amplitude'].set(0.5, min=0.1, max=1)
 pars['step1_sigma'].set(0.5, min=0.3, max=0.8)
 mod=step1
-#initial guess for gaussian
+
+# initial guess for gaussian
 x0f [:funcnum,2]=funccenter[:]
 for n0 in range (0,funcnum):
     x0f[n0,0:2]=[0.5,0.5]
@@ -247,14 +259,15 @@ for n0 in range (0,funcnum):
     pars['g%s_amplitude'%int(n0+1)].set(x0f[n0][0], min=lb[n0][0],max=ub[n0][0])
     pars['g%s_sigma'%int(n0+1)].set(x0f[n0][1], min=lb[n0][1],max=ub[n0][1])
     pars['g%s_center'%int(n0+1)].set(x0f[n0][2], min=lb[n0][2],max=ub[n0][2])
-    mod+=gauss          
-#fitting the functions
+    mod+=gauss  
+        
+# fitting the functions
 init = mod.eval(pars, x=fit_xdata)
 out = mod.fit(fit_ydata, pars, x=fit_xdata)
 Y_fitted=out.best_fit
 R_sqr=1 - out.residual.var() / np.var(fit_ydata)
 
-#reading fitted peaks parameters from first fitting attempt
+# reading fitted peaks parameters from first fitting attempt
 v=[]
 for param in out.params.values():
     v.append("%s:  %f" % (param.name, param.value))
@@ -283,24 +296,24 @@ for n in range(1,gaussnum):
         funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n+1)][2]))
         funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n)][2]))
         funccenter_new=np.unique(np.sort(funccenter_new))
-
+        
 if any(t<0.5 for t in func_diff):
     # second fitting attempt, after peaks with same energy position removed
     gaussnum=len(funccenter_new)
     funcnum=gaussnum
-    #initial guess x0F, lower bound lb, upper bound up
+    # initial guess x0F, lower bound lb, upper bound up
     x0f=np.zeros((funcnum,4))
     lb=np.zeros((funcnum,4))
     ub=np.zeros((funcnum,4))
     #initial guess for error function
     step1=StepModel(form='arctan', prefix='step1_')
-    #pars.update(step2.guess(y,x=x))
+    # pars.update(step2.guess(y,x=x))
     pars=step1.make_params()
     pars['step1_center'].set(e0+4, min=e0+3, max=e0+6)
     pars['step1_amplitude'].set(0.5, min=0.1, max=1)
     pars['step1_sigma'].set(0.5, min=0.3, max=0.8)
     mod=step1
-    #initial guess for gaussian
+    # initial guess for gaussian
     x0f [:funcnum,2]=funccenter_new[:]
     for n0 in range (0,funcnum):
         x0f[n0,0:2]=[0.5,0.5]
@@ -312,13 +325,13 @@ if any(t<0.5 for t in func_diff):
         pars['g%s_sigma'%int(n0+1)].set(x0f[n0][1], min=lb[n0][1],max=ub[n0][1])
         pars['g%s_center'%int(n0+1)].set(x0f[n0][2], min=lb[n0][2],max=ub[n0][2])
         mod+=gauss          
-    #fitting the functions
+    # fitting the functions
     init = mod.eval(pars, x=fit_xdata)
     out = mod.fit(fit_ydata, pars, x=fit_xdata)
     Y_fitted=out.best_fit
     R_sqr=1 - out.residual.var() / np.var(fit_ydata)
     
-    #reading fitted peaks parameters from second fitting attempt
+    # reading fitted peaks parameters from second fitting attempt
     v=[]
     for param in out.params.values():
         v.append("%s:  %f" % (param.name, param.value))
@@ -343,6 +356,7 @@ if any(t<0.5 for t in func_diff):
 #plot results
 fig=plt.figure() 
 plot_components = True
+
 plt.plot(xdata, ydata, 'b',label='Experimental Data')
 #plt.plot(fit_xdata, init, 'k--') #plot with initial guess
 plt.plot(fit_xdata, out.best_fit, 'r-', label='Fitted data')
@@ -358,19 +372,28 @@ ax.set_xlim([fit_xdata[0],fit_xdata[-1]+1])
 ax.set_ylim([0,max(fit_ydata)+0.5])
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
+#height = 4.0
+#width = 6.0
+#fig.set_figwidth(width)
+#fig.set_figheight(height)
 fig.show()
-fig.savefig('Fitted_peaks.tif')
+fig_filename = path_out+"\\fitted_peaks.png"
+#print(fig_filename)
+#fig.set_figwidth(2*width)
+#fig.set_figheight(2*height)
+fig.savefig(fig_filename)
+
 print("Goodness of fit (R-sqaured) is: %s" %R_sqr)
 
 log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr)
 
+log_file.flush()
 
-
-#write fitted peaks to output file 
+# write fitted peaks to output file 
 fitted_peaks=pd.concat([pd.DataFrame({'energy': fit_xdata}), pd.DataFrame(comps)], axis=1)
 fitted_peaks.to_csv(path_out+r'\fitted_peaks.txt', index=False, sep='\t', header=True)
 
-#Write fitted params to output file 
+# Write fitted params to output file 
 fitted_peaks_param=pd.concat([pd.DataFrame({'parameter': param_keywords}),pd.DataFrame(dict([(k,pd.Series(v)) for k,v in d.items()]))], axis=1)
 fitted_peaks_param.to_csv(path_out+r'\fitted_peaks_param.txt',index=False, sep='\t', header=True)
 
