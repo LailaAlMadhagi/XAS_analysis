@@ -144,11 +144,24 @@ freq_input_file=path_out+r"\freq.inp"
 freq_output_file=path_out+r"\freq.out"
 opt_error_file=path_out+r"\opt_error.txt"
 freq_error_file=path_out+r"\freq_error.txt"
-
+edge_data_file=path_in+r"\edge_data.txt"
 
 orbital_energies_array=np.array([])
 orbital_window_array=[]
-edge_data_array=np.array([['C','6','K','0','284.2'],['N','7','K','0','409.9']])
+#edge_data_array=np.array([['C','6','K','0','284.2'],['N','7','K','0','409.9']])
+
+#put edge data into array
+edge_data_array=np.array([])
+with open(edge_data_file,"r") as edge_data_file:
+    next (edge_data_file)
+    next (edge_data_file)
+    for line in edge_data_file:
+        line=line.split()
+        edge_data_array=np.append(edge_data_array,line)
+    edge_data_array=edge_data_array.reshape(int(len(edge_data_array)/5),5)
+    edge_data_file.close()
+
+
 
 #generate input file for Opt calculation
 opt_keywords_gas_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
@@ -299,12 +312,12 @@ freq_out.close()
 freq_err.close()
 
 #check Freq calc
-finding=-1
-while (finding==-1):
-    with open(freq_output_file, 'r') as freq_out_file, mmap.mmap(freq_out_file.fileno(), 0, access=mmap.ACCESS_READ) as freq_out:
+finding=0
+while (finding==0):
+    with open(freq_output_file, 'r+') as freq_out_file, mmap.mmap(freq_out_file.fileno(), 0, access=mmap.ACCESS_READ) as freq_out:
         if freq_out.find(b'ORCA TERMINATED NORMALLY') != -1:
             finding=freq_out.find(b'imaginary mode')
-            if finding != -1:
+            if finding == 0:
                 print ('Optimized geom not at minimum')
                 log_file.write('Optimized geom not at minimum\n')
                 with open(opt_input_file,'r+') as opt_file:
@@ -317,7 +330,6 @@ while (finding==-1):
                                 line=line.strip()
                                 line=line.replace(line,"*xyzfile 0 1 "+str(opt_geom_file)+"\n")
                         opt_file.write(line)
-                        #opt_file.close()    
                 with open (opt_error_file,"w") as opt_err, open (opt_output_file, "w") as opt_out:
                     p=sp.Popen(['ORCA',opt_input_file], stdout=opt_out, stderr=opt_err)
                     p_status=p.wait()
@@ -333,11 +345,11 @@ while (finding==-1):
                                 line=line.strip()
                                 line=line.replace(line,"*xyzfile 0 1 "+str(opt_geom_file)+"\n")
                         freq_file.write(line)
-                with open(freq_error_file,"w") as freq_err:
-                    p=sp.Popen(['ORCA',freq_input_file], stdout=freq_out_file, stderr=freq_err)
-                    p_status=p.wait()
-                    freq_err.close()
-            elif finding == -1:
+                freq_err=open(freq_error_file,"w")
+                p=sp.Popen(['ORCA',freq_input_file], stdout=freq_out_file, stderr=freq_err)
+                p_status=p.wait()
+                freq_err.close()
+            elif finding !=0:
                 print('Optimized geom is at global minimum')
                 log_file.write('Optimized geom is at global minimum\n')
                 break

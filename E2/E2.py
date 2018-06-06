@@ -15,9 +15,11 @@ import numpy as np
 import scipy.signal
 import matplotlib.pyplot as plt
 from collections import OrderedDict
+import pandas as pd
 import argparse
 import sys
 import socket
+
 
 
 # handle the input flags
@@ -70,8 +72,9 @@ filename_without_extension = filename[:index_of_dot]
 date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 resultsdir = r"E2_"+filename_without_extension+r"_"+date_time
 
-
-path_in=path
+working_dir=os.getcwd()
+#path_in=path
+path_in=working_dir
 path_out=path+r"\\"+resultsdir
 os.makedirs(path_out)
 
@@ -126,22 +129,18 @@ if args.n_columns -1 < args.column_energy:
 if args.n_columns -1 < args.column_intensity:
     sys.exit("ERROR; There are not enough colums in the data for the intensity column to exist.")
 
-#filename=r"\N1s_Imidazole_ISEELS_Hitchcock_Norm_Athena.txt" #provided by user 
 
-#resultsdir = r"E2_"+filename+r"_"+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-working_dir=os.getcwd()
-
-#working_dir=r"C:\Users\dmg81179\Desktop\Code_Development\2018-June_peak_fitting\working_dir"
-path_in=working_dir
-#path_out=working_dir+r"\\"+resultsdir
-#os.makedirs(path_out)
-path_out=working_dir
 
 edge_data_table=path_in+r"\edge_data.txt"
+
+data_file=file_and_path
+fitted_peak=path_out+r"\fitted_peaks"
+peak_params=path_out+r"\peak_params.txt"
+
+
 edge_data=np.array([])
-data_file=path_in+r"\%s" %filename 
 data=np.array([])
-peak_functions=path_out+r"\peak_functions.txt"
+
 
 with open(edge_data_table,"r") as edge_data_table:
     next (edge_data_table)
@@ -260,28 +259,31 @@ v=[]
 for param in out.params.values():
     v.append("%s:  %f" % (param.name, param.value))
     #param_values.append("%s:  %f +/- %f (init = %f)" % (param.name, param.value, param.stderr, param.init_value))
+param_keywords=["amplitude","sigma","center","fwhm","height"]
 param_values=[]
-for item in v:
-    param_values.append(item.split(":"))
+for m in param_keywords:
+    for item in v:
+        if m in item:
+            param_values.append(item.split(":"))
 function_keywords=["step"]
 d=OrderedDict([("step",[])])
 for i in range(1,funcnum+1):
     function_keywords.append("g%s"%i)
     d["g%s"%i]=[]
-param_keywords=["amplitude","fraction","center","fwhm","height","sigma"]
 for n in function_keywords:
     for c in range (0,len(param_values)):
         if n in param_values[c][0]:
-            d[n].append([param_values[c][0],param_values[c][1]])
+            d[n].append(param_values[c][1])
         c+=1
 funccenter_new=np.array([])
 func_diff=[]
 for n in range(1,gaussnum):
-    func_diff.append(abs(float(d['g%s'%str(n+1)][2][1])-float(d['g%s'%str(n)][2][1])))
-    if abs(float(d['g%s'%str(n+1)][2][1])-float(d['g%s'%str(n)][2][1])) >0.5:
-        funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n+1)][2][1]))
-        funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n)][2][1]))
+    func_diff.append(abs(float(d['g%s'%str(n+1)][2])-float(d['g%s'%str(n)][2])))
+    if abs(float(d['g%s'%str(n+1)][2])-float(d['g%s'%str(n)][2])) >0.5:
+        funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n+1)][2]))
+        funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n)][2]))
         funccenter_new=np.unique(np.sort(funccenter_new))
+
 if any(t<0.5 for t in func_diff):
     # second fitting attempt, after peaks with same energy position removed
     gaussnum=len(funccenter_new)
@@ -317,42 +319,60 @@ if any(t<0.5 for t in func_diff):
     R_sqr=1 - out.residual.var() / np.var(fit_ydata)
     
     #reading fitted peaks parameters from second fitting attempt
-    v_new=[]
+    v=[]
     for param in out.params.values():
-        v_new.append("%s:  %f" % (param.name, param.value))
+        v.append("%s:  %f" % (param.name, param.value))
         #param_values.append("%s:  %f +/- %f (init = %f)" % (param.name, param.value, param.stderr, param.init_value))
-    param_values_new=[]
-    for item in v_new:
-        param_values_new.append(item.split(":"))
-    function_keywords_new=["step"]
-    d_new=OrderedDict([("step",[])])
+    param_keywords=["amplitude","sigma","center","fwhm","height"]
+    param_values=[]
+    for m in param_keywords:
+        for item in v:
+            if m in item:
+                param_values.append(item.split(":"))
+    function_keywords=["step"]
+    d=OrderedDict([("step",[])])
     for i in range(1,funcnum+1):
         function_keywords.append("g%s"%i)
         d["g%s"%i]=[]
-    param_keywords=["amplitude","fraction","center","fwhm","height","sigma"]
-    for n in function_keywords_new:
-        for c in range (0,len(param_values_new)):
-            if n in param_values_new[c][0]:
-                d_new[n].append([param_values_new[c][0],param_values_new[c][1]])
+    for n in function_keywords:
+        for c in range (0,len(param_values)):
+            if n in param_values[c][0]:
+                d[n].append(param_values[c][1])
             c+=1
 
-#plot results 
+#plot results
+fig=plt.figure() 
 plot_components = True
-plt.plot(xdata, ydata, 'b')
+plt.plot(xdata, ydata, 'b',label='Experimental Data')
 #plt.plot(fit_xdata, init, 'k--') #plot with initial guess
-plt.plot(fit_xdata, out.best_fit, 'r-')
+plt.plot(fit_xdata, out.best_fit, 'r-', label='Fitted data')
 
 if plot_components:
     comps = out.eval_components(x=fit_xdata)
-    plt.plot(fit_xdata,comps['step1_'], 'k--')
+    plt.plot(fit_xdata,comps['step1_'], 'k--',label='Step Function')
     for x in range (1,gaussnum+1):
-        plt.plot(fit_xdata, comps['g%s_'%x], 'k--')
+        plt.plot(fit_xdata, comps['g%s_'%x], 'k--',label='Gaussian%s Function'%x)
+plt.legend(loc='upper left')
 ax = plt.gca()
 ax.set_xlim([fit_xdata[0],fit_xdata[-1]+1])
 ax.set_ylim([0,max(fit_ydata)+0.5])
-plt.show()
+plt.xlabel('Energy/ eV')
+plt.ylabel('Intensity')
+fig.show()
+fig.savefig('Fitted_peaks.tif')
 print("Goodness of fit (R-sqaured) is: %s" %R_sqr)
+
 log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr)
+
+
+
+#write fitted peaks to output file 
+fitted_peaks=pd.concat([pd.DataFrame({'energy': fit_xdata}), pd.DataFrame(comps)], axis=1)
+fitted_peaks.to_csv(path_out+r'\fitted_peaks.txt', index=False, sep='\t', header=True)
+
+#Write fitted params to output file 
+fitted_peaks_param=pd.concat([pd.DataFrame({'parameter': param_keywords}),pd.DataFrame(dict([(k,pd.Series(v)) for k,v in d.items()]))], axis=1)
+fitted_peaks_param.to_csv(path_out+r'\fitted_peaks_param.txt',index=False, sep='\t', header=True)
 
 
 stop = timeit.default_timer()
