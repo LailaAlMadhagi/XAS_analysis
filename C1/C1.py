@@ -89,9 +89,12 @@ for element in peak_param:
 #run tddft calc
 p=sp.Popen(['orca_mapspc',tddft_output_file,'ABS','-eV','-x0%s'%str(int(min(fit_exp_xdata)-15)),'-x1%s'%str(int(max(fit_exp_xdata))),'-n500','-w0.6'])
 p_status=p.wait()
-#read orbital energy information from ouput file 
+
+#read orbital energy information from ouput file
+#might not this information now
+""" 
 orbital_energies_array=np.array([])
-with open(tddft_output_file, 'r+') as tddft_output_file:
+with open(theory_data_file, 'r+') as tddft_output_file:
     copy=False
     for line in tddft_output_file:
         if line.strip()=="ORBITAL ENERGIES":
@@ -111,6 +114,40 @@ with open(tddft_output_file, 'r+') as tddft_output_file:
         x+=1
     orbital_energies_array=np.delete(orbital_energies_array, np.s_[unocc_orbitals[0]:],0)
     tddft_output_file.close()
+"""
+#extract Loewdin orbital population 
+lines=[]
+with open (tddft_output_file, "r") as tddft_output_file:
+    copy=False
+    for line in tddft_output_file:
+        if "LOEWDIN REDUCED ORBITAL POPULATIONS PER" in line.strip():
+            copy=True
+        elif "MAYER POPULATION ANALYSIS" in line.strip():
+            copy=False
+        elif copy:
+            line=line.split()
+            lines.append(line)
+    lines=lines[2:-3]
+    tddft_output_file.close()
+#This was taken from here https://codereview.stackexchange.com/questions/179530/
+#split-list-of-integers-at-certain-value-efficiently
+def block_split(seq,condition):
+    group=[]
+    for element in seq:
+        if element != condition:
+            group.append(element)
+        elif group:
+            yield group
+            group = []
+
+blocks=list(block_split(lines, []))
+Loewdin_population_per=[]            
+for chunk in blocks:
+    states=chunk[0]   
+    for k in chunk[4:-1]:
+        for j in range(0,len(states)):
+            Loewdin_population_per.append([int(states[j]),str(k[0]),str(k[1]),str(k[2]),float(k[j+3])])
+            Loewdin_population_per=sorted(Loewdin_population_per)
 
 #put theoretical data into array 
 theory_data=np.array([])
