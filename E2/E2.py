@@ -359,7 +359,7 @@ ax.set_ylim([0,max(fit_ydata)+0.5])
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
 fig.show()
-fig.savefig('Fitted_peaks.tif')
+fig.savefig(path_out+r'\Fitted_peaks.tif')
 print("Goodness of fit (R-sqaured) is: %s" %R_sqr)
 
 log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr)
