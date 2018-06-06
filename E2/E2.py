@@ -15,13 +15,123 @@ import numpy as np
 import scipy.signal
 import matplotlib.pyplot as plt
 from collections import OrderedDict
+import argparse
+import sys
+import socket
 
 
-filename=r"\N1s_Imidazole_ISEELS_Hitchcock_Norm_Athena.txt" #provided by user 
+# handle the input flags
+description='E2: Experimental spectra peak fitting'
+parser = argparse.ArgumentParser(description)
+
+
+parser.add_argument('in_spectra',
+    type=argparse.FileType('r'),
+    help="The experimental spectra file to be read in.",
+    default=sys.stdin, 
+    metavar="FILE")
+
+parser.add_argument("column_energy",  
+                    type=int, 
+                    help="The column in spectra file that holds the energy, 0 is the lowest value.")
+
+parser.add_argument("column_intensity",  
+                    type=int, 
+                    help="The column in spectra file that holds the intensity, 0 is the lowest value.")
+
+parser.add_argument("n_columns",  
+                    type=int, 
+                    help="The number of columns in spectra file.")
+
+parser.add_argument('-ft',
+    '--file_type',
+    default='Athena',
+    choices=['Athena', 'user_defined'],
+#    required=False,
+    help="Select the default set of orca parameters for particular chemical states.")
+
+parser.add_argument("-offset", 
+                    dest="offset",
+                    type=int,
+                    required=False,
+                    help="The number of lines in the input spectra file that are to be skipped before the data is read in.")
+
+args = parser.parse_args()
+
+#print(args)
+
+file_and_path=args.in_spectra.name
+
+path, filename = os.path.split(file_and_path)
+
+index_of_dot = filename.index(".") 
+filename_without_extension = filename[:index_of_dot]
+
+date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+resultsdir = r"E2_"+filename_without_extension+r"_"+date_time
+
+
+path_in=path
+path_out=path+r"\\"+resultsdir
+os.makedirs(path_out)
+
+log_file_name = path_out+r"\\log.txt"
+log_file=open(log_file_name, "w") 
+
+log_file.write(description+"\n\n")
+host=socket.gethostbyaddr(socket.gethostname())[0]
+log_file.write(r"This program ran at "+date_time+r" on the "+host+r" host system.")
+log_file.write("\n\n")
+
+print(description)
+print("\n~ Experimental spectra file details: {}".format(args.in_spectra))
+log_file.write("\n\n~ Experimental spectra file details: {}".format(args.in_spectra))
+
+print("\n~ Column with energy values: {}".format(args.column_energy))
+log_file.write("\n\n~ Column with energy values: {}".format(args.column_energy))
+
+print("\n~ Column with intensity values: {}".format(args.column_intensity))
+log_file.write("\n\n~ Column with intensity values: {}".format(args.column_intensity))
+
+print("\n~ Number of columns: {}".format(args.n_columns))
+log_file.write("\n\n~ Number of columns: {}".format(args.n_columns))
+
+print("\n~ File type of spectral file : {}".format(args.file_type))
+log_file.write("\n\n~ File type of spectral file : {}".format(args.file_type))
+
+
+print("\n~ Offset, number of lines to skip to get to the data: {}".format(args.offset))
+log_file.write("\n\n~ Offset, number of lines to skip to get to the data: {}".format(args.offset))
+
+ftype ="{}".format(args.file_type)
+
+
+skip = 38
+
+if "{}".format(args.file_type) == 'Athena':
+    print("You are using an Athena spectrum file.\n")
+    log_file.write("\n\nYou are using an Athena spectrum file.\n")
+if "{}".format(args.file_type) == 'user_defined':
+    print("You are not using an Athena spectrum file, it is user defined.\n")
+    log_file.write("\nYou are not using an Athena spectrum file, it is user defined.\n")
+    if args.offset is not None:
+        skip = int(args.offset)
+    if args.offset is None:
+        sys.exit("ERROR; User defined files need to have an offset value provided.")
+        
+
+if args.n_columns -1 < args.column_energy:
+    sys.exit("ERROR; There are not enough colums in the data for the energy column to exist.")
+    
+if args.n_columns -1 < args.column_intensity:
+    sys.exit("ERROR; There are not enough colums in the data for the intensity column to exist.")
+
+#filename=r"\N1s_Imidazole_ISEELS_Hitchcock_Norm_Athena.txt" #provided by user 
 
 #resultsdir = r"E2_"+filename+r"_"+datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-#working_dir=os.getcwd()
-working_dir=r"C:\Users\dmg81179\Desktop\Code_Development\2018-June_peak_fitting\working_dir"
+working_dir=os.getcwd()
+
+#working_dir=r"C:\Users\dmg81179\Desktop\Code_Development\2018-June_peak_fitting\working_dir"
 path_in=working_dir
 #path_out=working_dir+r"\\"+resultsdir
 #os.makedirs(path_out)
@@ -43,17 +153,17 @@ with open(edge_data_table,"r") as edge_data_table:
 edge_data_table.close()
 
 with open (data_file) as data_file:
-    lines_after_heading=data_file.readlines()[38:]# 38 is default but it can change 
+    lines_after_heading=data_file.readlines()[skip:]# 38 is default but it can change 
     for line in lines_after_heading:
         line=line.split()
         data=np.append(data,line)
-    data=data.reshape(int(len(data)/6),6)#6 is the number of columns and it can change 
+    data=data.reshape(int(len(data)/args.n_columns),args.n_columns)#6 is the number of columns and it can change 
 data_file.close()
 
 #xdata and ydata
-ycol=2
-xdata=data[:,0].astype(float) #xdata is always the first column
-ydata=data[:,ycol].astype(float) # ask user for the column where the ydata is 
+ycol=args.column_intensity
+xdata=data[:,args.column_energy].astype(float) #xdata is energy and is always the first column in Athena files
+ydata=data[:,ycol].astype(float) # ask user for the column where the intensity data, ydata as this is not always in the same place 
 
 #determine e0 
 dif1=np.diff(ydata)/np.diff(xdata)
@@ -242,6 +352,13 @@ ax.set_xlim([fit_xdata[0],fit_xdata[-1]+1])
 ax.set_ylim([0,max(fit_ydata)+0.5])
 plt.show()
 print("Goodness of fit (R-sqaured) is: %s" %R_sqr)
+log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr)
+
+
 stop = timeit.default_timer()
 running_time=(stop-start)/60
-print ("Running time is: "+ str(round(running_time,3)) + "minutes") 
+print ("\nRunning time is: "+ str(round(running_time,3)) + "minutes") 
+
+log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
+
+log_file.close()
