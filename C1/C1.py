@@ -115,7 +115,7 @@ with open(theory_data_file, 'r+') as tddft_output_file:
     orbital_energies_array=np.delete(orbital_energies_array, np.s_[unocc_orbitals[0]:],0)
     tddft_output_file.close()
 """
-#extract Loewdin orbital population 
+#extract Loewdin orbital population analysis information
 lines=[]
 with open (tddft_output_file, "r") as tddft_output_file:
     copy=False
