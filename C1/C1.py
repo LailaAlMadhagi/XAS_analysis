@@ -12,22 +12,112 @@ import os
 import numpy as np
 import subprocess as sp
 import matplotlib.pyplot as plt
-import scipy.signal
+#import scipy.signal
+import datetime
+import argparse
+import sys
+import socket
 
 
-exp_data_filename=r"N1s_Imidazole_ISEELS.txt" #experimental data file provided by the user
-theory_data_filename=r"TDDFT_N-edge.out"
-fitted_peaks_param_filename=r"fitted_peaks_param.txt"
+# handle the input flags
+description='C1: Compares experimental spectra with theorectically calculated data.'
+parser = argparse.ArgumentParser(description)
+
+parser.add_argument('in_experiment_file',
+    type=argparse.FileType('r'),
+    help="Experimental spectra datafile to be read in.",
+    default=sys.stdin, metavar="FILE")
+
+parser.add_argument('in_theoretical_file',
+    type=argparse.FileType('r'),
+    help="Theoretically calulated spectra datafile to be read in.",
+    default=sys.stdin, metavar="FILE")
+
+parser.add_argument('in_fitted_peaks_file',
+    type=argparse.FileType('r'),
+    help="Peaks fitted to the experimental spectra datafile to be read in.",
+    default=sys.stdin, metavar="FILE")
+
+'''parser.add_argument('in_edge_data_file',
+    type=argparse.FileType('r'),
+    help="Edge data from experimental spectra datafile to be read in.",
+    default=sys.stdin, metavar="FILE")'''
+
+
+args = parser.parse_args()
+
+
+file_exp_read=args.in_experiment_file.name
+
+path, file_exp = os.path.split(file_exp_read)
+                   
+index_of_dot = file_exp.index(".") 
+file_exp_without_extension = file_exp[:index_of_dot]
+
+date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+resultsdir = r"C1_"+file_exp_without_extension+r"_"+date_time
+
+
+path_in=path
+path_out=path+r"\\"+resultsdir
+os.makedirs(path_out)
+
+log_file_name = path_out+r"\\log.txt"
+log_file=open(log_file_name, "w") 
+
+log_file.write(description+"\n\n")
+host=socket.gethostbyaddr(socket.gethostname())[0]
+log_file.write(r"This program ran at "+date_time+r" on the "+host+r" host system.")
+log_file.write("\n\n")
+
+html_line1 =r"This program ran at "+date_time+r" on the "+host+r" host system"
+
+
+
+
+print("\n~ Experimental spectra file details: {}".format(args.in_experiment_file))
+log_file.write("\n\n~ Experimental spectra file details: {}".format(args.in_experiment_file))
+
+
+print("\n~ Theoretical spectra file details: {}".format(args.in_theoretical_file))
+log_file.write("\n\n~ Theoretical spectra file details: {}".format(args.in_theoretical_file))
+
+
+print("\n~ Peaks fitted to the theoretical spectra file details: {}".format(args.in_fitted_peaks_file))
+log_file.write("\n\n~ Peaks fitted to the theoretical spectra file details: {}".format(args.in_fitted_peaks_file))
+
+
+
+
 #input and output files 
 working_dir=os.getcwd()
-#working_dir=r"C:\Users\dmg81179\Desktop\Code_Development\2018_June_Compare_C1\working_dir"
-path_in=working_dir
-path_out=working_dir
-exp_data_file=path_in+r"\%s" %exp_data_filename 
-edge_data_table=path_in+r"\edge_data.txt"
-fitted_peaks_param=path_in+r"\%s" %fitted_peaks_param_filename
+
+
+#exp_data_file=path_in+r"\%s" %exp_data_filename 
+exp_data_file=args.in_experiment_file.name
+#edge_data_table=path_in+r"\edge_data.txt"
+#edge_data_table=args.in_edge_data_file.name
+edge_data_table=working_dir+r"\edge_data.txt"
+#fitted_peaks_param=path_in+r"\%s" %fitted_peaks_param_filename
+fitted_peaks_param=args.in_fitted_peaks_file.name
+#theory_data_file=path_in+r"\%s.abs.dat" %theory_data_filename
+file_theory_read=args.in_theoretical_file.name
+path_theory, file_theory = os.path.split(file_theory_read)
+theory_data_file=path_in+"\%s.abs.dat" %file_theory
+theory_data_filename=r"TDDFT_N-edge.out"
 tddft_output_file=path_in+r"\%s" %theory_data_filename
-theory_data_file=path_in+r"\%s.abs.dat" %theory_data_filename
+
+html_infile_name=working_dir+r"\template.html"
+html_outfile_name=path_out+r"\report.html"
+
+
+
+        
+        
+
+
+
+print("theory_data_file: ",theory_data_file)
 
 ###Extract Experimental data
 #put experimental data into array
@@ -180,6 +270,7 @@ for state,chunk in zip(states,states_blocks):
 
 #put theoretical data into array 
 theory_data=np.array([])
+#with open (theory_data_file) as theory_data_file:
 with open (theory_data_file) as theory_data_file:
     for line in theory_data_file:
         line=line.split()
@@ -222,6 +313,8 @@ for j in b:
 funccenter=funccenter[b_new]
 #translate the energy scale for the theoretical data based on experimental data
 trans_theory_xdata=theory_xdata+(float(first_exp_peak_center)-min(funccenter))
+transform=float(first_exp_peak_center)-min(funccenter)
+html_transform="%.3f" % transform
 
 ###Peak fitting
 peak_assignment_ls=[]
@@ -238,7 +331,7 @@ plt.plot(theory_xdata, theory_ydata, 'g--',label='Theoretical Spectrum')
 plt.legend(loc='upper right')
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
-fig_raw.savefig(path_out+r'\\Comparison of raw experimental and theoretical spectra.png')
+fig_raw.savefig(path_out+r'\\ComparisonOfRawExperimentalAndTheoreticalSpectra.png')
 
 fig_norm=plt.figure()
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -246,7 +339,7 @@ plt.plot(theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectrum')
 plt.legend(loc='upper right')
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
-fig_norm.savefig(path_out+r'\\Comparison of normalized experimental and theoretical spectra.png')
+fig_norm.savefig(path_out+r'\\ComparisonOfNormalizedExperimentalAndTheoreticalSpectra.png')
 
 fig_trans=plt.figure()
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -258,9 +351,34 @@ ax.set_ylim([0,max(fit_exp_ydata)+0.2])
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
 fig_trans.show()
-fig_trans.savefig(path_out+r'\\Comparison of normalized and translated experimental and theoretical spectra.png')
+fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectra.png')
 
 
 stop = timeit.default_timer()
 running_time=(stop-start)/60
 print ("Running time is: "+ str(round(running_time,3)) + "minutes") 
+
+log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
+
+log_file.close()
+
+
+with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as html_out:
+    n=0
+    for line in html_in:
+        if '***' in line and n==2:
+            html_out.write(line.replace("***",html_transform))            
+            n+=1
+        elif '***' in line and n==1:
+            html_out.write(line.replace("***",html_line1))            
+            n+=1
+        elif '***' in line and n==0:
+            html_out.write(line.replace("***",description))
+            n+=1
+        else:
+            html_out.write(line.strip())
+            print("0")
+        
+
+        
+ 

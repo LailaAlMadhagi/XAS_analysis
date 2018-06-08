@@ -111,7 +111,7 @@ log_file.write("\n\n~ Orca executable: {}".format(args.orca_executable))
 #print(args.orca_executable)
 #print(type(args.orca_executable))
 
-args = parser.parse_args()
+#args = parser.parse_args()
 #args_text = "args:".join(args)
 
 
