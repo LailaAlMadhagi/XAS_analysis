@@ -144,7 +144,8 @@ freq_input_file=path_out+r"\freq.inp"
 freq_output_file=path_out+r"\freq.out"
 opt_error_file=path_out+r"\opt_error.txt"
 freq_error_file=path_out+r"\freq_error.txt"
-edge_data_file=path_in+r"\edge_data.txt"
+working_dir=os.getcwd()
+edge_data_file=working_dir+r"\..\edge_data.txt"
 
 orbital_energies_array=np.array([])
 orbital_window_array=[]
