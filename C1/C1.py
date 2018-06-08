@@ -205,8 +205,9 @@ with open(theory_data_file, 'r+') as tddft_output_file:
     orbital_energies_array=np.delete(orbital_energies_array, np.s_[unocc_orbitals[0]:],0)
     tddft_output_file.close()
 """
-#extract Loewdin orbital population analysis information
-lines=[]
+#extract Loewdin orbital population analysis information and excited states information
+Loewdin_lines=[]
+states_lines=[]
 with open (tddft_output_file, "r") as tddft_output_file:
     copy=False
     for line in tddft_output_file:
@@ -216,28 +217,57 @@ with open (tddft_output_file, "r") as tddft_output_file:
             copy=False
         elif copy:
             line=line.split()
-            lines.append(line)
-    lines=lines[2:-3]
+            Loewdin_lines.append(line)
+    tddft_output_file.seek(0)
+    copy=False
+    for line in tddft_output_file:
+        if "EXCITED STATES" in line.strip():
+            copy=True
+        elif "EXCITATION SPECTRA" in line.strip():
+            copy=False
+        elif copy:
+            line=line.split()
+            states_lines.append(line)
+    
     tddft_output_file.close()
-#This was taken from here https://codereview.stackexchange.com/questions/179530/
+#Function to split read lines into blocks
+#The function was adapted from here https://codereview.stackexchange.com/questions/179530/
 #split-list-of-integers-at-certain-value-efficiently
 def block_split(seq,condition):
     group=[]
     for element in seq:
-        if element != condition:
+        if condition not in element and element!=[]:
+            group.append(element)
+        elif group:
+            yield group
+            group = []
+def states_split(seq,condition):
+    group=[]
+    for element in seq:
+        if condition in element and element!=[]:
             group.append(element)
         elif group:
             yield group
             group = []
 
-blocks=list(block_split(lines, []))
+Loewdin_lines=Loewdin_lines[2:-3]
+Loewdin_blocks=list(block_split(Loewdin_lines, []))
 Loewdin_population_per=[]            
-for chunk in blocks:
+for chunk in Loewdin_blocks:
     states=chunk[0]   
     for k in chunk[4:-1]:
         for j in range(0,len(states)):
             Loewdin_population_per.append([int(states[j]),str(k[0]),str(k[1]),str(k[2]),float(k[j+3])])
             Loewdin_population_per=sorted(Loewdin_population_per)
+            
+states_lines=states_lines[4:-1]
+states=list(states_split(states_lines,'STATE'))
+states_blocks=list(block_split(states_lines, 'STATE'))
+excited_states_ls=[]
+for state,chunk in zip(states,states_blocks):
+    for i in chunk:
+        excited_states_ls.append([int(state[0][1].replace(":","")),float(state[0][5]),i[0],i[2],float(i[4])])            
+            
 
 #put theoretical data into array 
 theory_data=np.array([])
