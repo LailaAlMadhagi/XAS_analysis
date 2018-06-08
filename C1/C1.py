@@ -17,6 +17,7 @@ import datetime
 import argparse
 import sys
 import socket
+from collections import OrderedDict
 
 
 # handle the input flags
@@ -316,11 +317,31 @@ trans_theory_xdata=theory_xdata+(float(first_exp_peak_center)-min(funccenter))
 transform=float(first_exp_peak_center)-min(funccenter)
 html_transform="%.3f" % transform
 
-###Peak fitting
+###Peak assignement
 peak_assignment_ls=[]
-for element in excited_states_ls:
-    peak_assignment_ls.append([[],element[1],element[2],[],element[3]])
+for j in excited_states_ls:
+    for k in Loewdin_population_per:
+        if str(k[0]) in j[2]:
+            if k[3]=='s':
+                if k[4]>=5:
+                    j.append(k[1]+k[2])                     
+for i in funccenter:
+    for j in excited_states_ls:
+        if j[1]-0.5 <= i <= j[1]+0.5:
+            for k in Loewdin_population_per:
+                if str(k[0]) in j[3]:
+                    if k[1]+k[2] in j[5]:
+                        if k[3]=='pz':
+                            if k[4]>=5:
+                                peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
 
+
+peak_assignment_d=OrderedDict()
+for element in peak_assignment_ls:
+    if element[0] not in peak_assignment_d:
+        peak_assignment_d[element[0]]=[element[1:]]
+    else:
+        peak_assignment_d[element[0]].append(element[1:])
 ###
 
 
@@ -353,6 +374,25 @@ plt.ylabel('Intensity')
 fig_trans.show()
 fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectra.png')
 
+fig_trans=plt.figure()
+plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
+plt.plot(trans_theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectrum')
+plt.legend(loc='upper left')
+ax = plt.gca()
+ax.set_xlim([fit_exp_xdata[0],fit_exp_xdata[-1]+1])
+ax.set_ylim([0,max(fit_exp_ydata)+0.2])
+plt.xlabel('Energy/ eV')
+plt.ylabel('Intensity')
+for element in peak_assignment_d:
+    plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
+    peak_assign_string=""
+    for item in peak_assignment_d[element]:
+        peak_assign_string+='%s > %s (%s)\n' %(item[2],item[3],round(item[4],3))
+    plt.annotate(peak_assign_string, 
+             xy=(element+transform, float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])),
+             arrowprops=dict(arrowstyle="->"))
+fig_trans.show()
+fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectraWithPeakAssignment.png')
 
 stop = timeit.default_timer()
 running_time=(stop-start)/60
