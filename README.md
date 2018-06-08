@@ -19,7 +19,7 @@ C1:  Compares experimental spectra with theorectically calculated data.
 
 TMD1: Creates a structural model of the system
 
-TMD2: Creates an excited state from Density Functional Theory
+TES1: A Theortical Electronic Structure Excited State Calculation for a Solution
 
 
 The data file edge_data.txt which is a text file containing edge data information (derived from "Journal of Physics: Conference Series 712 (2016) 012070" which is taken from the X-ray Data Booklet) is also stored in this directory as it is used by more than one script.

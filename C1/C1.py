@@ -98,7 +98,7 @@ working_dir=os.getcwd()
 exp_data_file=args.in_experiment_file.name
 #edge_data_table=path_in+r"\edge_data.txt"
 #edge_data_table=args.in_edge_data_file.name
-edge_data_table=working_dir+r"\edge_data.txt"
+edge_data_table=working_dir+r"\..\edge_data.txt"
 #fitted_peaks_param=path_in+r"\%s" %fitted_peaks_param_filename
 fitted_peaks_param=args.in_fitted_peaks_file.name
 #theory_data_file=path_in+r"\%s.abs.dat" %theory_data_filename
@@ -402,6 +402,7 @@ log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " min
 
 log_file.close()
 
+html_table_row="  <tr> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> <td> *5* </td> </tr>\n"
 
 with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as html_out:
     n=0
@@ -417,7 +418,10 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
             n+=1
         else:
             html_out.write(line.strip())
-            print("0")
+            
+        if '$$$' in line:
+            print("end of report")
+            
         
 
         
