@@ -266,8 +266,7 @@ states_blocks=list(block_split(states_lines, 'STATE'))
 excited_states_ls=[]
 for state,chunk in zip(states,states_blocks):
     for i in chunk:
-        excited_states_ls.append([int(state[0][1].replace(":","")),float(state[0][5]),i[0],i[2],float(i[4])])            
-            
+        excited_states_ls.append([int(state[0][1].replace(":","")),float(state[0][5]),i[0],i[2],float(i[4])])                        
 
 #put theoretical data into array 
 theory_data=np.array([])
@@ -316,6 +315,13 @@ funccenter=funccenter[b_new]
 trans_theory_xdata=theory_xdata+(float(first_exp_peak_center)-min(funccenter))
 transform=float(first_exp_peak_center)-min(funccenter)
 html_transform="%.3f" % transform
+
+###Peak fitting
+peak_assignment_ls=[]
+for element in excited_states_ls:
+    peak_assignment_ls.append([[],element[1],element[2],[],element[3]])
+
+###
 
 
 ###plotting
