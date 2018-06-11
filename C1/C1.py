@@ -362,7 +362,7 @@ log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " min
 
 log_file.close()
 
-html_table_row="  <tr> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> <td> *5* </td> </tr>\n"
+html_table_row="  <tr> <td> *0* </td> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> </tr>\n"
 
 with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as html_out:
     n=0
@@ -379,10 +379,22 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
         else:
             html_out.write(line.strip())
             
-        if '$$$' in line:
-            print("end of report")
+        if '+++' in line:
+            for element in peak_assignment_ls:
+                s0="1"
+                new_line = html_table_row.replace("*0*",s0)
+                s1="%.3f" % element[1]
+                print(s1)
+                new_line = new_line.replace("*1*",s1 )
+                new_line = new_line.replace("*2*",element[2] )
+                s3="3"
+                new_line = new_line.replace("*3*",s3 )
+                new_line = new_line.replace("*4*",element[4] )
+                print("element ",element)
+                print("new_line "+new_line)
+                html_out.write(new_line)
+
             
         
 
-        
- 
+

@@ -1,7 +1,7 @@
-XAS_analysis
+XAS_analysis (X-ray Absorption Spectroscopy)
 
 GENERAL INFORMATION ON THIS PROJECT
-This is created by Laila Al-Madhagi (fy11lham@leeds.ac.uk) for her PhD project on the 2018/05/17. Joanna Leng from the University of Leeds contributed to the development. The code license should be CC-BY-NC. GitHub does not support this license type and it will be added later
+This is created by Laila Al-Madhagi (fy11lham@leeds.ac.uk) for her PhD project on the 2018/05/17. Joanna Leng (j.leng@leeds.ac.uk) from the University of Leeds contributed to the development. The code license should be CC-BY-NC. GitHub does not support this license type and it will be added later
 
 This program was developed with Python 3.5.2 with modules: subprocess, mmap, numpy(version 1.13.1) and timeit. It was developed on a windows system using Anaconda.
 
