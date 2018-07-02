@@ -30,7 +30,10 @@ FILES INCLUDED
 						
 INFORMATION ON THE TE1 (THEORETICAL ELECTRONIC STRUCTURE CALCULATION) CODE
 
-usage: TE1.py [-h] [-op {gas,solution}] [-opi FILE] [-orca FILE] FILE
+usage: 
+
+TE1.py [-h] [-op {gas,solution}] [-opi FILE] [-orca FILE] FILE
+
 
 TE1: Theoretical electron density function calulation
 
@@ -53,7 +56,9 @@ optional arguments:
 
 
 This program was developed TO work with the software ORCA version 4.0.1.2 which can be downloaded after you have registered at the ORCA forum:
+
 https://orcaforum.cec.mpg.de/
+
 
 This program is the TE1 part of the computational pipeline or workflow, a diagram of all the planned pipes is provided in the respository. This is the Theory Electronic (Structutre) 1 pipe. The computation is in 3 steps:
 1, Geometry Optimisation 2, Frequency Calculation 3, Excited stated calculation or TDDFT calculation (Time Dependent Density Function Theory)

@@ -7,7 +7,7 @@ This program was developed with Python 3.5.2 with modules: numpy(version1.13.1),
 
 FILES INCLUDED 
 
-1,)README.md					This currently holds all the documentation for
+1,) README.md					This currently holds all the documentation for
 								this repository
 								
 2,) C1.py   					Python source code for the comparison pipeline  
@@ -29,7 +29,9 @@ FILES INCLUDED
 								
 INFORMATION ON THE C1 (COMPARISON) CODE
 
-usage:   [-h] FILE FILE FILE
+usage:   
+
+[-h] FILE FILE FILE
 
 C1: Compares experimental spectra with theorectically calculated data.
 	   
@@ -37,10 +39,13 @@ C1: Compares experimental spectra with theorectically calculated data.
 positional arguments:
 
   FILE        Experimental spectra datafile to be read in.
+  
   FILE        Theoretically calulated spectra datafile to be read in.
+  
   FILE        Peaks fitted to the experimental spectra datafile to be read in.
 
 optional arguments:
+
   -h, --help  show this help message and exit
   
   

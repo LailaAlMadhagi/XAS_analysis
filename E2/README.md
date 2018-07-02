@@ -22,7 +22,9 @@ FILES INCLUDED
 	
 INFORMATION ON THE E2 (COMPARISON) CODE	
 
-usage:  [-h] [-ft {Athena,user_defined}] [-offset OFFSET] FILE column_energy column_intensity n_columns
+usage:  
+
+[-h] [-ft {Athena,user_defined}] [-offset OFFSET] FILE column_energy column_intensity n_columns
 											 
 E2: Experimental spectra peak fitting
 											 									 
