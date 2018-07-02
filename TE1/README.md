@@ -35,6 +35,7 @@ usage: TE1.py [-h] [-op {gas,solution}] [-opi FILE] [-orca FILE] FILE
 TE1: Theoretical electron density function calulation
 
 positional arguments:
+
   FILE                molecular geometry file to be read in
 
 optional arguments:
