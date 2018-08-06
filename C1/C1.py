@@ -312,7 +312,7 @@ funccenter=fit_theory_xdata[posit]
 b=[]
 b_new=[]
 for i in range(0,len(funccenter)-1):
-    if funccenter[i+1]-funccenter[i]>0.5:
+    if funccenter[i+1]-funccenter[i]>0.2:
         b.append(i)
         b.append(i+1)
 for j in b:
@@ -342,13 +342,20 @@ for i in funccenter:
                             if k[4]>=5:
                                 peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
 
-
+peak_assignment_ls_f=[]
+for index, element in enumerate(peak_assignment_ls):
+    if element[1]==peak_assignment_ls[index-2][1]:
+            pass
+    else:
+        peak_assignment_ls_f.append(element)
+        
 peak_assignment_d=OrderedDict()
-for element in peak_assignment_ls:
+for element in peak_assignment_ls_f:
     if element[0] not in peak_assignment_d:
         peak_assignment_d[element[0]]=[element[1:]]
     else:
         peak_assignment_d[element[0]].append(element[1:])
+
 ###
 
 
@@ -428,8 +435,8 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
             
         if '+++' in line:
             s0=0
-            for index, element in enumerate(peak_assignment_ls):
-                if element[1]==peak_assignment_ls[index-1][1]:
+            for index, element in enumerate(peak_assignment_ls_f):
+                if element[1]==peak_assignment_ls_f[index-1][1]:
                     new_line = html_table_row.replace("*0*",str(s0))
                 else:
                     s0+=1
