@@ -18,6 +18,7 @@ import argparse
 import sys
 import socket
 from collections import OrderedDict
+import shutil
 
 
 # handle the input flags
@@ -60,7 +61,7 @@ resultsdir = r"C1_"+file_exp_without_extension+r"_"+date_time
 
 
 path_in=path
-path_out=path+r"\\"+resultsdir
+path_out=path+r"/"+resultsdir
 os.makedirs(path_out)
 
 log_file_name = path_out+r"\\log.txt"
@@ -104,9 +105,9 @@ fitted_peaks_param=args.in_fitted_peaks_file.name
 #theory_data_file=path_in+r"\%s.abs.dat" %theory_data_filename
 file_theory_read=args.in_theoretical_file.name
 path_theory, file_theory = os.path.split(file_theory_read)
-theory_data_file=path_in+"\%s.abs.dat" %file_theory
-theory_data_filename=r"TDDFT_N-edge.out"
-tddft_output_file=path_in+r"\%s" %theory_data_filename
+theory_data_file=path_out+"/%s.abs.dat" %file_theory
+theory_data_filename=path_out+r"/%s" %file_theory
+tddft_output_file=r"%s" %theory_data_filename
 
 html_infile_name=working_dir+r"\template.html"
 html_outfile_name=path_out+r"\report.html"
@@ -119,6 +120,12 @@ html_outfile_name=path_out+r"\report.html"
 
 
 print("theory_data_file: ",theory_data_file)
+
+
+###move theory data file to results directory
+for files in os.listdir(path_in):
+    if files.endswith(".out"):
+        shutil.copy(files,path_out)
 
 ###Extract Experimental data
 #put experimental data into array
@@ -390,7 +397,7 @@ for element in peak_assignment_d:
         peak_assign_string+='%s > %s (%s)\n' %(item[2],item[3],round(item[4],3))
     plt.annotate(peak_assign_string, 
              xy=(element+transform, float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])),
-             arrowprops=dict(arrowstyle="->"))
+             arrowprops=dict(arrowstyle="->", connectionstyle="angle3",lw=1))
 fig_trans.show()
 fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectraWithPeakAssignment.png')
 
@@ -402,7 +409,7 @@ log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " min
 
 log_file.close()
 
-html_table_row="  <tr> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> <td> *5* </td> </tr>\n"
+html_table_row="  <tr> <td> *0* </td> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> </tr>\n"
 
 with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as html_out:
     n=0
@@ -419,10 +426,21 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
         else:
             html_out.write(line.strip())
             
-        if '$$$' in line:
-            print("end of report")
-            
-        
-
-        
- 
+        if '+++' in line:
+            s0=0
+            for index, element in enumerate(peak_assignment_ls):
+                if element[1]==peak_assignment_ls[index-1][1]:
+                    new_line = html_table_row.replace("*0*",str(s0))
+                else:
+                    s0+=1
+                    new_line = html_table_row.replace("*0*",str(s0))
+                s1="%.3f" % element[1]
+                print(s1)
+                new_line = new_line.replace("*1*",s1 )
+                new_line = new_line.replace("*2*",element[2] )
+                new_line = new_line.replace("*3*",element[3] )
+                new_line = new_line.replace("*4*",element[4] )
+                print("element ",element)
+                print("new_line "+new_line)
+                html_out.write(new_line)
+                

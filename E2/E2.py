@@ -139,8 +139,7 @@ if args.n_columns -1 < args.column_intensity:
 
 log_file.flush()
 
-
-edge_data_table=path_in+r"\edge_data.txt"
+edge_data_table=working_dir+r"\..\edge_data.txt"
 
 spectra_file=file_and_path
 fitted_peak=path_out+r"\fitted_peaks"
