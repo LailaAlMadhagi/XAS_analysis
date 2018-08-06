@@ -443,4 +443,3 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
                 print("element ",element)
                 print("new_line "+new_line)
                 html_out.write(new_line)
-                
