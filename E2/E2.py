@@ -142,8 +142,9 @@ log_file.flush()
 edge_data_table=working_dir+r"\..\edge_data.txt"
 
 spectra_file=file_and_path
-fitted_peak=path_out+r"\fitted_peaks"
-peak_params=path_out+r"\peak_params.txt"
+path_exp, file_exp = os.path.split(file_and_path)
+fitted_peak=path_out+r"\%s_fitted_peaks.txt" %file_exp
+peak_params=path_out+r"\%s_peak_params.txt" %file_exp
 
 
 edge_data=np.array([])
@@ -195,7 +196,7 @@ post_pos_f=np.size(xdata)-fit_limits[3]-1
 """
 
 # determine fitting range
-fit_range=[5,5]
+fit_range=[5,8]
 fit_pos_i_ls=abs(xdata-e0+fit_range[0])
 fit_pos_i=np.where(fit_pos_i_ls==min(fit_pos_i_ls))[0][0]
 fit_pos_f_ls=abs(xdata-e0-fit_range[1])
@@ -242,7 +243,7 @@ step1=StepModel(form='arctan', prefix='step1_')
 
 # pars.update(step2.guess(y,x=x))
 pars=step1.make_params()
-pars['step1_center'].set(e0+4, min=e0+3, max=e0+6)
+pars['step1_center'].set(e0+6, min=e0+3, max=e0+8)
 pars['step1_amplitude'].set(0.5, min=0.1, max=1)
 pars['step1_sigma'].set(0.5, min=0.3, max=0.8)
 mod=step1
@@ -391,11 +392,11 @@ log_file.flush()
 
 # write fitted peaks to output file 
 fitted_peaks=pd.concat([pd.DataFrame({'energy': fit_xdata}), pd.DataFrame(comps)], axis=1)
-fitted_peaks.to_csv(path_out+r'\fitted_peaks.txt', index=False, sep='\t', header=True)
+fitted_peaks.to_csv(path_out+r'\%s_fitted_peaks.txt'%file_exp, index=False, sep='\t', header=True)
 
 # Write fitted params to output file 
 fitted_peaks_param=pd.concat([pd.DataFrame({'parameter': param_keywords}),pd.DataFrame(dict([(k,pd.Series(v)) for k,v in d.items()]))], axis=1)
-fitted_peaks_param.to_csv(path_out+r'\fitted_peaks_param.txt',index=False, sep='\t', header=True)
+fitted_peaks_param.to_csv(path_out+r'\%s_fitted_peaks_param.txt'%file_exp,index=False, sep='\t', header=True)
 
 
 stop = timeit.default_timer()

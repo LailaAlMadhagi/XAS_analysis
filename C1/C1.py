@@ -162,7 +162,7 @@ e_edge=abs(edge_data[:,4].astype(float)-e0)
 e1_pos=np.where(e_edge==min(e_edge))[0][0]
 element=edge_data[e1_pos][0]
 #determine fitting range
-fit_range=[5,5]
+fit_range=[5,8]
 fit_pos_i_ls=abs(exp_xdata-e0+fit_range[0])
 fit_pos_i=np.where(fit_pos_i_ls==min(fit_pos_i_ls))[0][0]
 fit_pos_f_ls=abs(exp_xdata-e0-fit_range[1])
@@ -293,7 +293,7 @@ norm_theory_ydata=(theory_ydata-min(theory_ydata))/(max(theory_ydata)-min(theory
 
 ##this is done to determine the center of the first peak in the theoretical spectrum
 #determine fitting range
-fit_range=[5,5]
+fit_range=[5,8]
 fit_pos_i_ls=abs(theory_xdata-(e0-12)+fit_range[0])
 fit_pos_i=np.where(fit_pos_i_ls==min(fit_pos_i_ls))[0][0]
 fit_pos_f_ls=abs(theory_xdata-(e0-12)-fit_range[1])
@@ -303,7 +303,7 @@ fit_theory_ydata=norm_theory_ydata[fit_pos_i:fit_pos_f].astype(float)
 #determination of number of gaussian and their initial position guesses
 #smooth_ydata=scipy.signal.savgol_filter(fit_theory_ydata,11,2)
 dif2=np.diff(fit_theory_ydata)/np.diff(fit_theory_xdata)
-e0_pos2=np.where(dif2==max(dif2))[0][0]
+e0_pos2=next((i for i, x in enumerate(dif2) if x), None)
 posit=np.array((np.where((dif2[1:]<0)*(dif2[0:-1]>0))),dtype='int')+1
 posit=np.unique(np.sort(np.append(posit,np.array((np.where((dif2[1:]>0)*(dif2[0:-1]<0))),dtype='int')+1)))
 posit=posit[posit>e0_pos2]
@@ -343,11 +343,14 @@ for i in funccenter:
                                 peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
 
 peak_assignment_ls_f=[]
-for index, element in enumerate(peak_assignment_ls):
-    if element[1]==peak_assignment_ls[index-2][1]:
-            pass
-    else:
-        peak_assignment_ls_f.append(element)
+if len(peak_assignment_ls)>3:
+    for index, element in enumerate(peak_assignment_ls):
+        if element[1]==peak_assignment_ls[index-2][1]:
+                pass
+        else:
+            peak_assignment_ls_f.append(element)
+else:
+    peak_assignment_ls_f=peak_assignment_ls
         
 peak_assignment_d=OrderedDict()
 for element in peak_assignment_ls_f:

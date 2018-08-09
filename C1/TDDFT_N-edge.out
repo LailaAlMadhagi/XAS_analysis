@@ -82,7 +82,7 @@
 
 
 *****************************************
-The coordinations will be read from file: U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\opt.xyz
+The coordinations will be read from file: U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\opt.xyz
 *****************************************
 
 
@@ -112,7 +112,7 @@ INFO   : the flag for use of LIBINT has been found!
 ================================================================================
                                        INPUT FILE
 ================================================================================
-NAME = U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.inp
+NAME = U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge.inp
 |  1> #This is N K-edge calculation 
 |  2> ! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 
 |  3> !NormalPrint 
@@ -126,7 +126,7 @@ NAME = U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.inp
 | 11> nroots=20 
 | 12> maxdim=200 
 | 13> end 
-| 14> *xyzfile 0 1 U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\opt.xyz                           ****END OF INPUT****
+| 14> *xyzfile 0 1 U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\opt.xyz                           ****END OF INPUT****
 ================================================================================
 
                        ****************************
@@ -291,12 +291,12 @@ BASIS SET IN INPUT FORMAT
 
  * One electron integrals 
  Pre-screening matrix                    ... done
- Shell pair data                         ... done (   0.000 sec)
+ Shell pair data                         ... done (   0.001 sec)
 
 Timings:
- Total evaluation time               ...     0.018 sec (   0.000 min)
- One electron matrix time            ...     0.022 sec (   0.000 min) =122.2%
- Schwartz matrix evaluation time     ...     0.120 sec (   0.002 min) =666.7%
+ Total evaluation time               ...     0.016 sec (   0.000 min)
+ One electron matrix time            ...     0.024 sec (   0.000 min) =150.0%
+ Schwartz matrix evaluation time     ...     0.153 sec (   0.003 min) =956.2%
 
 -------------------------------------------------------------------------------
                                  ORCA SCF
@@ -323,7 +323,7 @@ Hamiltonian:
 
 
 General Settings:
- Integral files         IntName         .... U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge
+ Integral files         IntName         .... U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge
  Hartree-Fock type      HFTyp           .... RHF
  Total Charge           Charge          ....    0
  Multiplicity           Mult            ....    1
@@ -373,11 +373,11 @@ Convergence Tolerance:
 
 Diagonalization of the overlap matrix:
 Smallest eigenvalue                        ... 2.103e-003
-Time for diagonalization                   ...    0.002 sec
+Time for diagonalization                   ...    0.003 sec
 Threshold for overlap eigenvalues          ... 1.000e-008
 Number of eigenvalues below threshold      ... 0
-Time for construction of square roots      ...    0.024 sec
-Total time needed                          ...    0.028 sec
+Time for construction of square roots      ...    0.021 sec
+Total time needed                          ...    0.024 sec
 
 -------------------
 DFT GRID GENERATION
@@ -397,7 +397,7 @@ Grids for H and He will be reduced by one unit
 nearest neighbour list constructed           ...    0.0 sec
 Grid point re-assignment to atoms done       ...    0.0 sec
 Grid point division into batches done        ...    0.1 sec
-Reduced shell lists constructed in    0.3 sec
+Reduced shell lists constructed in    0.4 sec
 
 Total number of grid points                  ...    21441
 Total number of batches                      ...      341
@@ -410,7 +410,7 @@ Average number of large basis fcns per batch ...    56.15 (86.74%)
 Maximum spatial batch extension              ...  19.24, 18.97, 21.54 au
 Average spatial batch extension              ...   3.30,  3.23,  3.90 au
 
-Time for grid setup =    0.372 sec
+Time for grid setup =    0.413 sec
 
 ------------------------------
 INITIAL GUESS: MODEL POTENTIAL
@@ -422,7 +422,7 @@ Initializing the effective Hamiltonian             ... done
 Starting the Coulomb interaction                   ... done (   0.0 sec)
 Reading the grid                                   ... done
 Mapping shells                                     ... done
-Starting the XC term evaluation                    ... done (   0.2 sec)
+Starting the XC term evaluation                    ... done (   0.3 sec)
   promolecular density results
      # of electrons  =     35.998610085
      EX              =    -29.767763573
@@ -433,7 +433,7 @@ Diagonalizing the Hamiltonian                      ... done (   0.0 sec)
 Back transforming the eigenvectors                 ... done (   0.0 sec)
 Now organizing SCF variables                       ... done
                       ------------------
-                      INITIAL GUESS DONE (   0.8 sec)
+                      INITIAL GUESS DONE (   0.9 sec)
                       ------------------
 --------------
 SCF ITERATIONS
@@ -693,9 +693,9 @@ SCF CONVERGENCE
   Last Orbital Gradient      ...   1.9632e-006  Tolerance :  1.0000e-005
   Last Orbital Rotation      ...   4.4996e-006  Tolerance :  1.0000e-005
 
-             **** THE GBW FILE WAS UPDATED (U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.gbw) ****
-             **** DENSITY FILE WAS UPDATED (U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.scfp.tmp) ****
-             **** ENERGY FILE WAS UPDATED (U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.en.tmp) ****
+             **** THE GBW FILE WAS UPDATED (U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge.gbw) ****
+             **** DENSITY FILE WAS UPDATED (U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge.scfp.tmp) ****
+             **** ENERGY FILE WAS UPDATED (U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge.en.tmp) ****
 ----------------
 ORBITAL ENERGIES
 ----------------
@@ -2676,32 +2676,32 @@ B(  2-N ,  5-H ) :   0.8304 B(  3-C ,  4-N ) :   1.6001 B(  3-C ,  8-H ) :   0.9
 TIMINGS
 -------
 
-Total SCF time: 0 days 0 hours 0 min 27 sec 
+Total SCF time: 0 days 0 hours 0 min 28 sec 
 
-Total time                  ....      27.133 sec
-Sum of individual times     ....      26.618 sec  ( 98.1%)
+Total time                  ....      28.677 sec
+Sum of individual times     ....      28.037 sec  ( 97.8%)
 
-Fock matrix formation       ....      22.496 sec  ( 82.9%)
-  XC integration            ....       7.251 sec  ( 32.2% of F)
-    Basis function eval.    ....       1.479 sec  ( 20.4% of XC)
-    Density eval.           ....       2.007 sec  ( 27.7% of XC)
-    XC-Functional eval.     ....       1.254 sec  ( 17.3% of XC)
-    XC-Potential eval.      ....       1.283 sec  ( 17.7% of XC)
-Diagonalization             ....       0.017 sec  (  0.1%)
-Density matrix formation    ....       0.001 sec  (  0.0%)
-Population analysis         ....       1.260 sec  (  4.6%)
-Initial guess               ....       0.476 sec  (  1.8%)
+Fock matrix formation       ....      23.748 sec  ( 82.8%)
+  XC integration            ....       7.826 sec  ( 33.0% of F)
+    Basis function eval.    ....       1.441 sec  ( 18.4% of XC)
+    Density eval.           ....       2.187 sec  ( 27.9% of XC)
+    XC-Functional eval.     ....       1.380 sec  ( 17.6% of XC)
+    XC-Potential eval.      ....       1.344 sec  ( 17.2% of XC)
+Diagonalization             ....       0.020 sec  (  0.1%)
+Density matrix formation    ....       0.002 sec  (  0.0%)
+Population analysis         ....       1.372 sec  (  4.8%)
+Initial guess               ....       0.517 sec  (  1.8%)
 Orbital Transformation      ....       0.000 sec  (  0.0%)
 Orbital Orthonormalization  ....       0.000 sec  (  0.0%)
-DIIS solution               ....       0.058 sec  (  0.2%)
-SOSCF solution              ....       0.020 sec  (  0.1%)
-Grid generation             ....       2.290 sec  (  8.4%)
+DIIS solution               ....       0.087 sec  (  0.3%)
+SOSCF solution              ....       0.019 sec  (  0.1%)
+Grid generation             ....       2.272 sec  (  7.9%)
 ------------------------------------------------------------------------------
                         ORCA TD-DFT/TDA CALCULATION
 ------------------------------------------------------------------------------
 
-Input orbitals are from        ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.gbw
-CI-vector output               ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.cis
+Input orbitals are from        ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge.gbw
+CI-vector output               ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge.cis
 Tamm-Dancoff approximation     ... operative
 CIS-Integral strategy          ... AO-integrals
 Integral handling              ... AO integral Direct
@@ -2750,7 +2750,7 @@ TD-DFT XC SETUP
 ---------------
 
 DFT calculation                         ... on
-Name of the grid file                   ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.grid_cis.tmp
+Name of the grid file                   ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge.grid_cis.tmp
 Exchange functional (SCF)               ... B88
 Exchange functional (TD-DFT)            ... B88
    X-Alpha parameter    XAlpha (SCF)    ...  0.666667
@@ -2799,44 +2799,44 @@ Number of trial vectors determined             ...    120
    Memory available              ...   512 MB
    Number of vectors per batch   ...   512
    Number of batches             ...     1
-   Time for densities:     0.042
+   Time for densities:     0.044
    Using LibInt in JK Direct
-   Time for J+K (Direct):    38.142
-   Time for XC-Integration:     3.020
-   Time for Sigma-Completion:     0.222
+   Time for J+K (Direct):    42.031
+   Time for XC-Integration:     3.241
+   Time for Sigma-Completion:     0.286
    Size of expansion space: 60
    Lowest Energy          :    14.259839751622
    Maximum Energy change  :    14.679604672582 (vector 19)
    Maximum residual norm  :     0.000321629854
 
                        ****Iteration    1****
-   Time for densities:     0.014
+   Time for densities:     0.017
    Using LibInt in JK Direct
-   Time for J+K (Direct):     8.408
-   Time for XC-Integration:     1.027
-   Time for Sigma-Completion:     0.075
+   Time for J+K (Direct):     9.437
+   Time for XC-Integration:     1.085
+   Time for Sigma-Completion:     0.071
    Size of expansion space: 80
    Lowest Energy          :    14.259657068560
    Maximum Energy change  :     0.000212786949 (vector 18)
    Maximum residual norm  :     0.000000254781
 
                        ****Iteration    2****
-   Time for densities:     0.013
+   Time for densities:     0.014
    Using LibInt in JK Direct
-   Time for J+K (Direct):     8.320
-   Time for XC-Integration:     1.026
-   Time for Sigma-Completion:     0.061
+   Time for J+K (Direct):     9.868
+   Time for XC-Integration:     1.269
+   Time for Sigma-Completion:     0.092
    Size of expansion space: 100
    Lowest Energy          :    14.259656964491
    Maximum Energy change  :     0.000000129360 (vector 2)
 
          *** CONVERGENCE OF ENERGIES REACHED ***
 
-Storing the converged CI vectors               ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.cis1
+Storing the converged CI vectors               ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge.cis1
 
                  *** DAVIDSON DONE ***
 
-Total time for solving the CIS problem:    73.246sec
+Total time for solving the CIS problem:    82.995sec
 
 ------------------------------------
 TD-DFT/TDA EXCITED STATES (SINGLETS)
@@ -3010,7 +3010,7 @@ State   Energy Wavelength       R         MX        MY        MZ
   19 3210140.7      3.1      0.00007   0.01024   0.00203  -0.15622
   20 3221783.1      3.1      0.00010  -0.03121  -0.00542   0.47361
 
-Total run time:       73.987 sec
+Total run time:       83.823 sec
 
            *** ORCA-CIS/TD-DFT FINISHED WITHOUT ERROR ***
 
@@ -3046,8 +3046,8 @@ FINAL SINGLE POINT ENERGY      -211.816975424012
 Dipole Moment Calculation                       ... on
 Quadrupole Moment Calculation                   ... off
 Polarizability Calculation                      ... off
-GBWName                                         ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.gbw
-Electron density file                           ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-06_16-22-34\TDDFT_N-edge.scfp.tmp
+GBWName                                         ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge.gbw
+Electron density file                           ... U:/XAS_analysis/TE1\\TE1_geom_2018-08-09_14-53-05\TDDFT_N-edge.scfp.tmp
 The origin for moment calculation is the CENTER OF MASS  = (-21.238253, 13.987913 -0.152673)
 
 -------------
@@ -3065,9 +3065,9 @@ Magnitude (Debye)      :      3.70989
 
 Timings for individual modules:
 
-Sum of individual times         ...      101.614 sec (=   1.694 min)
-GTO integral calculation        ...        0.365 sec (=   0.006 min)   0.4 %
-SCF iterations                  ...       27.196 sec (=   0.453 min)  26.8 %
-CIS module                      ...       74.053 sec (=   1.234 min)  72.9 %
+Sum of individual times         ...      113.098 sec (=   1.885 min)
+GTO integral calculation        ...        0.441 sec (=   0.007 min)   0.4 %
+SCF iterations                  ...       28.737 sec (=   0.479 min)  25.4 %
+CIS module                      ...       83.920 sec (=   1.399 min)  74.2 %
                              ****ORCA TERMINATED NORMALLY****
-TOTAL RUN TIME: 0 days 0 hours 1 minutes 42 seconds 282 msec
+TOTAL RUN TIME: 0 days 0 hours 1 minutes 53 seconds 763 msec

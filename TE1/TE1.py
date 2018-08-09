@@ -133,7 +133,7 @@ if args.orca_executable is not None:
 
 
 # Here are all the files we need to create (except the log file which we are already using)
-geom_file=path_in+r"\geom.xyz"
+geom_file=args.in_geom_file.name
 opt_input_file=path_out+r"\opt.inp"
 new_opt_input_file=path_out+r"\new_opt.inp"
 opt_output_file=path_out+r"\opt.out"
