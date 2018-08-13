@@ -30,6 +30,24 @@ parser.add_argument('in_experiment_file',
     help="Experimental spectra datafile to be read in.",
     default=sys.stdin, metavar="FILE")
 
+parser.add_argument("column_energy",  
+                    type=int, 
+                    help="The column in spectra file that holds the energy, 0 is the lowest value.")
+
+parser.add_argument("column_intensity",  
+                    type=int, 
+                    help="The column in spectra file that holds the intensity, 0 is the lowest value.")
+
+parser.add_argument("n_columns",  
+                    type=int, 
+                    help="The number of columns in spectra file.")
+
+parser.add_argument("-offset", 
+                    dest="offset",
+                    type=int,
+                    required=False,
+                    help="The number of lines in the input spectra file that are to be skipped before the data is read in.")
+
 parser.add_argument('in_theoretical_file',
     type=argparse.FileType('r'),
     help="Theoretically calulated spectra datafile to be read in.",
@@ -40,6 +58,7 @@ parser.add_argument('in_fitted_peaks_file',
     help="Peaks fitted to the experimental spectra datafile to be read in.",
     default=sys.stdin, metavar="FILE")
 
+
 '''parser.add_argument('in_edge_data_file',
     type=argparse.FileType('r'),
     help="Edge data from experimental spectra datafile to be read in.",
@@ -48,6 +67,7 @@ parser.add_argument('in_fitted_peaks_file',
 
 args = parser.parse_args()
 
+skip = int(args.offset)
 
 file_exp_read=args.in_experiment_file.name
 
@@ -123,23 +143,22 @@ print("theory_data_file: ",theory_data_file)
 
 
 ###move theory data file to results directory
-for files in os.listdir(path_in):
-    if files.endswith(".out"):
-        shutil.copy(files,path_out)
+path, theoretical_file_name=os.path.split(args.in_theoretical_file.name)
+shutil.copy(theoretical_file_name,path_out)
 
 ###Extract Experimental data
 #put experimental data into array
 exp_data=np.array([])
 with open (exp_data_file) as exp_data_file:
-    lines_after_heading=exp_data_file.readlines()[38:]# 38 is default but it can change 
+    lines_after_heading=exp_data_file.readlines()[skip:] 
     for line in lines_after_heading:
         line=line.split()
         exp_data=np.append(exp_data,line)
-    exp_data=exp_data.reshape(int(len(exp_data)/6),6)#6 is the number of columns and it can change 
+    exp_data=exp_data.reshape(int(len(exp_data)/args.n_columns),args.n_columns)
 exp_data_file.close()
 #xdata and ydata
-exp_ycol=2
-exp_xdata=exp_data[:,0].astype(float) #xdata is always the first column
+exp_ycol=args.column_intensity
+exp_xdata=exp_data[:,args.column_energy].astype(float) #xdata is always the first column
 exp_ydata=exp_data[:,exp_ycol].astype(float) # ask user for the column where the ydata is 
 norm_exp_ydata=(exp_ydata-min(exp_ydata))/(max(exp_ydata)-min(exp_ydata))
 
@@ -156,7 +175,8 @@ with open(edge_data_table,"r") as edge_data_table:
 ##determine fitting range to be used when plotting 
 #determine e0 requried for fitting range
 dif1=np.diff(exp_ydata)/np.diff(exp_xdata)
-e0_pos=np.where(dif1==max(dif1))[0][0]
+#e0_pos=np.where(dif1==max(dif1))[0][0]
+e0_pos=np.where(dif1==np.nanmax(dif1[dif1!=np.inf]))[0][0]
 e0=exp_xdata[e0_pos]
 e_edge=abs(edge_data[:,4].astype(float)-e0)
 e1_pos=np.where(e_edge==min(e_edge))[0][0]
@@ -369,7 +389,8 @@ plt.plot(theory_xdata, theory_ydata, 'g--',label='Theoretical Spectrum')
 plt.legend(loc='upper right')
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
-fig_raw.savefig(path_out+r'\\ComparisonOfRawExperimentalAndTheoreticalSpectra.png')
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+fig_raw.savefig(path_out+r'\\ComparisonOfRawExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
 fig_norm=plt.figure()
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -377,7 +398,8 @@ plt.plot(theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectrum')
 plt.legend(loc='upper right')
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
-fig_norm.savefig(path_out+r'\\ComparisonOfNormalizedExperimentalAndTheoreticalSpectra.png')
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+fig_norm.savefig(path_out+r'\\ComparisonOfNormalizedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
 fig_trans=plt.figure()
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -388,8 +410,9 @@ ax.set_xlim([fit_exp_xdata[0],fit_exp_xdata[-1]+1])
 ax.set_ylim([0,max(fit_exp_ydata)+0.2])
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 fig_trans.show()
-fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectra.png')
+fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
 fig_trans=plt.figure()
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -400,6 +423,7 @@ ax.set_xlim([fit_exp_xdata[0],fit_exp_xdata[-1]+1])
 ax.set_ylim([0,max(fit_exp_ydata)+0.2])
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 for element in peak_assignment_d:
     plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
     peak_assign_string=""
@@ -409,7 +433,7 @@ for element in peak_assignment_d:
              xy=(element+transform, float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])),
              arrowprops=dict(arrowstyle="->", connectionstyle="angle3",lw=1))
 fig_trans.show()
-fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectraWithPeakAssignment.png')
+fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectraWithPeakAssignment.png',bbox_inches='tight')
 
 stop = timeit.default_timer()
 running_time=(stop-start)/60
@@ -449,7 +473,7 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
                 new_line = new_line.replace("*1*",s1 )
                 new_line = new_line.replace("*2*",element[2] )
                 new_line = new_line.replace("*3*",element[3] )
-                new_line = new_line.replace("*4*",element[4] )
+                new_line = new_line.replace("*4*","%s (%s)"%(element[4],format("%0.3f"%element[5])) )
                 print("element ",element)
                 print("new_line "+new_line)
                 html_out.write(new_line)

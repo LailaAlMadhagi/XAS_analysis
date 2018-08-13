@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Tue May 22 17:16:41 2018
 @author: Laila Al-Madhagi 
@@ -189,7 +188,6 @@ pre_pos_i_ls=abs(xdata-e0+fit_limits[0])
 pre_pos_i=np.where(pre_pos_i_ls==min(pre_pos_i_ls))[0][0]
 pre_pos_f_ls=abs(xdata-e0+fit_limits[1])
 pre_pos_f=np.where(pre_pos_f_ls==min(pre_pos_f_ls))[0][0]
-
 post_pos_i_ls=abs(xdata-e0+fit_limits[2])
 post_pos_i=np.where(post_pos_i_ls==min(post_pos_i_ls))[0][0]
 post_pos_f=np.size(xdata)-fit_limits[3]-1
@@ -204,19 +202,13 @@ fit_pos_f=np.where(fit_pos_f_ls==min(fit_pos_f_ls))[0][0]
 fit_xdata=xdata[fit_pos_i:fit_pos_f].astype(float)
 fit_ydata=ydata[fit_pos_i:fit_pos_f].astype(float)
 
-
-
-# determination of number of gaussian and their initial position guesses
-smooth_ydata=scipy.signal.savgol_filter(fit_ydata,11,2)
-dif2=np.diff(smooth_ydata)/np.diff(fit_xdata)
+# determination of number of gaussian and their initial position guesses + fitting
+dif2=np.diff(fit_ydata)/np.diff(fit_xdata)
 e0_pos2=np.where(dif2==max(dif2))[0][0]
 posit=np.array((np.where((dif2[1:]<0)*(dif2[0:-1]>0))),dtype='int')+1
 posit=np.unique(np.sort(np.append(posit,np.array((np.where((dif2[1:]>0)*(dif2[0:-1]<0))),dtype='int'))))
 posit=posit[posit>e0_pos2]
 funccenter=fit_xdata[posit]
-
-
-# remove extraneous peaks
 b=[]
 b_new=[]
 for i in range(0,len(funccenter)-1):
@@ -227,27 +219,21 @@ for j in b:
     if j not in b_new:
         b_new.append(j)
 funccenter=funccenter[b_new]
-
-
 ## First fitting attempt 
 gaussnum=len(funccenter)
 funcnum=gaussnum
-
 # initial guess x0F, lower bound lb, upper bound up
 x0f=np.zeros((funcnum,4))
 lb=np.zeros((funcnum,4))
 ub=np.zeros((funcnum,4))
-
 # initial guess for error function
 step1=StepModel(form='arctan', prefix='step1_')
-
 # pars.update(step2.guess(y,x=x))
 pars=step1.make_params()
 pars['step1_center'].set(e0+6, min=e0+3, max=e0+8)
 pars['step1_amplitude'].set(0.5, min=0.1, max=1)
 pars['step1_sigma'].set(0.5, min=0.3, max=0.8)
 mod=step1
-
 # initial guess for gaussian
 x0f [:funcnum,2]=funccenter[:]
 for n0 in range (0,funcnum):
@@ -260,13 +246,11 @@ for n0 in range (0,funcnum):
     pars['g%s_sigma'%int(n0+1)].set(x0f[n0][1], min=lb[n0][1],max=ub[n0][1])
     pars['g%s_center'%int(n0+1)].set(x0f[n0][2], min=lb[n0][2],max=ub[n0][2])
     mod+=gauss  
-        
 # fitting the functions
 init = mod.eval(pars, x=fit_xdata)
 out = mod.fit(fit_ydata, pars, x=fit_xdata)
 Y_fitted=out.best_fit
 R_sqr=1 - out.residual.var() / np.var(fit_ydata)
-
 # reading fitted peaks parameters from first fitting attempt
 v=[]
 for param in out.params.values():
@@ -293,7 +277,7 @@ func_diff=[]
 for n in range(1,gaussnum):
     func_diff.append(abs(float(d['g%s'%str(n+1)][2])-float(d['g%s'%str(n)][2])))
     if abs(float(d['g%s'%str(n+1)][2])-float(d['g%s'%str(n)][2])) >0.5:
-        funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n+1)][2]))
+        #funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n+1)][2]))
         funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n)][2]))
         funccenter_new=np.unique(np.sort(funccenter_new))
         
@@ -330,7 +314,203 @@ if any(t<0.5 for t in func_diff):
     out = mod.fit(fit_ydata, pars, x=fit_xdata)
     Y_fitted=out.best_fit
     R_sqr=1 - out.residual.var() / np.var(fit_ydata)
+
+
+# determination of number of gaussian and their initial position guesses + fitting using smooth Y-data
+smooth_ydata=scipy.signal.savgol_filter(fit_ydata,11,2)
+dif2_smooth=np.diff(smooth_ydata)/np.diff(fit_xdata)
+e0_pos2_smooth=np.where(dif2_smooth==max(dif2_smooth))[0][0]
+posit_smooth=np.array((np.where((dif2_smooth[1:]<0)*(dif2_smooth[0:-1]>0))),dtype='int')+1
+posit_smooth=np.unique(np.sort(np.append(posit_smooth,np.array((np.where((dif2_smooth[1:]>0)*(dif2_smooth[0:-1]<0))),dtype='int'))))
+posit_smooth=posit_smooth[posit_smooth>e0_pos2_smooth]
+funccenter_smooth=fit_xdata[posit_smooth]
+# remove extraneous peaks
+b_smooth=[]
+b_new_smooth=[]
+for i in range(0,len(funccenter_smooth)-1):
+    if funccenter_smooth[i+1]-funccenter_smooth[i]>0.5:
+        b_smooth.append(i)
+        b_smooth.append(i+1)
+for j in b_smooth:
+    if j not in b_new_smooth:
+        b_new_smooth.append(j)
+funccenter_smooth=funccenter_smooth[b_new_smooth]
+## First fitting attempt 
+gaussnum_smooth=len(funccenter_smooth)
+funcnum_smooth=gaussnum_smooth
+# initial guess x0F, lower bound lb, upper bound up
+x0f_smooth=np.zeros((funcnum_smooth,4))
+lb_smooth=np.zeros((funcnum_smooth,4))
+ub_smooth=np.zeros((funcnum_smooth,4))
+# initial guess for error function
+step1_smooth=StepModel(form='arctan', prefix='step1_')
+# pars.update(step2.guess(y,x=x))
+pars_smooth=step1_smooth.make_params()
+pars_smooth['step1_center'].set(e0+6, min=e0+3, max=e0+8)
+pars_smooth['step1_amplitude'].set(0.5, min=0.1, max=1)
+pars_smooth['step1_sigma'].set(0.5, min=0.3, max=0.8)
+mod_smooth=step1_smooth
+
+# initial guess for gaussian
+x0f_smooth [:funcnum_smooth,2]=funccenter_smooth[:]
+for n0 in range (0,funcnum_smooth):
+    x0f_smooth[n0,0:2]=[0.5,0.5]
+    lb_smooth[n0,:]=[0.2,0.2,x0f_smooth[n0,2]-1,0]
+    ub_smooth[n0,:]=[3,0.7,x0f_smooth[n0,2]+1,0.1]
+    gauss_smooth=GaussianModel(prefix='g%s_'%int(n0+1))
+    pars_smooth.update(gauss_smooth.make_params())
+    pars_smooth['g%s_amplitude'%int(n0+1)].set(x0f_smooth[n0][0], min=lb_smooth[n0][0],max=ub_smooth[n0][0])
+    pars_smooth['g%s_sigma'%int(n0+1)].set(x0f_smooth[n0][1], min=lb_smooth[n0][1],max=ub_smooth[n0][1])
+    pars_smooth['g%s_center'%int(n0+1)].set(x0f_smooth[n0][2], min=lb_smooth[n0][2],max=ub_smooth[n0][2])
+    mod_smooth+=gauss_smooth  
+        
+# fitting the functions
+init_smooth = mod_smooth.eval(pars_smooth, x=fit_xdata)
+out_smooth = mod_smooth.fit(fit_ydata, pars_smooth, x=fit_xdata)
+Y_fitted_smooth=out_smooth.best_fit
+R_sqr_smooth=1 - out_smooth.residual.var() / np.var(fit_ydata)
+# reading fitted peaks parameters from first fitting attempt
+v_smooth=[]
+for param_smooth in out_smooth.params.values():
+    v_smooth.append("%s:  %f" % (param_smooth.name, param_smooth.value))
+    #param_values.append("%s:  %f +/- %f (init = %f)" % (param.name, param.value, param.stderr, param.init_value))
+param_keywords=["amplitude","sigma","center","fwhm","height"]
+param_values_smooth=[]
+for m in param_keywords:
+    for item in v_smooth:
+        if m in item:
+            param_values_smooth.append(item.split(":"))
+function_keywords=["step"]
+d_smooth=OrderedDict([("step",[])])
+for i in range(1,funcnum_smooth+1):
+    function_keywords.append("g%s"%i)
+    d_smooth["g%s"%i]=[]
+for n in function_keywords:
+    for c in range (0,len(param_values_smooth)):
+        if n in param_values_smooth[c][0]:
+            d_smooth[n].append(param_values_smooth[c][1])
+        c+=1
+funccenter_new_smooth=np.array([])
+func_diff_smooth=[]
+for n in range(1,gaussnum_smooth):
+    func_diff_smooth.append(abs(float(d_smooth['g%s'%str(n+1)][2])-float(d_smooth['g%s'%str(n)][2])))
+    if abs(float(d_smooth['g%s'%str(n+1)][2])-float(d_smooth['g%s'%str(n)][2])) >0.5:
+        #funccenter_new_smooth=np.append(funccenter_new_smooth,float(d['g%s'%str(n+1)][2]))
+        funccenter_new_smooth=np.append(funccenter_new_smooth,float(d_smooth['g%s'%str(n)][2]))
+        funccenter_new_smooth=np.unique(np.sort(funccenter_new_smooth))
+        
+if any(t<0.5 for t in func_diff_smooth):
+    # second fitting attempt, after peaks with same energy position removed
+    gaussnum_smooth=len(funccenter_new_smooth)
+    funcnum_smooth=gaussnum_smooth
+    # initial guess x0F, lower bound lb, upper bound up
+    x0f=np.zeros((funcnum_smooth,4))
+    lb=np.zeros((funcnum_smooth,4))
+    ub=np.zeros((funcnum_smooth,4))
+    #initial guess for error function
+    step1_smooth=StepModel(form='arctan', prefix='step1_')
+    # pars.update(step2.guess(y,x=x))
+    pars_smooth=step1_smooth.make_params()
+    pars_smooth['step1_center'].set(e0+4, min=e0+3, max=e0+6)
+    pars_smooth['step1_amplitude'].set(0.5, min=0.1, max=1)
+    pars_smooth['step1_sigma'].set(0.5, min=0.3, max=0.8)
+    mod_smooth=step1_smooth
+    # initial guess for gaussian
+    x0f_smooth [:funcnum_smooth,2]=funccenter_new_smooth[:]
+    for n0 in range (0,funcnum_smooth):
+        x0f_smooth[n0,0:2]=[0.5,0.5]
+        lb_smooth[n0,:]=[0.2,0.2,x0f_smooth[n0,2]-1,0]
+        ub_smooth[n0,:]=[3,0.7,x0f_smooth[n0,2]+1,0.1]
+        gauss_smooth=GaussianModel(prefix='g%s_'%int(n0+1))
+        pars_smooth.update(gauss_smooth.make_params())
+        pars_smooth['g%s_amplitude'%int(n0+1)].set(x0f_smooth[n0][0], min=lb_smooth[n0][0],max=ub_smooth[n0][0])
+        pars_smooth['g%s_sigma'%int(n0+1)].set(x0f_smooth[n0][1], min=lb_smooth[n0][1],max=ub_smooth[n0][1])
+        pars_smooth['g%s_center'%int(n0+1)].set(x0f_smooth[n0][2], min=lb_smooth[n0][2],max=ub_smooth[n0][2])
+        mod_smooth+=gauss_smooth          
+    # fitting the functions
+    init_smooth = mod_smooth.eval(pars_smooth, x=fit_xdata)
+    out_smooth = mod_smooth.fit(fit_ydata, pars_smooth, x=fit_xdata)
+    Y_fitted_smooth=out_smooth.best_fit
+    R_sqr_smooth=1 - out_smooth.residual.var() / np.var(fit_ydata)
+
+if R_sqr_smooth>R_sqr:
+    # reading fitted peaks parameters from second fitting attempt
+    v_smooth=[]
+    for param_smooth in out_smooth.params.values():
+        v_smooth.append("%s:  %f" % (param_smooth.name, param_smooth.value))
+        #param_values.append("%s:  %f +/- %f (init = %f)" % (param.name, param.value, param.stderr, param.init_value))
+    param_keywords=["amplitude","sigma","center","fwhm","height"]
+    param_values_smooth=[]
+    for m in param_keywords:
+        for item in v_smooth:
+            if m in item:
+                param_values_smooth.append(item.split(":"))
+    function_keywords=["step"]
+    d_smooth=OrderedDict([("step",[])])
+    for i in range(1,funcnum_smooth+1):
+        function_keywords.append("g%s"%i)
+        d_smooth["g%s"%i]=[]
+    for n in function_keywords:
+        for c in range (0,len(param_values_smooth)):
+            if n in param_values_smooth[c][0]:
+                d_smooth[n].append(param_values_smooth[c][1])
+            c+=1
+    #plot results
+    fig=plt.figure() 
+    plot_components = True
     
+    plt.plot(xdata, ydata, 'b',label='Experimental Data')
+    #plt.plot(fit_xdata, init, 'k--') #plot with initial guess
+    plt.plot(fit_xdata, out_smooth.best_fit, 'r-', label='Fitted data')
+    
+    if plot_components:
+        comps = out_smooth.eval_components(x=fit_xdata)
+        plt.plot(fit_xdata,comps['step1_'], 'k--',label='Step Function')
+        for x in range (1,gaussnum_smooth+1):
+            plt.plot(fit_xdata, comps['g%s_'%x], 'k--',label='Gaussian%s Function'%x)
+    plt.legend(loc='upper left')
+    ax = plt.gca()
+    ax.set_xlim([fit_xdata[0],fit_xdata[-1]+1])
+    ax.set_ylim([0,max(fit_ydata)+0.5])
+    plt.xlabel('Energy/ eV')
+    plt.ylabel('Intensity')
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    #height = 4.0
+    #width = 6.0
+    #fig.set_figwidth(width)
+    #fig.set_figheight(height)
+    fig.show()
+    fig_filename = path_out+"\\fitted_peaks.png"
+    #print(fig_filename)
+    #fig.set_figwidth(2*width)
+    #fig.set_figheight(2*height)
+    fig.savefig(fig_filename,bbox_inches='tight')
+    
+    
+    print("Goodness of fit (R-sqaured) is: %s" %R_sqr_smooth)
+    
+    log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr_smooth)
+    
+    log_file.flush()
+    
+    # write fitted peaks to output file 
+    fitted_peaks=pd.concat([pd.DataFrame({'energy': fit_xdata}), pd.DataFrame(comps)], axis=1)
+    fitted_peaks.to_csv(path_out+r'\%s_fitted_peaks.txt'%file_exp, index=False, sep='\t', header=True)
+    
+    # Write fitted params to output file 
+    fitted_peaks_param=pd.concat([pd.DataFrame({'parameter': param_keywords}),pd.DataFrame(dict([(k,pd.Series(v)) for k,v in d_smooth.items()]))], 
+axis=1)
+    fitted_peaks_param.to_csv(path_out+r'\%s_fitted_peaks_param.txt'%file_exp,index=False, sep='\t', header=True)
+    
+    
+    stop = timeit.default_timer()
+    running_time=(stop-start)/60
+    print ("\nRunning time is: "+ str(round(running_time,3)) + "minutes") 
+    
+    log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
+    
+    log_file.close()
+else:
     # reading fitted peaks parameters from second fitting attempt
     v=[]
     for param in out.params.values():
@@ -352,57 +532,57 @@ if any(t<0.5 for t in func_diff):
             if n in param_values[c][0]:
                 d[n].append(param_values[c][1])
             c+=1
-
-#plot results
-fig=plt.figure() 
-plot_components = True
-
-plt.plot(xdata, ydata, 'b',label='Experimental Data')
-#plt.plot(fit_xdata, init, 'k--') #plot with initial guess
-plt.plot(fit_xdata, out.best_fit, 'r-', label='Fitted data')
-
-if plot_components:
-    comps = out.eval_components(x=fit_xdata)
-    plt.plot(fit_xdata,comps['step1_'], 'k--',label='Step Function')
-    for x in range (1,gaussnum+1):
-        plt.plot(fit_xdata, comps['g%s_'%x], 'k--',label='Gaussian%s Function'%x)
-plt.legend(loc='upper left')
-ax = plt.gca()
-ax.set_xlim([fit_xdata[0],fit_xdata[-1]+1])
-ax.set_ylim([0,max(fit_ydata)+0.5])
-plt.xlabel('Energy/ eV')
-plt.ylabel('Intensity')
-#height = 4.0
-#width = 6.0
-#fig.set_figwidth(width)
-#fig.set_figheight(height)
-fig.show()
-fig_filename = path_out+"\\fitted_peaks.png"
-#print(fig_filename)
-#fig.set_figwidth(2*width)
-#fig.set_figheight(2*height)
-fig.savefig(fig_filename)
-
-
-print("Goodness of fit (R-sqaured) is: %s" %R_sqr)
-
-log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr)
-
-log_file.flush()
-
-# write fitted peaks to output file 
-fitted_peaks=pd.concat([pd.DataFrame({'energy': fit_xdata}), pd.DataFrame(comps)], axis=1)
-fitted_peaks.to_csv(path_out+r'\%s_fitted_peaks.txt'%file_exp, index=False, sep='\t', header=True)
-
-# Write fitted params to output file 
-fitted_peaks_param=pd.concat([pd.DataFrame({'parameter': param_keywords}),pd.DataFrame(dict([(k,pd.Series(v)) for k,v in d.items()]))], axis=1)
-fitted_peaks_param.to_csv(path_out+r'\%s_fitted_peaks_param.txt'%file_exp,index=False, sep='\t', header=True)
-
-
-stop = timeit.default_timer()
-running_time=(stop-start)/60
-print ("\nRunning time is: "+ str(round(running_time,3)) + "minutes") 
-
-log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
-
-log_file.close()
+    #plot results
+    fig=plt.figure() 
+    plot_components = True
+    
+    plt.plot(xdata, ydata, 'b',label='Experimental Data')
+    #plt.plot(fit_xdata, init, 'k--') #plot with initial guess
+    plt.plot(fit_xdata, out.best_fit, 'r-', label='Fitted data')
+    
+    if plot_components:
+        comps = out.eval_components(x=fit_xdata)
+        plt.plot(fit_xdata,comps['step1_'], 'k--',label='Step Function')
+        for x in range (1,gaussnum+1):
+            plt.plot(fit_xdata, comps['g%s_'%x], 'k--',label='Gaussian%s Function'%x)
+    plt.legend(loc='upper left')
+    ax = plt.gca()
+    ax.set_xlim([fit_xdata[0],fit_xdata[-1]+1])
+    ax.set_ylim([0,max(fit_ydata)+0.5])
+    plt.xlabel('Energy/ eV')
+    plt.ylabel('Intensity')
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    #height = 4.0
+    #width = 6.0
+    #fig.set_figwidth(width)
+    #fig.set_figheight(height)
+    fig.show()
+    fig_filename = path_out+"\\fitted_peaks.png"
+    #print(fig_filename)
+    #fig.set_figwidth(2*width)
+    #fig.set_figheight(2*height)
+    fig.savefig(fig_filename,bbox_inches='tight')
+    
+    
+    print("Goodness of fit (R-sqaured) is: %s" %R_sqr)
+    
+    log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr)
+    
+    log_file.flush()
+    
+    # write fitted peaks to output file 
+    fitted_peaks=pd.concat([pd.DataFrame({'energy': fit_xdata}), pd.DataFrame(comps)], axis=1)
+    fitted_peaks.to_csv(path_out+r'\%s_fitted_peaks.txt'%file_exp, index=False, sep='\t', header=True)
+    
+    # Write fitted params to output file 
+    fitted_peaks_param=pd.concat([pd.DataFrame({'parameter': param_keywords}),pd.DataFrame(dict([(k,pd.Series(v)) for k,v in d.items()]))], axis=1)
+    fitted_peaks_param.to_csv(path_out+r'\%s_fitted_peaks_param.txt'%file_exp,index=False, sep='\t', header=True)
+    
+    
+    stop = timeit.default_timer()
+    running_time=(stop-start)/60
+    print ("\nRunning time is: "+ str(round(running_time,3)) + "minutes") 
+    
+    log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
+    
+    log_file.close()

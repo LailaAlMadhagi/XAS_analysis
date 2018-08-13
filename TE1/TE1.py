@@ -188,6 +188,11 @@ if args.file_orca_params is None:
     log_file.write("\n\nThe default orca optimisation parameters are used from the -op flag.")
 log_file.flush()
 
+#list of elements from geom file
+elements_geom_in=[]
+with open (geom_file,'r') as geom_in:
+    for line in geom_in:
+        elements_geom_in.append(line[0])
 
 opt_keywords_infile_array = ["!"]
 if args.file_orca_params is not None:    
@@ -228,7 +233,8 @@ p=sp.Popen(['ORCA',opt_input_file], stdout=opt_out, stderr=opt_err)
 p_status=p.wait()
 opt_out.close()
 opt_err.close()
-
+log_file.close()
+log_file=open(log_file_name, "w")
 # check Opt.out file
 loop=1
 finding=-1
@@ -311,7 +317,8 @@ p=sp.Popen(['ORCA',freq_input_file], stdout=freq_out, stderr=freq_err)
 p_status=p.wait()
 freq_out.close()
 freq_err.close()
-
+log_file.close()
+log_file=open(log_file_name, "w")
 #check Freq calc
 finding=0
 while (finding==0):
@@ -373,7 +380,7 @@ for j in edge_data_array:
     edge=np.array(edge_data_array[:,2])
     energy_theoretical=np.array((edge_data_array[:,4]).astype(np.float))
 
-energy_theoretical_min=energy_theoretical-30
+energy_theoretical_min=energy_theoretical-60
 energy_theoretical_max=energy_theoretical
 
 for k in range(0,len(edge)):
@@ -383,7 +390,10 @@ for k in range(0,len(edge)):
                 sub_array=[]
                 sub_array.append(element[k])
                 sub_array.append(int(orbital_number[l]))
-                orbital_window_array.append(sub_array)
+                if sub_array[0] in elements_geom_in:
+                    orbital_window_array.append(sub_array)
+                else:
+                    pass
 d=defaultdict(list)
 for lis in orbital_window_array:
     d[lis[0]].append(lis[1],)
@@ -421,6 +431,8 @@ for m in range(0,len(orbital_window_array)):
     tddft_out.close()
     tddft_err.close()
 
+log_file.close()
+log_file=open(log_file_name, "w")
 log_file.flush()
                      
 stop = timeit.default_timer()
