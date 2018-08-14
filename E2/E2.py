@@ -174,7 +174,7 @@ ydata=data[:,ycol].astype(float) # ask user for the column where the intensity d
 
 # determine e0 
 dif1=np.diff(ydata)/np.diff(xdata)
-e0_pos=np.where(dif1==max(dif1))[0][0]
+e0_pos=np.where(dif1==np.nanmax(dif1[dif1!=np.inf]))[0][0]
 e0=xdata[e0_pos]
 e_edge=abs(edge_data[:,4].astype(float)-e0)
 e1_pos=np.where(e_edge==min(e_edge))[0][0]
@@ -269,7 +269,7 @@ for i in range(1,funcnum+1):
     d["g%s"%i]=[]
 for n in function_keywords:
     for c in range (0,len(param_values)):
-        if n in param_values[c][0]:
+        if n == param_values[c][0].split('_')[0]:
             d[n].append(param_values[c][1])
         c+=1
 funccenter_new=np.array([])
@@ -280,7 +280,6 @@ for n in range(1,gaussnum):
         #funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n+1)][2]))
         funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n)][2]))
         funccenter_new=np.unique(np.sort(funccenter_new))
-        
 if any(t<0.5 for t in func_diff):
     # second fitting attempt, after peaks with same energy position removed
     gaussnum=len(funccenter_new)
@@ -387,7 +386,7 @@ for i in range(1,funcnum_smooth+1):
     d_smooth["g%s"%i]=[]
 for n in function_keywords:
     for c in range (0,len(param_values_smooth)):
-        if n in param_values_smooth[c][0]:
+        if n == param_values_smooth[c][0].split('_')[0]:
             d_smooth[n].append(param_values_smooth[c][1])
         c+=1
 funccenter_new_smooth=np.array([])
@@ -404,9 +403,9 @@ if any(t<0.5 for t in func_diff_smooth):
     gaussnum_smooth=len(funccenter_new_smooth)
     funcnum_smooth=gaussnum_smooth
     # initial guess x0F, lower bound lb, upper bound up
-    x0f=np.zeros((funcnum_smooth,4))
-    lb=np.zeros((funcnum_smooth,4))
-    ub=np.zeros((funcnum_smooth,4))
+    x0f_smooth=np.zeros((funcnum_smooth,4))
+    lb_smooth=np.zeros((funcnum_smooth,4))
+    ub_smooth=np.zeros((funcnum_smooth,4))
     #initial guess for error function
     step1_smooth=StepModel(form='arctan', prefix='step1_')
     # pars.update(step2.guess(y,x=x))

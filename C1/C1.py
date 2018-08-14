@@ -339,10 +339,7 @@ for j in b:
     if j not in b_new:
         b_new.append(j)
 funccenter=funccenter[b_new]
-#translate the energy scale for the theoretical data based on experimental data
-trans_theory_xdata=theory_xdata+(float(first_exp_peak_center)-min(funccenter))
-transform=float(first_exp_peak_center)-min(funccenter)
-html_transform="%.3f" % transform
+
 
 ###Peak assignement
 peak_assignment_ls=[]
@@ -357,10 +354,13 @@ for i in funccenter:
         if j[1]-0.5 <= i <= j[1]+0.5:
             for k in Loewdin_population_per:
                 if str(k[0]) in j[3]:
-                    if k[1]+k[2] in j[5]:
-                        if k[3]=='pz':
-                            if k[4]>=5:
-                                peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
+                    if len(j)==6:
+                        if k[1]+k[2] in j[5]:
+                            if k[3]=='pz':
+                                if k[4]>=5:
+                                    peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
+                    else:
+                        pass
 
 peak_assignment_ls_f=[]
 if len(peak_assignment_ls)>3:
@@ -380,7 +380,13 @@ for element in peak_assignment_ls_f:
         peak_assignment_d[element[0]].append(element[1:])
 
 ###
-
+#translate the energy scale for the theoretical data based on experimental data
+if peak_assignment_ls_f!=[]:
+    transform=float(first_exp_peak_center)-peak_assignment_ls_f[0][0]
+else:
+    transform=float(first_exp_peak_center)-min(funccenter)
+trans_theory_xdata=theory_xdata+transform
+html_transform="%.3f" % transform
 
 ###plotting
 fig_raw=plt.figure()
@@ -428,7 +434,7 @@ for element in peak_assignment_d:
     plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
     peak_assign_string=""
     for item in peak_assignment_d[element]:
-        peak_assign_string+='%s > %s (%s)\n' %(item[2],item[3],round(item[4],3))
+        peak_assign_string+='%s (%s > %s) (%s)\n' %(item[2],item[1],item[3],round(item[4],3))
     plt.annotate(peak_assign_string, 
              xy=(element+transform, float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])),
              arrowprops=dict(arrowstyle="->", connectionstyle="angle3",lw=1))
