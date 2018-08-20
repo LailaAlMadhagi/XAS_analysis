@@ -158,8 +158,16 @@ with open (exp_data_file) as exp_data_file:
 exp_data_file.close()
 #xdata and ydata
 exp_ycol=args.column_intensity
-exp_xdata=exp_data[:,args.column_energy].astype(float) #xdata is always the first column
-exp_ydata=exp_data[:,exp_ycol].astype(float) # ask user for the column where the ydata is 
+#exp_xdata=exp_data[:,args.column_energy].astype(float) #xdata is always the first column
+exp_xdata_row=exp_data[:,args.column_energy]
+exp_xdata=np.array([])
+for x in exp_xdata_row:
+    exp_xdata=np.append(exp_xdata,float(x.replace(",","")))
+#exp_ydata=exp_data[:,exp_ycol].astype(float) # ask user for the column where the ydata is 
+exp_ydata_row=exp_data[:,exp_ycol]
+exp_ydata=np.array([])
+for y in exp_ydata_row:
+    exp_ydata=np.append(exp_ydata,float(y.replace(",","")))
 norm_exp_ydata=(exp_ydata-min(exp_ydata))/(max(exp_ydata)-min(exp_ydata))
 
 #put edge data into array
@@ -354,7 +362,7 @@ for i in funccenter:
         if j[1]-0.5 <= i <= j[1]+0.5:
             for k in Loewdin_population_per:
                 if str(k[0]) in j[3]:
-                    if len(j)==6:
+                    if len(j)>5:
                         if k[1]+k[2] in j[5]:
                             if k[3]=='pz':
                                 if k[4]>=5:
@@ -389,28 +397,25 @@ trans_theory_xdata=theory_xdata+transform
 html_transform="%.3f" % transform
 
 ###plotting
-fig_raw=plt.figure()
+fig_raw=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, exp_ydata, 'b',label='Experimental Spectrum')
 plt.plot(theory_xdata, theory_ydata, 'g--',label='Theoretical Spectrum')
-plt.legend(loc='upper right')
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 fig_raw.savefig(path_out+r'\\ComparisonOfRawExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
-fig_norm=plt.figure()
+fig_norm=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
 plt.plot(theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectrum')
-plt.legend(loc='upper right')
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 fig_norm.savefig(path_out+r'\\ComparisonOfNormalizedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
-fig_trans=plt.figure()
+fig_trans=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
 plt.plot(trans_theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectrum')
-plt.legend(loc='upper left')
 ax = plt.gca()
 ax.set_xlim([fit_exp_xdata[0],fit_exp_xdata[-1]+1])
 ax.set_ylim([0,max(fit_exp_ydata)+0.2])
@@ -420,10 +425,9 @@ plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 fig_trans.show()
 fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
-fig_trans=plt.figure()
+fig_trans=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
 plt.plot(trans_theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectrum')
-plt.legend(loc='upper left')
 ax = plt.gca()
 ax.set_xlim([fit_exp_xdata[0],fit_exp_xdata[-1]+1])
 ax.set_ylim([0,max(fit_exp_ydata)+0.2])

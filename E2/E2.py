@@ -169,9 +169,17 @@ spectra_file.close()
 
 # xdata (energy) and ydata (intensity)
 ycol=args.column_intensity
-xdata=data[:,args.column_energy].astype(float) # xdata is energy and is always the first column in Athena files in 2018
-ydata=data[:,ycol].astype(float) # ask user for the column where the intensity data, ydata as this is not always in the same place 
-
+#xdata=data[:,args.column_energy].astype(float)
+xdata_row=data[:,args.column_energy]
+xdata=np.array([])
+for x in xdata_row:
+    xdata=np.append(xdata,float(x.replace(",",""))) # xdata is energy and is always the first column in Athena files in 2018
+#ydata=data[:,ycol].astype(float) # ask user for the column where the intensity data, ydata as this is not always in the same place 
+ydata_row=data[:,ycol]
+ydata=np.array([])
+for y in ydata_row:
+    ydata=np.append(ydata,float(y.replace(",","")))
+    
 # determine e0 
 dif1=np.diff(ydata)/np.diff(xdata)
 e0_pos=np.where(dif1==np.nanmax(dif1[dif1!=np.inf]))[0][0]
@@ -455,7 +463,7 @@ if R_sqr_smooth>R_sqr:
                 d_smooth[n].append(param_values_smooth[c][1])
             c+=1
     #plot results
-    fig=plt.figure() 
+    fig=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k') 
     plot_components = True
     
     plt.plot(xdata, ydata, 'b',label='Experimental Data')
@@ -532,7 +540,7 @@ else:
                 d[n].append(param_values[c][1])
             c+=1
     #plot results
-    fig=plt.figure() 
+    fig=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k') 
     plot_components = True
     
     plt.plot(xdata, ydata, 'b',label='Experimental Data')
