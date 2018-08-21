@@ -400,17 +400,21 @@ html_transform="%.3f" % transform
 fig_raw=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, exp_ydata, 'b',label='Experimental Spectrum')
 plt.plot(theory_xdata, theory_ydata, 'g--',label='Theoretical Spectrum')
-plt.xlabel('Energy/ eV')
-plt.ylabel('Intensity')
-plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+plt.xlabel('Energy/ eV',{'fontsize':'22'})
+plt.ylabel('Intensity',{'fontsize':'22'})
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
+plt.xticks(fontsize = 18)
+plt.yticks(fontsize = 18)
 fig_raw.savefig(path_out+r'\\ComparisonOfRawExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
 fig_norm=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
 plt.plot(theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectrum')
-plt.xlabel('Energy/ eV')
-plt.ylabel('Intensity')
-plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+plt.xlabel('Energy/ eV',{'fontsize':'22'})
+plt.ylabel('Intensity',{'fontsize':'22'})
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
+plt.xticks(fontsize = 18)
+plt.yticks(fontsize = 18)
 fig_norm.savefig(path_out+r'\\ComparisonOfNormalizedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
 fig_trans=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
@@ -419,9 +423,11 @@ plt.plot(trans_theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectru
 ax = plt.gca()
 ax.set_xlim([fit_exp_xdata[0],fit_exp_xdata[-1]+1])
 ax.set_ylim([0,max(fit_exp_ydata)+0.2])
-plt.xlabel('Energy/ eV')
-plt.ylabel('Intensity')
-plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+plt.xlabel('Energy/ eV',{'fontsize':'22'})
+plt.ylabel('Intensity',{'fontsize':'22'})
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
+plt.xticks(fontsize = 18)
+plt.yticks(fontsize = 18)
 fig_trans.show()
 fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
@@ -431,17 +437,23 @@ plt.plot(trans_theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectru
 ax = plt.gca()
 ax.set_xlim([fit_exp_xdata[0],fit_exp_xdata[-1]+1])
 ax.set_ylim([0,max(fit_exp_ydata)+0.2])
-plt.xlabel('Energy/ eV')
-plt.ylabel('Intensity')
-plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+plt.xlabel('Energy/ eV',{'fontsize':'22'})
+plt.ylabel('Intensity',{'fontsize':'22'})
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
+plt.xticks(fontsize = 18)
+plt.yticks(fontsize = 18)
+feature=1
 for element in peak_assignment_d:
     plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
-    peak_assign_string=""
-    for item in peak_assignment_d[element]:
-        peak_assign_string+='%s (%s > %s) (%s)\n' %(item[2],item[1],item[3],round(item[4],3))
-    plt.annotate(peak_assign_string, 
-             xy=(element+transform, float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])),
-             arrowprops=dict(arrowstyle="->", connectionstyle="angle3",lw=1))
+    peak_assign_string=str(feature)
+    #for item in peak_assignment_d[element]:
+        #peak_assign_string+='%s (%s > %s) (%s)\n' %(item[2],item[1],item[3],round(item[4],3))
+    x_annotate=element+transform
+    y_annotate=float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])
+    plt.annotate(peak_assign_string, xy=(x_annotate,y_annotate), 
+                 xytext=(x_annotate+0, y_annotate+0.1),size=18,va="bottom", ha="center",
+                arrowprops=dict(arrowstyle="->"))
+    feature+=1
 fig_trans.show()
 fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectraWithPeakAssignment.png',bbox_inches='tight')
 
@@ -454,6 +466,19 @@ log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " min
 log_file.close()
 
 html_table_row="  <tr> <td> *0* </td> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> </tr>\n"
+
+# the html template handles image resolution issues that are better described 
+# in the README file.
+"""
+for element in peak_assignment_d:
+    plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
+    peak_assign_string=""
+    for item in peak_assignment_d[element]:
+        peak_assign_string+='%s (%s > %s) (%s)\n' %(item[2],item[1],item[3],round(item[4],3))
+    plt.annotate(peak_assign_string, 
+             xy=(element+transform, float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])),
+             arrowprops=dict(arrowstyle="->", horizontalalignment='right',verticalalignment='top',lw=1))
+"""
 
 with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as html_out:
     n=0

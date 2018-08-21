@@ -43,7 +43,7 @@ parser.add_argument('in_geom_file',
 
 parser.add_argument('-op',
     default="gas",
-    choices=['gas', 'solution'],
+    choices=['gas', 'liquid'],
     help="Select the default set of orca parameters for particular chemical states.")
 
 parser.add_argument("-opi", 
@@ -82,30 +82,32 @@ path_in=path
 path_out=path+r"\\"+resultsdir
 os.makedirs(path_out)
 
+# We do not use the logfile handler because it conflicts with the argparser that
+# controls the command line options.
 log_file_name = path_out+r"\\log.txt"
 log_file=open(log_file_name, "w") 
 
-log_file.write(description+"\n\n")
+log_file.emit(description+"\n\n")
 host=socket.gethostbyaddr(socket.gethostname())[0]
-log_file.write(r"This program ran at "+date_time+r" on the "+host+r" host system.")
-log_file.write("\n\n")
+log_file.emit(r"This program ran at "+date_time+r" on the "+host+r" host system.")
+log_file.emit("\n\n")
 
 
 
 
 print("\n~ Molecular geometry file details: {}".format(args.in_geom_file))
-log_file.write("\n\n~ Molecular geometry file details: {}".format(args.in_geom_file))
+log_file.emit("\n\n~ Molecular geometry file details: {}".format(args.in_geom_file))
 
 
 print("\n~ Orca parameter set : {}".format(args.op))
-log_file.write("\n\n~ Orca parameter set : {}".format(args.op))
+log_file.emit("\n\n~ Orca parameter set : {}".format(args.op))
 
 
 print("\n~ Orca parameter file: {}".format(args.file_orca_params))
-log_file.write("\n\n~ Orca parameter file: {}".format(args.file_orca_params))
+log_file.emit("\n\n~ Orca parameter file: {}".format(args.file_orca_params))
 
 print("\n~ Orca executable: {}".format(args.orca_executable))
-log_file.write("\n\n~ Orca executable: {}".format(args.orca_executable))
+log_file.emit("\n\n~ Orca executable: {}".format(args.orca_executable))
 
 
 #print(args.orca_executable)
@@ -116,19 +118,19 @@ log_file.write("\n\n~ Orca executable: {}".format(args.orca_executable))
 
 
 print("\n\nSTART: \n")
-log_file.write("\n\nSTART: \n")
+log_file.emit("\n\nSTART: \n")
 log_file.flush()
 
 ORCA=r"C:\Orca\orca.exe"
 
 if args.orca_executable is None:
     print("The default path for orca, C:\Orca\orca.exe, is used.")
-    log_file.write("\n\nThe default path for orca, C:\Orca\orca.exe, is used.")
+    log_file.emit("\n\nThe default path for orca, C:\Orca\orca.exe, is used.")
 
 if args.orca_executable is not None:
     ORCA=args.orca_executable
     print("This does not use the default path for orca, instead it used this path: ", ORCA)
-    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: ", ORCA)
+    log_file.emit("\n\nThis does not use the default path for orca, instead it used this path: ", ORCA)
 
 
 
@@ -166,7 +168,7 @@ with open(edge_data_file,"r") as edge_data_file:
 
 #generate input file for Opt calculation
 opt_keywords_gas_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
-opt_keywords_solution_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","CPCM(Water)","Grid3", "FinalGrid5", "Opt"])
+opt_keywords_liquids_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","CPCM(Water)","Grid3", "FinalGrid5", "Opt"])
 
 # default case
 opt_keywords_array=opt_keywords_gas_array
@@ -175,17 +177,17 @@ opt_keywords_array=opt_keywords_gas_array
 
 if "gas" in args.op:
     print("The default gas orca optimisation parameters are used.")
-    log_file.write("\n\nThe default gas orca optimisation parameters are used.")
+    log_file.emit("\n\nThe default gas orca optimisation parameters are used.")
 
 if "solution" in args.op:
-    opt_keywords_array=opt_keywords_solution_array
-    print("The default solution orca optimisation parameters are used.")
-    log_file.write("\n\nThe default solution orca optimisation parameters are used.")
+    opt_keywords_array=opt_keywords_liquids_array
+    print("The default liquids orca optimisation parameters are used.")
+    log_file.emit("\n\nThe default liquids orca optimisation parameters are used.")
     
 #if "None" in args.file_orca_params:
 if args.file_orca_params is None:    
     print("The default orca optimisation parameters are used from the -op flag.")
-    log_file.write("\n\nThe default orca optimisation parameters are used from the -op flag.")
+    log_file.emit("\n\nThe default orca optimisation parameters are used from the -op flag.")
 log_file.flush()
 
 #list of elements from geom file
@@ -206,13 +208,13 @@ if args.file_orca_params is not None:
     opt_keywords_array=opt_keywords_infile_array
     print("The default orca optimisation parameters from the -op flag are not used. Instead the parameters from the orca parameters file are used and these are: ")
     print(array)
-    log_file.write("\n\nThe default orca optimisation parameters from the -op flag are not used. Instead the parameters from the orca parameters file are used and these are: \n")
-    log_file.write("\n".join(str(elem) for elem in array))
+    log_file.emit("\n\nThe default orca optimisation parameters from the -op flag are not used. Instead the parameters from the orca parameters file are used and these are: \n")
+    log_file.emit("\n".join(str(elem) for elem in array))
 
 #opt_keywords_array=np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])np.array(["!","B3LYP","6-31G*","TIGHTSCF","Grid3", "FinalGrid5", "Opt"])
 print_array=np.array(["\n!NormalPrint","%output","Print[P_Basis] 2","Print[P_MOS] 1","end"])
 print("\n")
-log_file.write("\n\n")
+log_file.emit("\n\n")
 geom_array=np.array(["*xyzfile","0","1",str(geom_file)])
 
 with open(opt_input_file, "w") as opt_file:
@@ -233,6 +235,9 @@ p=sp.Popen(['ORCA',opt_input_file], stdout=opt_out, stderr=opt_err)
 p_status=p.wait()
 opt_out.close()
 opt_err.close()
+
+# The log_file write times out after about an hour. We close it and then
+# open them again because this loop can take a long time to run
 log_file.close()
 log_file=open(log_file_name, "w")
 # check Opt.out file
@@ -258,7 +263,7 @@ while (finding==-1):
                         for part in line.split():
                             if ("xyzfile") in part:
                                 line=line.strip()
-                                line=line.replace(line,"*xyzfile 0 1 "+str(opt_geom_file)+"\n")
+                                line=line.replace(line,"*xyzfile 0 1 "+str(opt_geom_file)+"\n")   
                         opt_file.write(line)
                     opt_file.close()    
                 opt_err=open(opt_error_file,"w") 

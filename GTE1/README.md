@@ -1,4 +1,4 @@
-XAS_analysis: TE1 code
+XAS_analysis: GTE1 code
 
 GENERAL INFORMATION ON THIS PROJECT
 This is created by Laila Al-Madhagi (fy11lham@leeds.ac.uk) for her PhD project on the 2018/05/17. Joanna Leng (j.leng@leeds.ac.uk) from the University of Leeds contributed to the development. The code license should be CC-BY-NC. GitHub does not support this license type and it will be added later
@@ -11,8 +11,8 @@ FILES INCLUDED
 1,)README.md			This currently holds all the documentation for
 						this repository
 
-2,) TE1.py  			Python source code for the theoretical
-						electronic structure calculations
+2,) GTE1.py  			Python source code for the theoretical
+						electronic structure calculations of a gas
 						
 3,) edge_data.txt		A text file containing edge data information
 						(derived from "Journal of Physics: Conference Series 712 (2016) 012070" which is taken from the X-ray Data Booklet)
@@ -28,24 +28,25 @@ FILES INCLUDED
 
 
 						
-INFORMATION ON THE TE1 (THEORETICAL ELECTRONIC STRUCTURE CALCULATION) CODE
+INFORMATION ON THE GTE1 (GAS THEORETICAL ELECTRONIC STRUCTURE CALCULATION) CODE
 
 usage: 
 
-TE1.py [-h] [-op {gas,solution}] [-opi FILE] [-orca FILE] FILE
+GTE1.py [-h] [-op {gas,liquid}] [-opi FILE] [-orca FILE] FILE
 
 
-TE1: Theoretical electron density function calulation
+GTE1: Theoretical electron density function calulation
 
 positional arguments:
 
-  FILE                molecular geometry file to be read in
+  FILE                Molecular geometry file to be read in; filename must include
+                      its path and it is best not to be in the directory structure for this code.
 
 optional arguments:
 
   -h, --help          show this help message and exit
   
-  -op {gas,solution}  Select the default set of orca parameters for particular
+  -op {gas,liquid}  Select the default set of orca parameters for particular
                       chemical states.
 					  
   -opi FILE           input file with orca optimation parameters. This over
@@ -54,8 +55,20 @@ optional arguments:
   -orca FILE          path to the orca executable; C:\Orca\orca.exe is the
                       default path
 
+EXAMPLE USAGE
 
-This program was developed TO work with the software ORCA version 4.0.1.2 which can be downloaded after you have registered at the ORCA forum:
+1, minimal needed to run (defaults assume it is a gas):
+
+GTE1.py C:\Users\userid\Desktop\analysis\Imidazole\Imidazole_geom.xyz
+
+2, minimal needed to run with user defined orca parameters:
+
+GTE1.py C:\Users\userid\Desktop\analysis\Imidazole\Imidazole_geom.xyz -orca C:\Users\userid\Desktop\analysis\Imidazole\orca_parameters.txt
+
+
+BACKGROUND
+
+This program was developed To work with the software ORCA version 4.0.1.2 which can be downloaded after you have registered at the ORCA forum:
 
 https://orcaforum.cec.mpg.de/
 
