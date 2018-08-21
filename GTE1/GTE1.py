@@ -82,7 +82,7 @@ path_in=path
 path_out=path+r"\\"+resultsdir
 os.makedirs(path_out)
 
-# We do not use the logfile handler because it conflicts with the parser that
+# We do not use the logfile handler because it conflicts with the argparser that
 # controls the command line options.
 log_file_name = path_out+r"\\log.txt"
 log_file=open(log_file_name, "w") 

@@ -1,4 +1,4 @@
-XAS_analysis: TE1 code
+XAS_analysis: GTE1 code
 
 GENERAL INFORMATION ON THIS PROJECT
 This is created by Laila Al-Madhagi (fy11lham@leeds.ac.uk) for her PhD project on the 2018/05/17. Joanna Leng (j.leng@leeds.ac.uk) from the University of Leeds contributed to the development. The code license should be CC-BY-NC. GitHub does not support this license type and it will be added later
@@ -12,7 +12,7 @@ FILES INCLUDED
 						this repository
 
 2,) GTE1.py  			Python source code for the theoretical
-						electronic structure calculations
+						electronic structure calculations of a gas
 						
 3,) edge_data.txt		A text file containing edge data information
 						(derived from "Journal of Physics: Conference Series 712 (2016) 012070" which is taken from the X-ray Data Booklet)
@@ -28,7 +28,7 @@ FILES INCLUDED
 
 
 						
-INFORMATION ON THE TE1 (THEORETICAL ELECTRONIC STRUCTURE CALCULATION) CODE
+INFORMATION ON THE GTE1 (GAS THEORETICAL ELECTRONIC STRUCTURE CALCULATION) CODE
 
 usage: 
 
@@ -39,8 +39,8 @@ GTE1: Theoretical electron density function calulation
 
 positional arguments:
 
-  FILE                molecular geometry file to be read in; file should include
-                      its path and it is best not to be in the directory structure for this code
+  FILE                Molecular geometry file to be read in; filename must include
+                      its path and it is best not to be in the directory structure for this code.
 
 optional arguments:
 

@@ -434,14 +434,16 @@ ax.set_ylim([0,max(fit_exp_ydata)+0.2])
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+feature=1
 for element in peak_assignment_d:
     plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
-    peak_assign_string=""
-    for item in peak_assignment_d[element]:
-        peak_assign_string+='%s (%s > %s) (%s)\n' %(item[2],item[1],item[3],round(item[4],3))
+    peak_assign_string=str(feature)
+    #for item in peak_assignment_d[element]:
+        #peak_assign_string+='%s (%s > %s) (%s)\n' %(item[2],item[1],item[3],round(item[4],3))
     plt.annotate(peak_assign_string, 
              xy=(element+transform, float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])),
              arrowprops=dict(arrowstyle="->", connectionstyle="angle3",lw=1))
+    feature+=1
 fig_trans.show()
 fig_trans.savefig(path_out+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectraWithPeakAssignment.png',bbox_inches='tight')
 
@@ -454,6 +456,19 @@ log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " min
 log_file.close()
 
 html_table_row="  <tr> <td> *0* </td> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> </tr>\n"
+
+# the html template handles image resolution issues that are better described 
+# in the README file.
+
+for element in peak_assignment_d:
+    plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
+    peak_assign_string=""
+    for item in peak_assignment_d[element]:
+        peak_assign_string+='%s (%s > %s) (%s)\n' %(item[2],item[1],item[3],round(item[4],3))
+    plt.annotate(peak_assign_string, 
+             xy=(element+transform, float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])),
+             arrowprops=dict(arrowstyle="->", connectionstyle="angle3",lw=1))
+
 
 with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as html_out:
     n=0

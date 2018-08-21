@@ -1,0 +1,1 @@
+U:\XAS_analysis\GC1\Benzaldehyde\Benzaldehyde_C1s.txt 0 2 3 -offset 18 U:\XAS_analysis\GC1\Benzaldehyde\TDDFT_C-edge.out U:U:\XAS_analysis\GC1\Benzaldehyde\Benzaldehyde_C1s.txt_fitted_peaks_param.txt

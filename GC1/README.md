@@ -1,4 +1,4 @@
-XAS_analysis: C1 code
+XAS_analysis: GC1 code
 
 GENERAL INFORMATION ON THIS PROJECT
 This is created by Laila Al-Madhagi (fy11lham@leeds.ac.uk) for her PhD project on the 2018/06/05. Joanna Leng (j.leng@leeds.ac.uk) from the University of Leeds contributed to the development. The code license should be CC-BY-NC. GitHub does not support this license type and it will be added later. 
@@ -10,7 +10,8 @@ FILES INCLUDED
 1,) README.md					This currently holds all the documentation for
 								this repository
 								
-2,) C1.py   					Python source code for the comparison pipeline  
+2,) GC1.py   					Python source code for the gas comparison
+                                pipeline  
 								
 3,) edge_data.txt				A text file containing edge data information
 								(derived from "Journal of Physics: Conference Series 712 (2016) 012070" which is taken from the X-ray Data Booklet)
@@ -27,13 +28,13 @@ FILES INCLUDED
 								
 								
 								
-INFORMATION ON THE C1 (COMPARISON) CODE
+INFORMATION ON THE GC1 (GAS COMPARISON) CODE
 
 usage:   
 
 [-h] FILE FILE FILE
 
-C1: Compares experimental spectra with theorectically calculated data.
+GC1: Compares experimental spectra with theorectically calculated data for a gas.
 	   
 	   
 positional arguments:
@@ -48,7 +49,15 @@ optional arguments:
 
   -h, --help  show this help message and exit
   
-  
-  
+EXAMPLE USAGE
 
-This program is the C1 part of the Manual pipeline, which is explain the README file in the top directory of this project.The computation is done by comparing the experimental and theoretical spectra. The theoretical spectra is translated so that the first peak is aligned with the first peak in the experimental spectrum.   
+GC1.py C:\Users\userid\Desktop\data\Benzaldehyde\Benzaldehyde_C1s.txt 0 2 3 -offset 18 C:\Users\userid\Desktop\data\Benzaldehyde\TDDFT_C-edge.out C:\Users\userid\Desktop\data\Benzaldehyde\Benzaldehyde_C1s.txt_fitted_peaks_param.txt
+
+THE REPORT
+
+Images in this script are created and are referenced in an html report. The images exist separately to this report and can be used in other documents. The resolution of these images is determined by the graphics settings of the system that creates them. These are scaled in the html to 100% so that high resolution images will be visible on the screen (it will also increase the size of low resolution images). At the time of writing the html 5 format was new and was not fully implemented in all browsers. Also the html 5 standard had new ways to handle images that did not include scaling so the html template is not compatible with html 5.
+
+  
+BACKGROUND  
+
+This program is the GC1 part of the Manual pipeline, which is explained the README file in the top directory of this project.The computation is done by comparing the experimental and theoretical spectra. The theoretical spectra is translated so that the first peak is aligned with the first peak in the experimental spectrum.   

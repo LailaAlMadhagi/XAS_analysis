@@ -24,13 +24,14 @@ INFORMATION ON THE E2 (COMPARISON) CODE
 
 usage:  
 
-[-h] [-ft {Athena,user_defined}] [-offset OFFSET] FILE column_energy column_intensity n_columns
+E2.py [-h] [-ft {Athena,user_defined}] [-offset OFFSET] FILE column_energy column_intensity n_columns
 											 
 E2: Experimental spectra peak fitting
 											 									 
 positional arguments:
 
-  FILE                  The experimental spectra file to be read in.
+  FILE                  The experimental spectra file to be read in;
+                        filename must include its path and it is best not to be in the directory structure for this code
   
   column_energy         The column in spectra file that holds the energy, 0 is
                         the lowest value.
@@ -52,5 +53,12 @@ optional arguments:
   -offset OFFSET        The number of lines in the input spectra file that are
                         to be skipped before the data is read in.
 
+EXAMPLE USAGE
+
+1, minimal needed to run (defaults assume it is a gas):
+
+E2.py  C:\Users\userid\Desktop\analysis\ImidazoleExperiment\N1s_Imidazole_ISEELS.txt 0 2 6
+
+BACKGROUND
 
 This program is the E2 part of the experimental pipeline or workflow, which is described in the README file in the top level directory for the project.

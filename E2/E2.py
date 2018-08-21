@@ -494,7 +494,7 @@ if R_sqr_smooth>R_sqr:
     fig.savefig(fig_filename,bbox_inches='tight')
     
     
-    print("Goodness of fit (R-sqaured) is: %s" %R_sqr_smooth)
+    print("Goodness of fit (R-squared) is: %s" %R_sqr_smooth)
     
     log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr_smooth)
     
