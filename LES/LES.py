@@ -49,18 +49,18 @@ parser.add_argument("-orca",
 
 # all input argument have been read now we can process them
 args = parser.parse_args()
-path, file_geom_dir = os.path.split(args.in_geom_dir)
+path_LES, file_geom_dir = os.path.split(args.in_geom_dir)
 #file_geom_read=args.in_geom_file.name
 geom_filenames=[]
-for filename in os.listdir(path+r"/%s"%file_geom_dir):
+for filename in os.listdir(path_LES+r"/%s"%file_geom_dir):
     geom_filenames.append(filename)
-
+"""
 #run E2
 p=sp.Popen(['python','U:\XAS_analysis\E2\E2.py',
             'U:\XAS_analysis\E2\Imdz_Solution_35C_APS.txt','0','3','7','--file_type', 'user_defined',
             '-offset', '38'])
-
-    
+p_status=p.wait()
+"""    
 #if not file_geom.endswith('.xyz'): 
 #    sys.exit("ERROR; The molecular geometry file does not have the expected .xyz file extension.")
                  
@@ -72,11 +72,11 @@ for file in geom_filenames:
     resultsdir = r"LES_"+file_geom_dir+r"_"+file+r"_"+date_time
     
     
-    path_in=path
-    path_out=path+r"\\"+resultsdir
-    os.makedirs(path_out)
+    path_in_LES=path_LES
+    path_out_LES=path_LES+r"/"+resultsdir
+    os.makedirs(path_out_LES)
     
-    log_file_name = path_out+r"\\log.txt"
+    log_file_name = path_out_LES+r"\\log.txt"
     log_file=open(log_file_name, "w") 
     
     log_file.write(description+"\n\n")
@@ -127,12 +127,12 @@ for file in geom_filenames:
 
 
 # Here are all the files we need to create (except the log file which we are already using)
-    geom_file=path+r"/%s"%file_geom_dir+"/%s"%file
-    sp_input_file=path_out+r"\sp.inp"
-    new_sp_input_file=path_out+r"\new_sp.inp"
-    sp_output_file=path_out+r"\sp.out"
-    new_sp_output_file=path_out+r"\new_sp.out"
-    sp_error_file=path_out+r"\sp_error.txt"
+    geom_file=path_LES+r"/%s"%file_geom_dir+"/%s"%file
+    sp_input_file=path_out_LES+r"\sp.inp"
+    new_sp_input_file=path_out_LES+r"\new_sp.inp"
+    sp_output_file=path_out_LES+r"\sp.out"
+    new_sp_output_file=path_out_LES+r"\new_sp.out"
+    sp_error_file=path_out_LES+r"\sp_error.txt"
     working_dir=os.getcwd()
     edge_data_file=working_dir+r"\..\edge_data.txt"
     orbital_energies_array=np.array([])
@@ -274,38 +274,38 @@ for file in geom_filenames:
     d=defaultdict(list)
     for lis in orbital_window_array:
         d[lis[0]].append(lis[1],)
-    orbital_window_array=[list(x for y in i for x in y) for i in d.items()]
-                          
+    orbital_window_array=[list(x for y in i for x in y) for i in d.items()]                
     tddft_keywords_array=sp_keywords_array
     for m in range(0,len(orbital_window_array)):
-        tddft_input_file=path_out+r"\TDDFT_%s-edge.inp" %orbital_window_array[m][0]
-        tddft_output_file=path_out+r"\TDDFT_%s-edge.out" %orbital_window_array[m][0]    
-        tddft_error_file=path_out+r"\TDDFT_%s-edge_error.txt" %orbital_window_array[m][0]
-        tddft_orbwin_string="orbwin[0]="        
-        orbitals=[]
-        orbitals.append(orbital_window_array[m][1])
-        orbitals.append(orbital_window_array[m][-1])
-        tddft_orbwin_string+="%s,%s" %(str(orbitals[0]),str(orbitals[1])) 
-        tddft_orbwin_string+=",-1,-1"
-        tddft_calc_array=["\n%tddft",tddft_orbwin_string,"nroots=20","maxdim=200","end"]
-        with open(tddft_input_file, "w") as tddft_input:
-            tddft_input.writelines("#This is %s K-edge calculation \n" %orbital_window_array[m][0])
-            for item in tddft_keywords_array:
-                tddft_input.writelines(["%s " %item])
-            for item in print_array:
-                tddft_input.writelines(["%s \n" %item])
-            for item in tddft_calc_array:
-                tddft_input.writelines(["%s \n" %item])
-            for item in geom_array:
-                tddft_input.writelines(["%s " %item])
-            tddft_input.close()
-        #run tddft calculations
-        tddft_out=open(tddft_output_file, "w") 
-        tddft_err=open(tddft_error_file,"w") 
-        p=sp.Popen([ORCA,tddft_input_file], stdout=tddft_out, stderr=tddft_err)
-        p_status=p.wait()
-        tddft_out.close()
-        tddft_err.close()
+        if orbital_window_array[m][0]=='N':
+            tddft_input_file=path_out_LES+r"\TDDFT_%s-edge.inp" %orbital_window_array[m][0]
+            tddft_output_file=path_out_LES+r"\TDDFT_%s-edge.out" %orbital_window_array[m][0]    
+            tddft_error_file=path_out_LES+r"\TDDFT_%s-edge_error.txt" %orbital_window_array[m][0]
+            tddft_orbwin_string="orbwin[0]="        
+            orbitals=[]
+            orbitals.append(orbital_window_array[m][1])
+            orbitals.append(orbital_window_array[m][-1])
+            tddft_orbwin_string+="%s,%s" %(str(orbitals[0]),str(orbitals[1])) 
+            tddft_orbwin_string+=",-1,-1"
+            tddft_calc_array=["\n%tddft",tddft_orbwin_string,"nroots=20","maxdim=200","end"]
+            with open(tddft_input_file, "w") as tddft_input:
+                tddft_input.writelines("#This is %s K-edge calculation \n" %orbital_window_array[m][0])
+                for item in tddft_keywords_array:
+                    tddft_input.writelines(["%s " %item])
+                for item in print_array:
+                    tddft_input.writelines(["%s \n" %item])
+                for item in tddft_calc_array:
+                    tddft_input.writelines(["%s \n" %item])
+                for item in geom_array:
+                    tddft_input.writelines(["%s " %item])
+                tddft_input.close()
+            #run tddft calculations
+            tddft_out=open(tddft_output_file, "w") 
+            tddft_err=open(tddft_error_file,"w") 
+            p=sp.Popen([ORCA,tddft_input_file], stdout=tddft_out, stderr=tddft_err)
+            p_status=p.wait()
+            tddft_out.close()
+            tddft_err.close()
     
     log_file.close()
     log_file=open(log_file_name, "w")
@@ -327,10 +327,30 @@ for file in geom_filenames:
     log_file.write("\n\tTime-Dependent Density Functional Theory calculation time is: "+ str(round(tddft_time,3)) + " minutes")
     
     log_file.close()
+
     #run LC1
     p=sp.Popen(['python','U:\XAS_analysis\LC1\LC1.py',
-            'U:\XAS_analysis\E2\Imdz_Solution_35C_APS.txt','0','3','7','-ft',
-            'user_defined','-offset 18',
-            path_out+r'\TDDFT_N-edge.out', 
-            'U:\XAS_analysis\E2\E2_Imdz_Solution_35C_APS_2018-08-20_13-48-32\Imdz_Solution_35C_APS.txt_fitted_peaks_param'])
-    
+        'U:\XAS_analysis\E2\Imdz_Solution_35C_APS.txt','0','3','7','-offset','38',
+        str(path_out_LES+'\TDDFT_N-edge.out'), 
+        'U:\XAS_analysis\E2\E2_Imdz_Solution_35C_APS_2018-08-20_16-33-03\Imdz_Solution_35C_APS.txt_fitted_peaks_param.txt'],
+        stdout=sp.PIPE, stderr=sp.PIPE)
+    p_status=p.wait()
+    output, err = p.communicate()
+    Norm_Trans_theory_data=path_in_LES+r'\..\LC1\NormTranslatedTheoryData.txt'
+    theory_xdata=[]
+    theory_ydata=[] 
+    with open (Norm_Trans_theory_data,'r') as theory_file:
+        lines=theory_file.readlines()
+        for x in lines:
+            theory_xdata.append(x.split('\t')[0])
+            theory_ydata.append((x.split('\t')[1]).replace("\n",""))
+    theory_file.close() 
+    Exp_data=path_in_LES+r'\..\E2\Imdz_Solution_35C_APS.txt'
+    exp_xdata=[]
+    exp_ydata=[] 
+    with open (Exp_data,'r') as exp_file:
+        lines=exp_file.readlines()[38:]
+        for line in lines:
+            exp_xdata.append(line.split('  ')[1])
+            exp_ydata.append(line.split('  ')[5])
+           
