@@ -129,7 +129,8 @@ path_theory, file_theory = os.path.split(file_theory_read)
 theory_data_file=path_out_LC1+"/%s.abs.dat" %file_theory
 theory_data_filename=path_out_LC1+r"/%s" %file_theory
 tddft_output_file=r"%s" %theory_data_filename
-norm_translated_theory_data=path_out_LC1+r"/%s_NormTranslatedTheoryData.txt"%file_exp.split('.')[0]
+#norm_translated_theory_data=path_out_LC1+r"/%s_NormTranslatedTheoryData.txt"%file_exp.split('.')[0]
+norm_translated_theory_data=path_out_LC1+r"/NormTranslatedTheoryData.txt"
 
 
 html_infile_name=path_in_LC1+r"\template.html"
@@ -462,6 +463,9 @@ print ("Running time is: "+ str(round(running_time,3)) + "minutes")
 log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
 
 log_file.close()
+
+shutil.copy(path_out_LC1+r"/NormTranslatedTheoryData.txt",path_in_LC1+r'/../LES')
+
 
 html_table_row="  <tr> <td> *0* </td> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> </tr>\n"
 
