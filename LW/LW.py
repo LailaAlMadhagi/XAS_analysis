@@ -16,7 +16,7 @@ import subprocess as sp
 import numpy as np
 import pandas as pd
 
-git_dir=r'/Users/lailaal-madhagi/Desktop/Git_repositry/XAS_Analysis'
+
 # handle the input flags
 description='LW: Wrapper script for Liquid samples'
 parser = argparse.ArgumentParser(description)
@@ -32,6 +32,7 @@ parser.add_argument('in_args',
 args = parser.parse_args()
 
 path_LW, args_file = os.path.split(args.in_args.name)
+git_dir=path_LW+r'//..'
 LW_date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 resultsdir = r"Results_dir_"+LW_date_time
 
