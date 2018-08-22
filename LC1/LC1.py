@@ -22,7 +22,7 @@ import shutil
 
 
 # handle the input flags
-description='C1: Compares experimental spectra with theorectically calculated data.'
+description='LC1: Compares experimental spectra with theorectically calculated data for liquid samples.'
 parser = argparse.ArgumentParser(description)
 
 parser.add_argument('in_experiment_file',
@@ -48,6 +48,12 @@ parser.add_argument("-offset",
                     required=False,
                     help="The number of lines in the input spectra file that are to be skipped before the data is read in.")
 
+parser.add_argument("-orca",
+                    dest="orca_executable",
+                    required=False,
+                    help="path to the orca executable; C:\Orca\orca.exe is the default path",
+                    metavar="FILE")
+
 parser.add_argument('in_theoretical_file',
     type=argparse.FileType('r'),
     help="Theoretically calulated spectra datafile to be read in.",
@@ -58,6 +64,11 @@ parser.add_argument('in_fitted_peaks_file',
     help="Peaks fitted to the experimental spectra datafile to be read in.",
     default=sys.stdin, metavar="FILE")
 
+parser.add_argument("-path_out",
+                    dest="LC1_path_out",
+                    type=str,
+                    required=False,
+                    help="directory where output is written")
 
 '''parser.add_argument('in_edge_data_file',
     type=argparse.FileType('r'),
@@ -69,85 +80,80 @@ args = parser.parse_args()
 
 skip = int(args.offset)
 
-file_exp_read=args.in_experiment_file.name
-
-path_E2, file_exp = os.path.split(file_exp_read)
-path_LC1=path_E2+r'\..\LC1'
-
+path_exp, file_exp = os.path.split(args.in_experiment_file.name)
 index_of_dot = file_exp.index(".") 
 file_exp_without_extension = file_exp[:index_of_dot]
 
+
+#setting input and output paths
+working_dir=os.getcwd()
 date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 resultsdir = r"C1_"+file_exp_without_extension+r"_"+date_time
 
+path_in=path_exp+r'\..\LC1'
+if args.LC1_path_out is not None:
+    path_out=args.LC1_path_out+r"//"+resultsdir
+if args.LC1_path_out is None:
+    path_out=path_in+r"//"+resultsdir
+os.makedirs(path_out)
 
-path_in_LC1=path_LC1
-path_out_LC1=path_LC1+r"/"+resultsdir
-os.makedirs(path_out_LC1)
 
-log_file_name = path_out_LC1+r"\\log.txt"
+log_file_name = path_out+r"//log.txt"
 log_file=open(log_file_name, "w") 
-
 log_file.write(description+"\n\n")
-host=socket.gethostbyaddr(socket.gethostname())[0]
-log_file.write(r"This program ran at "+date_time+r" on the "+host+r" host system.")
+#host=socket.gethostbyaddr(socket.gethostname())[0]
+#log_file.write(r"This program ran at "+date_time+r" on the "+host+r" host system.")
+log_file.write(r"This program ran at "+date_time+r" on the host system.")
 log_file.write("\n\n")
 
-html_line1 =r"This program ran at "+date_time+r" on the "+host+r" host system"
-
-
+#html_line1 =r"This program ran at "+date_time+r" on the "+host+r" host system"
+html_line1 =r"This program ran at "+date_time+r" on the host system"
 
 
 print("\n~ Experimental spectra file details: {}".format(args.in_experiment_file))
 log_file.write("\n\n~ Experimental spectra file details: {}".format(args.in_experiment_file))
 
-
 print("\n~ Theoretical spectra file details: {}".format(args.in_theoretical_file))
 log_file.write("\n\n~ Theoretical spectra file details: {}".format(args.in_theoretical_file))
-
 
 print("\n~ Peaks fitted to the theoretical spectra file details: {}".format(args.in_fitted_peaks_file))
 log_file.write("\n\n~ Peaks fitted to the theoretical spectra file details: {}".format(args.in_fitted_peaks_file))
 
 
+ORCA=r"C:\Orca\orca.exe"
+
+if args.orca_executable is None:
+    print("The default path for orca, C:\Orca\orca.exe, is used.")
+    log_file.write("\n\nThe default path for orca, C:\Orca\orca.exe, is used.")
+
+if args.orca_executable is not None:
+    ORCA=args.orca_executable
+    print("This does not use the default path for orca, instead it used this path: ", ORCA)
+    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: %s"%ORCA)
+
+    
 
 
-#input and output files 
-working_dir=os.getcwd()
-
-
-#exp_data_file=path_in+r"\%s" %exp_data_filename 
 exp_data_file=args.in_experiment_file.name
-#edge_data_table=path_in+r"\edge_data.txt"
-#edge_data_table=args.in_edge_data_file.name
-edge_data_table=working_dir+r"\..\edge_data.txt"
-#fitted_peaks_param=path_in+r"\%s" %fitted_peaks_param_filename
+edge_data_table=working_dir+r"//..//edge_data.txt"
 fitted_peaks_param=args.in_fitted_peaks_file.name
-#theory_data_file=path_in+r"\%s.abs.dat" %theory_data_filename
 file_theory_read=args.in_theoretical_file.name
 path_theory, file_theory = os.path.split(file_theory_read)
-theory_data_file=path_out_LC1+"/%s.abs.dat" %file_theory
-theory_data_filename=path_out_LC1+r"/%s" %file_theory
+theory_data_file=path_out+"//%s.abs.dat" %file_theory
+theory_data_filename=path_out+r"//"+file_theory
 tddft_output_file=r"%s" %theory_data_filename
-norm_translated_theory_data=path_out_LC1+r"/%s_NormTranslatedTheoryData.txt"%file_exp.split('.')[0]
+norm_translated_theory_data=path_out+r"/NormTranslatedTheoryData.txt"
 
 
-html_infile_name=path_in_LC1+r"\template.html"
-html_outfile_name=path_out_LC1+r"\report.html"
-
-
-
-        
-        
-
-
+html_infile_name=path_in+r"//template.html"
+html_outfile_name=path_out+r"//report.html"
 
 print("theory_data_file: ",theory_data_file)
 
 
 ###move theory data file to results directory
 path_out_LES, theoretical_file_name=os.path.split(args.in_theoretical_file.name)
-shutil.copy(path_out_LES+r'\%s'%theoretical_file_name,path_out_LC1)
+shutil.copy(args.in_theoretical_file.name,path_out)
 
 ###Extract Experimental data
 #put experimental data into array
@@ -216,7 +222,7 @@ for element in peak_param:
 
 ###Extract theoretical data
 #run tddft calc
-p=sp.Popen(['orca_mapspc',tddft_output_file,'ABS','-eV','-x0%s'%str(int(min(fit_exp_xdata)-15)),'-x1%s'%str(int(max(fit_exp_xdata))),'-n500','-w0.6'])
+p=sp.Popen([str(ORCA+'_mapspc'),tddft_output_file,'ABS','-eV','-x0%s'%str(int(min(fit_exp_xdata)-15)),'-x1%s'%str(int(max(fit_exp_xdata))),'-n500','-w0.6'])
 p_status=p.wait()
 
 #read orbital energy information from ouput file
@@ -413,7 +419,7 @@ plt.plot(theory_xdata, theory_ydata, 'g--',label='Theoretical Spectrum')
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-fig_raw.savefig(path_out_LC1+r'\\ComparisonOfRawExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
+fig_raw.savefig(path_out+r'//ComparisonOfRawExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
 fig_norm=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -421,7 +427,7 @@ plt.plot(theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectrum')
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-fig_norm.savefig(path_out_LC1+r'\\ComparisonOfNormalizedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
+fig_norm.savefig(path_out+r'//ComparisonOfNormalizedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
 fig_trans=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -433,7 +439,7 @@ plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 fig_trans.show()
-fig_trans.savefig(path_out_LC1+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
+fig_trans.savefig(path_out+r'//ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
 
 fig_trans=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -453,18 +459,18 @@ for element in peak_assignment_d:
              xy=(element+transform, float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])),
              arrowprops=dict(arrowstyle="->", connectionstyle="angle3",lw=1))
 fig_trans.show()
-fig_trans.savefig(path_out_LC1+r'\\ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectraWithPeakAssignment.png',bbox_inches='tight')
+fig_trans.savefig(path_out+r'//ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectraWithPeakAssignment.png',bbox_inches='tight')
 
+#print running time information
 stop = timeit.default_timer()
 running_time=(stop-start)/60
 print ("Running time is: "+ str(round(running_time,3)) + "minutes") 
-
 log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
-
 log_file.close()
 
-html_table_row="  <tr> <td> *0* </td> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> </tr>\n"
 
+#print information to html file
+html_table_row="  <tr> <td> *0* </td> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> </tr>\n"
 with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as html_out:
     n=0
     for line in html_in:
@@ -497,3 +503,4 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
                 print("element ",element)
                 print("new_line "+new_line)
                 html_out.write(new_line)
+print("\nLC1 outputs are in \n%s"%path_out)
