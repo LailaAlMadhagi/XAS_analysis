@@ -39,7 +39,7 @@ path_in=path_LW
 path_out=path_LW+r'//'+resultsdir
 os.makedirs(path_out)
 
-arguments_d={'geom_directory':[],'orca_param':[],'orca_executable':'/Users/lailaal-madhagi/Library/Orca401/orca',
+arguments_d={'geom_directory':[],'orca_param':[],'orca_executable':[],
              'experimental_spectra':[],'experimental_energy_column_number':[],
              'experimental_intensity_column_number':[],'experimental_number_columns':[],
              'experimental_header_skip':[],'element_calculate':[],'results_dir':path_out,
