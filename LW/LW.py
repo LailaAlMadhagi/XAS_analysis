@@ -68,9 +68,9 @@ LE2_p=sp.Popen(['python',str(parent_dir+r'//LE2//LE2.py'),
 LE2_output, LE2_err = LE2_p.communicate()
 LE2_p_status=LE2_p.wait()
 LE2_path_out=(LE2_output.decode('utf-8').split('\n')[-2]).replace('\r','').replace('\n','')
-log_file.write('LE2 output is: '+LE2_output)
+log_file.write('LE2 output is: '+LE2_output.decode('utf-8'))
 log_file.write("\n\n")
-log_file.write('LE2 err is: '+LE2_err)
+log_file.write('LE2 err is: '+LE2_err.decode('utf-8'))
 log_file.write("\n\n")
 
 R_sqr=0
@@ -94,9 +94,9 @@ for file in os.listdir(arguments_d['geom_directory']):
             LES_output, LES_err = LES_p.communicate()
             LES_p_status=LES_p.wait()
             LES_path_out=(LES_output.decode('utf-8').split('\n')[-2]).replace('\r','').replace('\n','')
-            log_file.write('LES output is: '+LES_output)
+            log_file.write('LES output is: '+LES_output.decode('utf-8'))
             log_file.write("\n\n")
-            log_file.write('LES err is: '+LES_err)
+            log_file.write('LES err is: '+LES_err.decode('utf-8'))
             log_file.write("\n\n")
             #add tddft_out file to arguments dictionary
             for file in os.listdir(LES_path_out):
@@ -120,9 +120,9 @@ for file in os.listdir(arguments_d['geom_directory']):
             LC1_output, LC1_err = LC1_p.communicate()
             LC1_p_status=LC1_p.wait()
             LC1_path_out=(LC1_output.decode('utf-8').split('\n')[-2]).replace('\r','').replace('\n','')
-            log_file.write('LC1 output is: '+LC1_output)
+            log_file.write('LC1 output is: '+LC1_output.decode('utf-8'))
             log_file.write("\n\n")
-            log_file.write('LC1 err is: '+LC1_err)
+            log_file.write('LC1 err is: '+LC1_err.decode('utf-8'))
             log_file.write("\n\n")
 
             ##comparison
