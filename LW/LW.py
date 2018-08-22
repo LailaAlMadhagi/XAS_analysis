@@ -64,8 +64,11 @@ LE2_p_status=LE2_p.wait()
 LE2_path_out=LE2_output.decode('utf-8').split('\n')[-2]
 
 R_sqr=0
-theory_xdata=np.array([])
-theory_ydata=np.array([])
+theory_xdata_all=np.array([])
+theory_xdata_avg=np.array([])
+theory_ydata_all=np.array([])
+theory_ydata_avg=np.array([])
+
 loop=int(1)
 for file in os.listdir(arguments_d['geom_directory']):
     if not file.startswith('.') and os.path.isfile(os.path.join(arguments_d['geom_directory'], file)):
@@ -116,11 +119,11 @@ for file in os.listdir(arguments_d['geom_directory']):
                     theory_xdata_s.append(line.split('\t')[0])
                     theory_ydata_s.append((line.split('\t')[1]).replace('\n',''))
             theory_file.close()
-            theory_xdata=np.append(theory_xdata,theory_xdata_s)
-            theory_xdata=np.average((theory_xdata.astype(float)).reshape(loop,int(len(theory_xdata)/loop)),axis=0)
-            theory_ydata=np.append(theory_ydata,theory_ydata_s)
-            theory_ydata=np.average((theory_ydata.astype(float)).reshape(loop,int(len(theory_ydata)/loop)),axis=0)
-            df_theory=pd.DataFrame({'energy_theory':theory_xdata,'intensity_theory':theory_ydata}) 
+            theory_xdata_all=np.append(theory_xdata_all,theory_xdata_s)
+            theory_xdata_avg=np.average((theory_xdata_all.astype(float)).reshape(loop,int(len(theory_xdata_all)/loop)),axis=0)
+            theory_ydata_all=np.append(theory_ydata_all,theory_ydata_s)
+            theory_ydata_avg=np.average((theory_ydata_all.astype(float)).reshape(loop,int(len(theory_ydata_all)/loop)),axis=0)
+            df_theory=pd.DataFrame({'energy_theory':theory_xdata_avg,'intensity_theory':theory_ydata_avg}) 
             #extract experimental data needed for comparison
             exp_data=np.array([])
             with open (arguments_d['experimental_spectra'],'r') as exp_file:
