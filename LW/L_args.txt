@@ -1,8 +1,8 @@
 Arguments for liquid state
-geom_directory=/Users/lailaal-madhagi/Desktop/Git_repositry/XAS_analysis/LES/Imdz_geom_files
+geom_directory=U://XAS_analysis//LES//Imdz_geom_files
 orca_param=
-orca_executabl=
-experimental_spectra=/Users/lailaal-madhagi/Desktop/Git_repositry/XAS_analysis/LE2/Imdz_Solution_35C_APS.txt
+orca_executabl=C://Orca//orca.exe
+experimental_spectra=U://XAS_analysis//LE2//Imdz_Solution_35C_APS.txt
 experimental_energy_column_number=0
 experimental_intensity_column_number=3
 experimental_number_columns=7
