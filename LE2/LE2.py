@@ -107,14 +107,15 @@ if args.LE2_path_out is None:
 
 
 os.makedirs(path_out)
-log_file_name = path_out+r"\\log.txt"
+log_file_name = path_out+r"//log.txt"
 log_file=open(log_file_name, "w") 
 
 
 
 log_file.write(description+"\n\n")
-host=socket.gethostbyaddr(socket.gethostname())[0]
-log_file.write(r"This program ran at "+LE2_date_time+r" on the "+host+r" host system.")
+#host=socket.gethostbyaddr(socket.gethostname())[0]
+#log_file.write(r"This program ran at "+LE2_date_time+r" on the "+host+r" host system.")
+log_file.write(r"This program ran at "+LE2_date_time+r" on the host system.")
 log_file.write("\n\n")
 
 print(description)
@@ -153,11 +154,11 @@ if "{}".format(args.file_type) == 'user_defined':
 
 log_file.flush()
 
-edge_data_table=working_dir+r"\..\edge_data.txt"
+edge_data_table=working_dir+r"//..//edge_data.txt"
 
-spectra_file=path_exp+r'\%s'%file_exp
-fitted_peak=path_out+r"\%s_fitted_peaks.txt" %filename_without_extension
-peak_params=path_out+r"\%s_peak_params.txt" %filename_without_extension
+spectra_file=path_exp+r'//'+file_exp
+fitted_peak=path_out+r"//%s_fitted_peaks.txt" %filename_without_extension
+peak_params=path_out+r"//%s_peak_params.txt" %filename_without_extension
 
 
 edge_data=np.array([])
@@ -483,15 +484,8 @@ if R_sqr_smooth>R_sqr:
     plt.xlabel('Energy/ eV')
     plt.ylabel('Intensity')
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-    #height = 4.0
-    #width = 6.0
-    #fig.set_figwidth(width)
-    #fig.set_figheight(height)
     fig.show()
-    fig_filename = path_out+"\\fitted_peaks.png"
-    #print(fig_filename)
-    #fig.set_figwidth(2*width)
-    #fig.set_figheight(2*height)
+    fig_filename = path_out+"//%s_fitted_peaks.png"%filename_without_extension
     fig.savefig(fig_filename,bbox_inches='tight')
     
     
@@ -503,12 +497,12 @@ if R_sqr_smooth>R_sqr:
     
     # write fitted peaks to output file 
     fitted_peaks=pd.concat([pd.DataFrame({'energy': fit_xdata}), pd.DataFrame(comps)], axis=1)
-    fitted_peaks.to_csv(path_out+r'\%s_fitted_peaks.txt'%file_exp, index=False, sep='\t', header=True)
+    fitted_peaks.to_csv(fitted_peak, index=False, sep='\t', header=True)
     
     # Write fitted params to output file 
     fitted_peaks_param=pd.concat([pd.DataFrame({'parameter': param_keywords}),pd.DataFrame(dict([(k,pd.Series(v)) for k,v in d_smooth.items()]))], 
 axis=1)
-    fitted_peaks_param.to_csv(path_out+r'\%s_fitted_peaks_param.txt'%file_exp,index=False, sep='\t', header=True)
+    fitted_peaks_param.to_csv(peak_params,index=False, sep='\t', header=True)
     
     
     stop = timeit.default_timer()
@@ -561,7 +555,7 @@ else:
     plt.ylabel('Intensity')
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     fig.show()
-    fig_filename = path_out+"\\%s_fitted_peaks.png"%filename_without_extension
+    fig_filename = path_out+"//%s_fitted_peaks.png"%filename_without_extension
     fig.savefig(fig_filename,bbox_inches='tight')
     
     
