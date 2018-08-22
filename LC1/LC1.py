@@ -467,7 +467,7 @@ running_time=(stop-start)/60
 print ("Running time is: "+ str(round(running_time,3)) + "minutes") 
 log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
 log_file.close()
-print("\nLC1 outputs are in \n%s"%path_out)
+
 
 #print information to html file
 html_table_row="  <tr> <td> *0* </td> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> </tr>\n"
@@ -503,3 +503,4 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
                 print("element ",element)
                 print("new_line "+new_line)
                 html_out.write(new_line)
+print("\nLC1 outputs are in \n%s"%path_out)
