@@ -465,20 +465,15 @@ log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " min
 
 log_file.close()
 
-html_table_row="  <tr> <td> *0* </td> <td> *1* </td>  <td> *2* </td> <td> *3* </td> <td> *4* </td> </tr>\n"
 
-# the html template handles image resolution issues that are better described 
-# in the README file.
-"""
-for element in peak_assignment_d:
-    plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
-    peak_assign_string=""
-    for item in peak_assignment_d[element]:
-        peak_assign_string+='%s (%s > %s) (%s)\n' %(item[2],item[1],item[3],round(item[4],3))
-    plt.annotate(peak_assign_string, 
-             xy=(element+transform, float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])),
-             arrowprops=dict(arrowstyle="->", horizontalalignment='right',verticalalignment='top',lw=1))
-"""
+
+# The resolution of the images depends on the graphics hardware and settings.
+# The html template scales the images so the image resolution is not so important
+# Image scaling is not part of html 5 format and at the time of writing html 5
+# was not working in all browsers so the template is not in html 5.
+# These are also described in the README file.
+
+feature=1
 
 with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as html_out:
     n=0
@@ -492,23 +487,36 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
         elif '***' in line and n==0:
             html_out.write(line.replace("***",description))
             n+=1
-        else:
-            html_out.write(line.strip())
-            
-        if '+++' in line:
+        elif '+*+*+*' in line:
+            #print("before: ",line)
+            line=""
+            #html_out.write(line.replace("+*+*+*","\n\n"))
+            print("after: ",line)
+            #s0=1
+            for element in peak_assignment_d:
+                #print("1: ",element)                
+                for item in peak_assignment_d[element]:
+                    peak_assign_string=""
+                    peak_assign_string+='<tr> <td>%s</td> <td>%s</td> <td>%s</td> <td>%s</td> <td>%s</td> </tr>\n' %(feature,item[2],item[1],item[3],round(item[4],3))
+                    html_out.write(peak_assign_string)
+                    #print("2: ",peak_assign_string)
+                feature+=1
+        elif '+++' in line:
+            line=""
             s0=0
             for index, element in enumerate(peak_assignment_ls_f):
+                peak_number=0
                 if element[1]==peak_assignment_ls_f[index-1][1]:
-                    new_line = html_table_row.replace("*0*",str(s0))
+                    peak_number=str(s0)
                 else:
                     s0+=1
-                    new_line = html_table_row.replace("*0*",str(s0))
+                    peak_number=str(s0)
                 s1="%.3f" % element[1]
-                print(s1)
-                new_line = new_line.replace("*1*",s1 )
-                new_line = new_line.replace("*2*",element[2] )
-                new_line = new_line.replace("*3*",element[3] )
-                new_line = new_line.replace("*4*","%s (%s)"%(element[4],format("%0.3f"%element[5])) )
-                print("element ",element)
-                print("new_line "+new_line)
+                new_line=""
+                new_line='<tr> <td> %d </td> <td> %s </td> <td> %s </td> <td> %s </td> <td> %s(%f) </td> </tr> \n' %(s0,s1,element[2],element[3],element[4],round(element[5],3))
                 html_out.write(new_line)
+        else:
+            html_out.write(line.strip())
+        
+
+            
