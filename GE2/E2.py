@@ -15,7 +15,6 @@ import scipy.signal
 #import matplotlib 
 #matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-
 from collections import OrderedDict
 import pandas as pd
 import argparse
@@ -93,6 +92,8 @@ host=socket.gethostbyaddr(socket.gethostname())[0]
 log_file.write(r"This program ran at "+date_time+r" on the "+host+r" host system.")
 log_file.write("\n\n")
 
+
+
 print(description)
 print("\n~ Experimental spectra file details: {}".format(args.in_spectra))
 log_file.write("\n\n~ Experimental spectra file details: {}".format(args.in_spectra))
@@ -144,6 +145,8 @@ spectra_file=file_and_path
 path_exp, file_exp = os.path.split(file_and_path)
 fitted_peak=path_out+r"\%s_fitted_peaks.txt" %file_exp
 peak_params=path_out+r"\%s_peak_params.txt" %file_exp
+
+
 
 
 edge_data=np.array([])
@@ -593,3 +596,50 @@ else:
     log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
     
     log_file.close()
+
+
+html_infile_name=working_dir+r"\template.html"
+html_outfile_name=path_out+r"\report.html"
+
+html_line1 =r"This program ran at "+date_time+r" on the "+host+r" host system"
+
+# The resolution of the images depends on the graphics hardware and settings.
+# The html template scales the images so the image resolution is not so important
+# Image scaling is not part of html 5 format and at the time of writing html 5
+# was not working in all browsers so the template is not in html 5.
+# These are also described in the README file.
+
+feature=1
+
+with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as html_out:
+    n=0
+    for line in html_in:
+        if '***' in line and n==2:
+            s="%0.3f"%(R_sqr)
+            html_out.write(line.replace("***",s))
+            print("R_sqr: ",round(R_sqr,3))            
+            n+=1
+        elif '***' in line and n==1:
+            html_out.write(line.replace("***",html_line1))            
+            n+=1
+        elif '***' in line and n==0:
+            html_out.write(line.replace("***",description))
+            n+=1
+        elif '+*+*+*' in line:
+            line=""
+            #print("type(fitted_peaks_param): ", type(fitted_peaks_param))
+            total_rows=len(fitted_peaks_param.axes[0])
+            total_cols=len(fitted_peaks_param.axes[1])
+            #print("columns: ",total_cols)
+            #print(fitted_peaks_param)
+            n=0
+            for c in range(1,total_cols):
+                row_line="<tr> <td> g%d </td> "%(n)
+                for r in range(total_rows):
+                    row_line+=" <td> %s </td> "%( fitted_peaks_param.iloc[r,c])
+                row_line+=" </tr>"
+                print(row_line)
+                html_out.write(row_line)
+                n+=1
+        else:
+            html_out.write(line.strip())
