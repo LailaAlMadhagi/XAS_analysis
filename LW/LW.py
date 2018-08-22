@@ -32,7 +32,7 @@ parser.add_argument('in_args',
 args = parser.parse_args()
 
 path_LW, args_file = os.path.split(args.in_args.name)
-git_dir=path_LW+r'//..'
+parent_dir=path_LW+r'//..'
 LW_date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 resultsdir = r"Results_dir_"+LW_date_time
 
@@ -53,7 +53,7 @@ with open (path_LW+r'//'+args_file,'r') as args_f:
 args_f.close()
 
 #run LE2:
-LE2_p=sp.Popen(['python',str(git_dir+r'//LE2//LE2.py'),
+LE2_p=sp.Popen(['python',str(parent_dir+r'//LE2//LE2.py'),
                 str(arguments_d['experimental_spectra']),
                 str(arguments_d['experimental_energy_column_number']),
                 str(arguments_d['experimental_intensity_column_number']),
@@ -76,7 +76,7 @@ for file in os.listdir(arguments_d['geom_directory']):
         if R_sqr<0.8:
             arguments_d['geom_file_name']=file
             #run LES
-            LES_p=sp.Popen(['python',str(git_dir+r'//LES//LES.py'),
+            LES_p=sp.Popen(['python',str(parent_dir+r'//LES//LES.py'),
                             str(arguments_d['geom_directory']),
                             '-geom_file_name',str(arguments_d['geom_file_name']),
                             '-orca',str(arguments_d['orca_executable']),
@@ -94,7 +94,7 @@ for file in os.listdir(arguments_d['geom_directory']):
                 if file.endswith('peak_params.txt'): 
                     arguments_d['fitted_peaks_params']=os.path.join(LE2_path_out,file)
             #run LC1
-            LC1_p=sp.Popen(['python',str(git_dir+r'//LC1//LC1.py'),
+            LC1_p=sp.Popen(['python',str(parent_dir+r'//LC1//LC1.py'),
                             str(arguments_d['experimental_spectra']),
                             str(arguments_d['experimental_energy_column_number']),
                             str(arguments_d['experimental_intensity_column_number']),
