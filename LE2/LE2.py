@@ -113,9 +113,23 @@ log_file=open(log_file_name, "w")
 
 
 log_file.write(description+"\n\n")
-#host=socket.gethostbyaddr(socket.gethostname())[0]
-#log_file.write(r"This program ran at "+LE2_date_time+r" on the "+host+r" host system.")
-log_file.write(r"This program ran at "+LE2_date_time+r" on the host system.")
+try:
+    host=socket.gethostbyaddr(socket.gethostname())[0]
+    log_file.write(r"This program ran at "+LE2_date_time+r" on the "+host+r" host system.")
+except socket.herror:
+    log_file.write(r"This program ran at "+LE2_date_time+r" on the host system.")
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+try:
+    # doesn't even have to be reachable
+    s.connect(('10.255.255.255', 1))
+    IP = s.getsockname()[0]
+except:
+    IP = '127.0.0.1'
+finally:
+    s.close()
+    
+print("IP: ",IP)
+log_file.write("System's IP address is: "+IP)
 log_file.write("\n\n")
 
 print(description)

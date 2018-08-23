@@ -7,7 +7,7 @@ This program was developed with Python 3.5.2 with modules: subprocess, mmap, num
 
 SOFTWARE OVERVIEW
 
-This software is the start of automating the computational pipeline or workflow for XAS Analysis. There are python 3 scripts for each state of matter ie, gas, liquid and solid, however the experimental spectra peak fitting (E2) is the same for all these states. The initial of each of these states is used at the start of a script name to indicate what the script is used for. The scripts that make up this pipeline is in its own directory. These are:
+This software is the start of automating the computational pipeline or workflow for XAS Analysis. There are python 4 scripts for each state of matter ie, gas, liquid and solid, however the experimental spectra peak fitting (E2) and the comparison (C1) are the same for all these states. The initial of each of these states is used at the start of a script name to indicate what the script is used for. The scripts that make up this pipeline is in its own directory. These are:
 
 E1: Experimental spectra background noise subtraction and normalization. This is still to be implemented as a deep learning problem.
 
@@ -17,13 +17,15 @@ GTE1: Theoretical electron density function calulation for a gas
 
 LES1: (Theoretical) excited state calulation for a liquid
 
-SES: (Theoretical) excited state calulation for a solid
+SES1: (Theoretical) excited state calulation for a solid
 
-GC1:  Compares experimental spectra with theorectically calculated data for a gas
+C1:  Compares experimental spectra with theorectically calculated data
 
-LC1:  Compares experimental spectra with theorectically calculated data for a liquid
+GW:  Wrapper Script to run E2, GTE1 and C1 for a gas
 
-SC1:   Compares experimental spectra with theorectically calculated data for a solid
+LW:  Wrapper Script to run E2, LES1 and C1 for a liquid
+
+SW:  Wrapper Script to run E2, SES1 and C1 for a solid
 
 
 The data file edge_data.txt which is a text file containing edge data information (derived from "Journal of Physics: Conference Series 712 (2016) 012070" which is taken from the X-ray Data Booklet) is also stored in this directory as it is used by more than one script.
