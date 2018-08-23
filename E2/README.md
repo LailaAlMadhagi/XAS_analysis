@@ -58,11 +58,14 @@ optional arguments:
   
   -path_out				The directory where the results directory will be written
   
+  
 EXAMPLE USAGE
 
 1, minimal needed to run (defaults assume it is a gas):
 
+
 E2.py  C:\Users\userid\Desktop\analysis\ImidazoleExperiment\N1s_Imidazole_ISEELS.txt 0 2 6 -offset 38
+
 
 BACKGROUND
 

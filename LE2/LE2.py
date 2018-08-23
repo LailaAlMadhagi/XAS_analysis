@@ -118,6 +118,7 @@ try:
     log_file.write(r"This program ran at "+LE2_date_time+r" on the "+host+r" host system.")
 except socket.herror:
     log_file.write(r"This program ran at "+LE2_date_time+r" on the host system.")
+
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 try:
     # doesn't even have to be reachable
@@ -129,7 +130,8 @@ finally:
     s.close()
     
 print("IP: ",IP)
-log_file.write("System's IP address is: "+IP)
+
+log_file.write("\n System's IP address is: "+IP)
 log_file.write("\n\n")
 
 print(description)
