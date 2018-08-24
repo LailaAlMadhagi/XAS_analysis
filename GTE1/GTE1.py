@@ -246,7 +246,7 @@ opt_err.close()
 # open them again because this loop can take a long time to run
 log_file.close()
 log_file=open(log_file_name, "w")
-"""
+
 # check Opt.out file
 loop=1
 finding=-1
@@ -472,5 +472,5 @@ log_file.write("\n\tTime-Dependent Density Functional Theory calculation time is
 
 print("\n~ path for directory where outputs are: {}".format(path_out))
 log_file.write("\n~ path for directory where outputs are: {}".format(path_out))
-"""
+
 log_file.close()
