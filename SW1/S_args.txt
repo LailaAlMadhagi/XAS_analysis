@@ -1,5 +1,5 @@
 Arguments for Solid state
-geom_directory=C://Users//dmg81179//Desktop//XAS_Analysis//SES
+geom_directory=C://Users//dmg81179//Desktop//XAS_Analysis//SES1
 orca_param=
 orca_executable=C://Orca//orca
 experimental_spectra=C://Users//dmg81179//Desktop//XAS_Analysis//E2//Imidazole_solid_APS.txt
