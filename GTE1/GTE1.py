@@ -67,10 +67,8 @@ parser.add_argument("-element",
 
 # all input argument have been read now we can process them
 args = parser.parse_args()
-
-file_geom_read=args.in_geom_file.name
-
-path, file_geom = os.path.split(file_geom_read)
+path, file_geom = os.path.split(args.in_geom_file.name)
+working_dir=os.getcwd()
 
 
 
@@ -84,7 +82,7 @@ date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 resultsdir = r"GTE1_"+file_geom_without_extension+r"_"+date_time
 
 
-path_in=path
+path_in=working_dir
 if args.path_out is not None:
     path_out=args.path_out+r"//"+resultsdir
 if args.path_out is None:
@@ -125,12 +123,21 @@ log_file.write("\n\n~ Molecular geometry file details: {}".format(args.in_geom_f
 print("\n~ Orca parameter file: {}".format(args.file_orca_params))
 log_file.write("\n\n~ Orca parameter file: {}".format(args.file_orca_params))
 
-print("\n~ Orca executable: {}".format(args.orca_executable))
-log_file.write("\n\n~ Orca executable: {}".format(args.orca_executable))
-
 print("\n~ Excited state calculations are run for element: {}".format(args.element))
 log_file.write("\n~ Excited state calculations are run for element: {}".format(args.element))
 
+ORCA=r"C://Orca//orca"
+
+if args.orca_executable is None or args.orca_executable=='':
+    print("The default path for orca, C://Orca//orca, is used.")
+    log_file.write("\n\nThe default path for orca, C://Orca//orca, is used.")
+
+if args.orca_executable is not None and args.orca_executable!='':
+    ORCA=args.orca_executable
+    print("This does not use the default path for orca, instead it used this path: "+ORCA)
+    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: "+ORCA)
+
+    
 log_file.write('\n\nPython {0} and {1}'.format((sys.version).split('|')[0],(sys.version).split('|')[1]))
 log_file.write('\n\nNumpy version is: '+np.__version__)
 log_file.flush()
@@ -145,18 +152,6 @@ log_file.flush()
 print("\n\nSTART: \n")
 log_file.write("\n\nSTART: \n")
 log_file.flush()
-
-ORCA=r"C://Orca//orca"
-
-if args.orca_executable is None or args.orca_executable=='':
-    print("The default path for orca, C://Orca//orca, is used.")
-    log_file.write("\n\nThe default path for orca, C://Orca//orca, is used.")
-
-if args.orca_executable is not None and args.orca_executable!='':
-    ORCA=args.orca_executable
-    print("This does not use the default path for orca, instead it used this path: "+ORCA)
-    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: "+ORCA)
-
 
 
 # Here are all the files we need to create (except the log file which we are already using)
@@ -251,6 +246,7 @@ opt_err.close()
 # open them again because this loop can take a long time to run
 log_file.close()
 log_file=open(log_file_name, "w")
+"""
 # check Opt.out file
 loop=1
 finding=-1
@@ -476,5 +472,5 @@ log_file.write("\n\tTime-Dependent Density Functional Theory calculation time is
 
 print("\n~ path for directory where outputs are: {}".format(path_out))
 log_file.write("\n~ path for directory where outputs are: {}".format(path_out))
-
+"""
 log_file.close()

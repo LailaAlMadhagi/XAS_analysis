@@ -28,7 +28,7 @@ INFORMATION ON THE LES1 (Liquid THEORETICAL EXCITED STATE CALCULATION) CODE
 
 usage: 
 
-LES1.py [-h] [-geom_file_name FILE] [-opi FILE] [-orca] [-path_out] [-element] DIR
+LES1.py [-h] [-geom_file_name FILE] [-opi FILE] [-orca] [-path_out] [-element] [-pal] DIR
 
 
 GTE1: Theoretical electron density function calulation
@@ -59,6 +59,9 @@ optional arguments:
 
   -element				The elemtent for which excited state calculations 
 						will be performed
+      
+  -pal 					Specify number of processors for parallel jobs. 
+						Do not specifiy if wanting to run serial jobs
 	
 
 EXAMPLE USAGE

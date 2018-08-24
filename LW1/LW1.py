@@ -49,7 +49,8 @@ arguments_d={'geom_directory':[],'orca_param':[],'orca_executable':[],
              'experimental_spectra':[],'experimental_energy_column_number':[],
              'experimental_intensity_column_number':[],'experimental_number_columns':[],
              'experimental_header_skip':[],'element_calculate':[],'results_dir':path_out,
-             'geom_file_name':[],'tddft_out_file':[],'fitted_peaks_params':[]}
+             'geom_file_name':[],'tddft_out_file':[],'fitted_peaks_params':[],
+             'number of processors':[]}
 
 with open (args.in_args.name,'r') as args_f:
     lines=args_f.readlines()[1:]
@@ -91,7 +92,8 @@ for file in os.listdir(arguments_d['geom_directory']):
                             '-geom_file_name',str(arguments_d['geom_file_name']),
                             '-orca',str(arguments_d['orca_executable']),
                             '-path_out',str(arguments_d['results_dir']),
-                            '-element',str(arguments_d['element_calculate'])],stdout=sp.PIPE, stderr=sp.PIPE)
+                            '-element',str(arguments_d['element_calculate']),
+                            '-pal',str(arguments_d['number of processors'])],stdout=sp.PIPE, stderr=sp.PIPE)
             LES1_output, LES1_err = LES1_p.communicate()
             LES1_p_status=LES1_p.wait()
             LES1_path_out=((LES1_output.decode('utf-8').split('\n')[-2]).replace('\r','').replace('\n','')).split(': ')[1]
@@ -100,6 +102,7 @@ for file in os.listdir(arguments_d['geom_directory']):
             log_file.write('LES1 err is: '+LES1_err.decode('utf-8'))
             log_file.write("\n\n")
             log_file.flush()
+            
             #add tddft_out file to arguments dictionary
             for file in os.listdir(LES1_path_out):
                 if file.endswith('.out') and arguments_d['element_calculate'] in file:
@@ -171,6 +174,7 @@ for file in os.listdir(arguments_d['geom_directory']):
             sstot=np.sum((df_C['intensity_exp'].astype(float)-ymean)**2)
             R_sqr=ssreg/sstot
             loop+=1
+            
         else:
             print("experimental and theoretical spectra are in good agreement and R-squared value is: %s"%R_sqr)
 log_file.close()            

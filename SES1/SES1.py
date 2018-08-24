@@ -71,6 +71,12 @@ parser.add_argument("-h_opt",
                     required=False,
                     help="Determine whether to run optimization calculation for hydrogen positions")
 
+parser.add_argument("-pal",
+                    dest="processors_number",
+                    type=str,
+                    required=False,
+                    help="If running ORCA in parallel specify the number of processors")
+
 # all input argument have been read now we can process them
 args = parser.parse_args()
 
@@ -81,8 +87,6 @@ if args.in_geom_dir is None:
         geom_files_dir=os.path.split(args.geom_file_name)[0]
 
 working_dir=os.getcwd()
-path_SES=working_dir
-
 path_geom, geom_files_dir = os.path.split(args.in_geom_dir)
 SES_date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
@@ -96,7 +100,7 @@ if args.geom_file_name is None:
     resultsdir = r"SES_"+geom_file.split('//')[-1].split('.')[0]+r'_'+SES_date_time
   
 # set in and out paths    
-path_in=path_SES
+path_in=working_dir
 if args.SES_path_out is not None:
     path_out=args.SES_path_out+r"//"+resultsdir
 if args.SES_path_out is None:
@@ -123,8 +127,17 @@ log_file.write("\n\n~ Orca parameter set : {}".format(args.op))
 print("\n~ Orca parameter file: {}".format(args.file_orca_params))
 log_file.write("\n\n~ Orca parameter file: {}".format(args.file_orca_params))
 
-print("\n~ Orca executable: {}".format(args.orca_executable))
-log_file.write("\n\n~ Orca executable: {}".format(args.orca_executable))
+ORCA=r"C://Orca//orca"
+
+if args.orca_executable is None or args.orca_executable=='':
+    print("The default path for orca, C://Orca//orca, is used.")
+    log_file.write("\n\nThe default path for orca, C://Orca//orca, is used.")
+
+if args.orca_executable is not None and args.orca_executable!='':
+    ORCA=args.orca_executable
+    print("This does not use the default path for orca, instead it used this path: "+ORCA)
+    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: "+ORCA)
+
 
 
 log_file.write('\n\nPython {0} and {1}'.format((sys.version).split('|')[0],(sys.version).split('|')[1]))
@@ -135,18 +148,11 @@ print("\n\nSTART: \n")
 log_file.write("\n\nSTART: \n")
 log_file.flush()
 
-ORCA=r"C://Orca//orca"
-
-if args.orca_executable is None:
-    print("The default path for orca, C:\Orca\orca.exe, is used.")
-    log_file.write("\n\nThe default path for orca, C:\Orca\orca.exe, is used.")
-
-if args.orca_executable is not None:
-    ORCA=args.orca_executable
-    print("This does not use the default path for orca, instead it used this path: ", ORCA)
-    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: %s"%ORCA)
-
     
+if args.processors_number is None or args.processors_number == '':
+    parallel_array=np.array(["#This is a serial job","\n\n"])      
+if args.processors_number is not None and args.processors_number != '':
+    parallel_array=np.array(["#This is a parallel job", "\n%pal"," nprocs ",int(args.processors_number)," end"])
     
     
 # Here are all the files we need to create (except the log file which we are already using)
@@ -219,6 +225,8 @@ if args.hydrogen_positions_Opt == 'None':
     
     #write SP input file
     with open(sp_input_file, "w") as sp_file:
+        for item in parallel_array:
+            sp_file.writelines(["%s " %item])
         for item in sp_keywords_array:
             sp_file.writelines(["%s " %item])
         for item in print_array:
@@ -309,6 +317,8 @@ elif args.hydrogen_positions_Opt != 'None':
     
     #write Opt input file
     with open(opt_input_file, "w") as Opt_file:
+        for item in parallel_array:
+            Opt_file.writelines(["%s " %item])
         for item in opt_keywords_array:
             Opt_file.writelines(["%s " %item])
         for item in h_opt_array:
@@ -453,6 +463,8 @@ for j in final_orbital_window_array:
     tddft_calc_array=["\n%tddft",tddft_orbwin_string,"nroots=20","maxdim=200","end"]
     with open(tddft_input_file, "w") as tddft_input:
         tddft_input.writelines("#This is %s K-edge calculation \n" %j[0])
+        for item in parallel_array:
+            tddft_input.writelines(["%s " %item])
         for item in tddft_keywords_array:
             tddft_input.writelines(["%s " %item])
         for item in print_array:

@@ -65,6 +65,13 @@ parser.add_argument("-element",
                     required=False,
                     help="the elemtent for which excited state calculations will be performed")
 
+parser.add_argument("-pal",
+                    dest="processors_number",
+                    type=str,
+                    required=False,
+                    help="If running ORCA in parallel specify the number of processors")
+
+
 # all input argument have been read now we can process them
 args = parser.parse_args()
 
@@ -87,7 +94,7 @@ if args.geom_file_name is None:
     resultsdir = r"LES_"+geom_file.split('//')[1]+r'_'+LES_date_time
   
 # set in and out paths    
-path_in=path_LES
+path_in=working_dir
 if args.LES_path_out is not None:
     path_out=args.LES_path_out+r"//"+resultsdir
 if args.LES_path_out is None:
@@ -114,27 +121,29 @@ log_file.write("\n\n~ Orca parameter set : {}".format(args.op))
 print("\n~ Orca parameter file: {}".format(args.file_orca_params))
 log_file.write("\n\n~ Orca parameter file: {}".format(args.file_orca_params))
 
-print("\n~ Orca executable: {}".format(args.orca_executable))
-log_file.write("\n\n~ Orca executable: {}".format(args.orca_executable))
+ORCA=r"C://Orca//orca"
+
+if args.orca_executable is None or args.orca_executable=='':
+    print("The default path for orca, C://Orca//orca, is used.")
+    log_file.write("\n\nThe default path for orca, C://Orca//orca, is used.")
+
+if args.orca_executable is not None and args.orca_executable!='':
+    ORCA=args.orca_executable
+    print("This does not use the default path for orca, instead it used this path: "+ORCA)
+    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: "+ORCA)
+
 
 
 print("\n\nSTART: \n")
 log_file.write("\n\nSTART: \n")
 log_file.flush()
 
-ORCA=r"C:\Orca\orca"
 
-if args.orca_executable is None:
-    print("The default path for orca, C:\Orca\orca, is used.")
-    log_file.write("\n\nThe default path for orca, C:\Orca\orca, is used.")
+if args.processors_number is None or args.processors_number == '':
+    parallel_array=np.array(["#This is a serial job","\n\n"])      
+if args.processors_number is not None and args.processors_number != '':
+    parallel_array=np.array(["#This is a parallel job", "\n%pal"," nprocs ",int(args.processors_number)," end"])
 
-if args.orca_executable is not None:
-    ORCA=args.orca_executable
-    print("This does not use the default path for orca, instead it used this path: ", ORCA)
-    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: %s"%ORCA)
-
-    
-    
     
 # Here are all the files we need to create (except the log file which we are already using)
 
@@ -161,7 +170,7 @@ with open(edge_data_file,"r") as edge_data_file:
 
 #generate input file for Single point calculation
 # default case for ORCA SP parameters
-sp_keywords_solution_array=np.array(["!","B3LYP","D3","ma-def2-SVP","TIGHTSCF","Grid3", "FinalGrid5"])
+sp_keywords_solution_array=np.array(["\n!","B3LYP","D3","ma-def2-SVP","TIGHTSCF","Grid3", "FinalGrid5"])
 
 """
 if "solution" in args.op:
@@ -177,7 +186,7 @@ if args.file_orca_params is None:
 log_file.flush()
 
 #user input for ORCA SP parameters
-sp_keywords_infile_array = ["!"]
+sp_keywords_infile_array = ["\n!"]
 if args.file_orca_params is not None:    
     array=[]
     filename_desc=args.file_orca_params
@@ -203,6 +212,8 @@ geom_array=np.array(["*xyzfile","0","1",str(geom_file)])
 
 #write SP input file
 with open(sp_input_file, "w") as sp_file:
+    for item in parallel_array:
+        sp_file.writelines(["%s " %item])
     for item in sp_keywords_array:
         sp_file.writelines(["%s " %item])
     for item in print_array:
@@ -309,6 +320,8 @@ for j in final_orbital_window_array:
     tddft_calc_array=["\n%tddft",tddft_orbwin_string,"nroots=20","maxdim=200","end"]
     with open(tddft_input_file, "w") as tddft_input:
         tddft_input.writelines("#This is %s K-edge calculation \n" %j[0])
+        for item in parallel_array:
+            tddft_input.writelines(["%s " %item])
         for item in tddft_keywords_array:
             tddft_input.writelines(["%s " %item])
         for item in print_array:
@@ -346,4 +359,5 @@ print("\n~ path for directory where outputs are: {}".format(path_out))
 log_file.write("\n~ path for directory where outputs are: {}".format(path_out))
 
 
-log_file.close()            
+log_file.close()
+            

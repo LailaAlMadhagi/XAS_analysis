@@ -21,11 +21,11 @@ SES1: (Theoretical) excited state calulation for a solid
 
 C1:  Compares experimental spectra with theorectically calculated data
 
-GW:  Wrapper Script to run E2, GTE1 and C1 for a gas
+GW1:  Wrapper Script to run E2, GTE1 and C1 for a gas
 
-LW:  Wrapper Script to run E2, LES1 and C1 for a liquid
+LW1:  Wrapper Script to run E2, LES1 and C1 for a liquid
 
-SW:  Wrapper Script to run E2, SES1 and C1 for a solid
+SW1:  Wrapper Script to run E2, SES1 and C1 for a solid
 
 
 The data file edge_data.txt which is a text file containing edge data information (derived from "Journal of Physics: Conference Series 712 (2016) 012070" which is taken from the X-ray Data Booklet) is also stored in this directory as it is used by more than one script.

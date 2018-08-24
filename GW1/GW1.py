@@ -94,6 +94,7 @@ log_file.write("\n\n")
 log_file.write('GTE1 err is: '+GTE1_err.decode('utf-8'))
 log_file.write("\n\n")
 log_file.flush()
+
 #add tddft_out file to arguments dictionary
 for file in os.listdir(GTE1_path_out):
     if file.endswith('.out') and arguments_d['element_calculate'] in file:
@@ -122,6 +123,5 @@ log_file.write('C1 output is: '+C1_output.decode('utf-8'))
 log_file.write("\n\n")
 log_file.write('C1 err is: '+C1_err.decode('utf-8'))
 log_file.write("\n\n")
+
 log_file.close()            
-            
-            

@@ -50,7 +50,8 @@ arguments_d={'geom_directory':[],'orca_param':[],'orca_executable':[],
              'experimental_spectra':[],'experimental_energy_column_number':[],
              'experimental_intensity_column_number':[],'experimental_number_columns':[],
              'experimental_header_skip':[],'element_calculate':[],'results_dir':path_out,
-             'geom_file_name':[],'tddft_out_file':[],'fitted_peaks_params':[],'hydrogen_opt':[]}
+             'geom_file_name':[],'tddft_out_file':[],'fitted_peaks_params':[],
+             'hydrogen_opt':[],'number of processors':[]}
 
 with open (args.in_args.name,'r') as args_f:
     lines=args_f.readlines()[1:]
@@ -103,7 +104,8 @@ while loop <loop_break:
                         '-orca',str(arguments_d['orca_executable']),
                         '-path_out',str(arguments_d['results_dir']),
                         '-element',str(arguments_d['element_calculate']),
-                        '-h_opt',str(arguments_d['hydrogen_opt'])],stdout=sp.PIPE, stderr=sp.PIPE)
+                        '-h_opt',str(arguments_d['hydrogen_opt']),
+                        '-pal',str(arguments_d['number of processors'])],stdout=sp.PIPE, stderr=sp.PIPE)
         SES1_output, SES1_err = SES1_p.communicate()
         SES1_p_status=SES1_p.wait()
         SES1_path_out=((SES1_output.decode('utf-8').split('\n')[-2]).replace('\r','').replace('\n','')).split(': ')[1]

@@ -28,7 +28,7 @@ INFORMATION ON THE LES1 (Liquid THEORETICAL EXCITED STATE CALCULATION) CODE
 
 usage: 
 
-LES1.py [-h] [-geom_file_name FILE] [-opi FILE] [-orca] [-path_out] [-element] [-h_opt] DIR
+LES1.py [-h] [-geom_file_name FILE] [-opi FILE] [-orca] [-path_out] [-element] [-h_opt] [-pal] DIR
 
 
 GTE1: Theoretical electron density function calulation
@@ -62,6 +62,10 @@ optional arguments:
 	
   -h_opt				Determines whether to run geometry optimization calculation 
 						for hydrogen positions 
+
+  -pal 					Specify number of processors for parallel jobs. 
+						Do not specifiy if wanting to run serial jobs
+							
 
 EXAMPLE USAGE
 

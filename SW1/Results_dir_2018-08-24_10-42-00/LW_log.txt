@@ -1,2 +1,0 @@
-SW: Wrapper script for Solid samples
-
