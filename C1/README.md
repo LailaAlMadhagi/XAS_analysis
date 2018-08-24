@@ -10,13 +10,9 @@ FILES INCLUDED
 1,) README.md					This currently holds all the documentation for
 								this repository
 								
-2,) GC1.py   					Python source code for the gas comparison
-                                pipeline  
+2,) C1.py   					Python source code for the comparison pipeline  
 								
-3,) edge_data.txt				A text file containing edge data information
-								(derived from "Journal of Physics: Conference Series 712 (2016) 012070" which is taken from the X-ray Data Booklet)
-								
-4,) fitted_peaks_param.txt  	A text file containing the parameters for
+3,) fitted_peaks_param.txt  	A text file containing the parameters for
 								the peaks fitted to the experimental data. This file is used for testing   
 								and development. 
 								
@@ -32,26 +28,42 @@ INFORMATION ON THE GC1 (GAS COMPARISON) CODE
 
 usage:   
 
-[-h] FILE FILE FILE
+[-h] [-offset] [-orca] [-path_out] FILE column_energy column_intensity n_columns FILE FILE
 
 GC1: Compares experimental spectra with theorectically calculated data for a gas.
 	   
 	   
 positional arguments:
 
-  FILE        Experimental spectra datafile to be read in.
+  FILE        			Experimental spectra datafile to be read in.
   
-  FILE        Theoretically calulated spectra datafile to be read in.
+  column_energy         The column in spectra file that holds the energy, 0 is
+                        the lowest value.
+						
+  column_intensity      The column in spectra file that holds the intensity, 0
+                        is the lowest value.
+						
+  n_columns             The number of columns in spectra file.
   
-  FILE        Peaks fitted to the experimental spectra datafile to be read in.
+  FILE        			Theoretically calulated spectra datafile to be read in.
+  
+  FILE        			Peaks fitted to the experimental spectra datafile to be read in.
 
 optional arguments:
 
-  -h, --help  show this help message and exit
+  -h, --help  			show this help message and exit
+  
+  -offset OFFSET        The number of lines in the input spectra file that are
+                        to be skipped before the data is read in.
+						
+  -orca FILE          	path to the orca executable; C:\Orca\orca is the
+						default path-orca	
+  
+  -path_out				The directory where the results directory will be written
   
 EXAMPLE USAGE
 
-GC1.py C:\Users\userid\Desktop\data\Benzaldehyde\Benzaldehyde_C1s.txt 0 2 3 -offset 18 C:\Users\userid\Desktop\data\Benzaldehyde\TDDFT_C-edge.out C:\Users\userid\Desktop\data\Benzaldehyde\Benzaldehyde_C1s.txt_fitted_peaks_param.txt
+C1.py C:\Users\userid\Desktop\data\Imidazole\N1s_Imidazole_ISEELS.txt 0 2 6 -offset 38 C:\Users\userid\Desktop\data\Imidazole\TDDFT_N-edge.out C:\Users\userid\Desktop\data\Imidazole\N1s_Imidazole_ISEELS.txt_fitted_peaks_param.txt
 
 THE REPORT
 

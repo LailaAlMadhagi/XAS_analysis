@@ -1,0 +1,6 @@
+B3LYP
+D3
+ma-def2-SVP
+TIGHTSCF
+Grid3
+FinalGrid5

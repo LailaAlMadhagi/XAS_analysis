@@ -4,6 +4,7 @@ Created on Tue May 22 17:16:41 2018
 email: fy11lham@leeds.ac.uk 
 This is a python code for peak fitting with some ideas from 
 Matlab code published in: Journal of Physics: Conference Series 712 (2016) 012070  
+Code last modified 23rd August 2018
 """
 
 import timeit
@@ -14,8 +15,8 @@ import numpy as np
 import scipy.signal
 #import matplotlib 
 #matplotlib.use('TkAgg')
+import matplotlib
 import matplotlib.pyplot as plt
-
 from collections import OrderedDict
 import pandas as pd
 import argparse
@@ -68,26 +69,22 @@ parser.add_argument("-offset",
                     help="The number of lines in the input spectra file that are to be skipped before the data is read in.")
 
 parser.add_argument("-path_out",
-                    dest="LE2_path_out",
+                    dest="path_out",
                     type=str,
                     required=False,
                     help="directory where output is written")
 
 args = parser.parse_args()
 
-#print(args)
 
 path_exp, file_exp = os.path.split(args.in_spectra.name)
-
 index_of_dot = file_exp.index(".") 
 filename_without_extension = file_exp[:index_of_dot]
 
-LE2_date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-resultsdir = r"LE2_"+filename_without_extension+r"_"+LE2_date_time
-#resultsdir = r"E2_"+filename_without_extension
+date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+resultsdir = r"E2_"+filename_without_extension+r"_"+date_time
 
 working_dir=os.getcwd()
-path_in=working_dir
 
 if args.n_columns -1 < args.column_energy:
     sys.exit("ERROR; There are not enough colums in the data for the energy column to exist.")
@@ -95,19 +92,16 @@ if args.n_columns -1 < args.column_energy:
 if args.n_columns -1 < args.column_intensity:
     sys.exit("ERROR; There are not enough colums in the data for the intensity column to exist.")
 
-if args.offset is not None:
-    skip = int(args.offset)
 if args.offset is None:
-    sys.exit("ERROR; User defined files need to have an offset value provided.")
+    sys.exit("ERROR; Need to have an offset value provided.")
         
-if args.LE2_path_out is not None:
-    path_out=args.LE2_path_out+r'//'+resultsdir
-if args.LE2_path_out is None:
+if args.path_out is not None:
+    path_out=args.path_out+r'//'+resultsdir
+if args.path_out is None:
     path_out=path_exp+r'//'+resultsdir
-
-
 os.makedirs(path_out)
-log_file_name = path_out+r"//log.txt"
+
+log_file_name = path_out+r"//%s_E2_log.txt"%filename_without_extension
 log_file=open(log_file_name, "w") 
 
 
@@ -115,9 +109,10 @@ log_file=open(log_file_name, "w")
 log_file.write(description+"\n\n")
 try:
     host=socket.gethostbyaddr(socket.gethostname())[0]
-    log_file.write(r"This program ran at "+LE2_date_time+r" on the "+host+r" host system.")
 except socket.herror:
-    log_file.write(r"This program ran at "+LE2_date_time+r" on the host system.")
+    host=''
+    
+log_file.write(r"This program ran at "+date_time+r" on the host system.")
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 try:
@@ -133,7 +128,9 @@ print("IP: ",IP)
 
 log_file.write("\n System's IP address is: "+IP)
 log_file.write("\n\n")
+log_file.flush()
 
+#print(args)
 print(description)
 print("\n~ Experimental spectra file details: {}".format(args.in_spectra))
 log_file.write("\n\n~ Experimental spectra file details: {}".format(args.in_spectra))
@@ -153,6 +150,12 @@ log_file.write("\n\n~ File type of spectral file : {}".format(args.file_type))
 
 print("\n~ Offset, number of lines to skip to get to the data: {}".format(args.offset))
 log_file.write("\n\n~ Offset, number of lines to skip to get to the data: {}".format(args.offset))
+
+log_file.write('\n\nPython {0} and {1}'.format((sys.version).split('|')[0],(sys.version).split('|')[1]))
+log_file.write('\n\nMatplotlib version is: '+matplotlib.__version__)
+log_file.write('\n\nScipy version is: '+scipy.__version__)
+log_file.write('\n\nPandas version is: '+pd.__version__)
+log_file.flush()
 """
 ftype ="{}".format(args.file_type)
 
@@ -191,7 +194,7 @@ with open(edge_data_table,"r") as edge_data_table:
 edge_data_table.close()
 
 with open (spectra_file) as spectra_file:
-    lines_after_heading=spectra_file.readlines()[skip:]# skip is provided through the command line
+    lines_after_heading=spectra_file.readlines()[int(args.offset):]
     for line in lines_after_heading:
         line=line.split()
         data=np.append(data,line)
@@ -200,12 +203,10 @@ spectra_file.close()
 
 # xdata (energy) and ydata (intensity)
 ycol=args.column_intensity
-#xdata=data[:,args.column_energy].astype(float)
 xdata_row=data[:,args.column_energy]
 xdata=np.array([])
 for x in xdata_row:
-    xdata=np.append(xdata,float(x.replace(",",""))) # xdata is energy and is always the first column in Athena files in 2018
-#ydata=data[:,ycol].astype(float) # ask user for the column where the intensity data, ydata as this is not always in the same place 
+    xdata=np.append(xdata,float(x.replace(",",""))) 
 ydata_row=data[:,ycol]
 ydata=np.array([])
 for y in ydata_row:
@@ -302,43 +303,43 @@ funccenter_new=np.array([])
 func_diff=[]
 for n in range(1,gaussnum):
     func_diff.append(abs(float(d['g%s'%str(n+1)][2])-float(d['g%s'%str(n)][2])))
-    if abs(float(d['g%s'%str(n+1)][2])-float(d['g%s'%str(n)][2])) >0.5:
+    if abs(float(d['g%s'%str(n+1)][2])-float(d['g%s'%str(n)][2])) >0.8:
         #funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n+1)][2]))
         funccenter_new=np.append(funccenter_new,float(d['g%s'%str(n)][2]))
         funccenter_new=np.unique(np.sort(funccenter_new))
-if any(t<0.5 for t in func_diff):
+#if any(t<0.8 for t in func_diff):
     # second fitting attempt, after peaks with same energy position removed
-    gaussnum=len(funccenter_new)
-    funcnum=gaussnum
-    # initial guess x0F, lower bound lb, upper bound up
-    x0f=np.zeros((funcnum,4))
-    lb=np.zeros((funcnum,4))
-    ub=np.zeros((funcnum,4))
-    #initial guess for error function
-    step1=StepModel(form='arctan', prefix='step1_')
-    # pars.update(step2.guess(y,x=x))
-    pars=step1.make_params()
-    pars['step1_center'].set(e0+4, min=e0+3, max=e0+6)
-    pars['step1_amplitude'].set(0.5, min=0.1, max=1)
-    pars['step1_sigma'].set(0.5, min=0.3, max=0.8)
-    mod=step1
-    # initial guess for gaussian
-    x0f [:funcnum,2]=funccenter_new[:]
-    for n0 in range (0,funcnum):
-        x0f[n0,0:2]=[0.5,0.5]
-        lb[n0,:]=[0.2,0.2,x0f[n0,2]-1,0]
-        ub[n0,:]=[3,0.7,x0f[n0,2]+1,0.1]
-        gauss=GaussianModel(prefix='g%s_'%int(n0+1))
-        pars.update(gauss.make_params())
-        pars['g%s_amplitude'%int(n0+1)].set(x0f[n0][0], min=lb[n0][0],max=ub[n0][0])
-        pars['g%s_sigma'%int(n0+1)].set(x0f[n0][1], min=lb[n0][1],max=ub[n0][1])
-        pars['g%s_center'%int(n0+1)].set(x0f[n0][2], min=lb[n0][2],max=ub[n0][2])
-        mod+=gauss          
-    # fitting the functions
-    init = mod.eval(pars, x=fit_xdata)
-    out = mod.fit(fit_ydata, pars, x=fit_xdata)
-    Y_fitted=out.best_fit
-    R_sqr=1 - out.residual.var() / np.var(fit_ydata)
+gaussnum=len(funccenter_new)
+funcnum=gaussnum
+# initial guess x0F, lower bound lb, upper bound up
+x0f=np.zeros((funcnum,4))
+lb=np.zeros((funcnum,4))
+ub=np.zeros((funcnum,4))
+#initial guess for error function
+step1=StepModel(form='arctan', prefix='step1_')
+# pars.update(step2.guess(y,x=x))
+pars=step1.make_params()
+pars['step1_center'].set(e0+4, min=e0+3, max=e0+6)
+pars['step1_amplitude'].set(0.5, min=0.1, max=1)
+pars['step1_sigma'].set(0.5, min=0.3, max=0.8)
+mod=step1
+# initial guess for gaussian
+x0f [:funcnum,2]=funccenter_new[:]
+for n0 in range (0,funcnum):
+    x0f[n0,0:2]=[0.5,0.5]
+    lb[n0,:]=[0.2,0.2,x0f[n0,2]-1,0]
+    ub[n0,:]=[3,0.7,x0f[n0,2]+1,0.1]
+    gauss=GaussianModel(prefix='g%s_'%int(n0+1))
+    pars.update(gauss.make_params())
+    pars['g%s_amplitude'%int(n0+1)].set(x0f[n0][0], min=lb[n0][0],max=ub[n0][0])
+    pars['g%s_sigma'%int(n0+1)].set(x0f[n0][1], min=lb[n0][1],max=ub[n0][1])
+    pars['g%s_center'%int(n0+1)].set(x0f[n0][2], min=lb[n0][2],max=ub[n0][2])
+    mod+=gauss          
+# fitting the functions
+init = mod.eval(pars, x=fit_xdata)
+out = mod.fit(fit_ydata, pars, x=fit_xdata)
+Y_fitted=out.best_fit
+R_sqr=1 - out.residual.var() / np.var(fit_ydata)
 
 
 # determination of number of gaussian and their initial position guesses + fitting using smooth Y-data
@@ -419,44 +420,43 @@ funccenter_new_smooth=np.array([])
 func_diff_smooth=[]
 for n in range(1,gaussnum_smooth):
     func_diff_smooth.append(abs(float(d_smooth['g%s'%str(n+1)][2])-float(d_smooth['g%s'%str(n)][2])))
-    if abs(float(d_smooth['g%s'%str(n+1)][2])-float(d_smooth['g%s'%str(n)][2])) >0.5:
+    if abs(float(d_smooth['g%s'%str(n+1)][2])-float(d_smooth['g%s'%str(n)][2])) >0.8:
         #funccenter_new_smooth=np.append(funccenter_new_smooth,float(d['g%s'%str(n+1)][2]))
         funccenter_new_smooth=np.append(funccenter_new_smooth,float(d_smooth['g%s'%str(n)][2]))
-        funccenter_new_smooth=np.unique(np.sort(funccenter_new_smooth))
-        
-if any(t<0.5 for t in func_diff_smooth):
+        funccenter_new_smooth=np.unique(np.sort(funccenter_new_smooth))        
+#if any(t<0.8 for t in func_diff_smooth):
     # second fitting attempt, after peaks with same energy position removed
-    gaussnum_smooth=len(funccenter_new_smooth)
-    funcnum_smooth=gaussnum_smooth
-    # initial guess x0F, lower bound lb, upper bound up
-    x0f_smooth=np.zeros((funcnum_smooth,4))
-    lb_smooth=np.zeros((funcnum_smooth,4))
-    ub_smooth=np.zeros((funcnum_smooth,4))
-    #initial guess for error function
-    step1_smooth=StepModel(form='arctan', prefix='step1_')
-    # pars.update(step2.guess(y,x=x))
-    pars_smooth=step1_smooth.make_params()
-    pars_smooth['step1_center'].set(e0+4, min=e0+3, max=e0+6)
-    pars_smooth['step1_amplitude'].set(0.5, min=0.1, max=1)
-    pars_smooth['step1_sigma'].set(0.5, min=0.3, max=0.8)
-    mod_smooth=step1_smooth
-    # initial guess for gaussian
-    x0f_smooth [:funcnum_smooth,2]=funccenter_new_smooth[:]
-    for n0 in range (0,funcnum_smooth):
-        x0f_smooth[n0,0:2]=[0.5,0.5]
-        lb_smooth[n0,:]=[0.2,0.2,x0f_smooth[n0,2]-1,0]
-        ub_smooth[n0,:]=[3,0.7,x0f_smooth[n0,2]+1,0.1]
-        gauss_smooth=GaussianModel(prefix='g%s_'%int(n0+1))
-        pars_smooth.update(gauss_smooth.make_params())
-        pars_smooth['g%s_amplitude'%int(n0+1)].set(x0f_smooth[n0][0], min=lb_smooth[n0][0],max=ub_smooth[n0][0])
-        pars_smooth['g%s_sigma'%int(n0+1)].set(x0f_smooth[n0][1], min=lb_smooth[n0][1],max=ub_smooth[n0][1])
-        pars_smooth['g%s_center'%int(n0+1)].set(x0f_smooth[n0][2], min=lb_smooth[n0][2],max=ub_smooth[n0][2])
-        mod_smooth+=gauss_smooth          
-    # fitting the functions
-    init_smooth = mod_smooth.eval(pars_smooth, x=fit_xdata)
-    out_smooth = mod_smooth.fit(fit_ydata, pars_smooth, x=fit_xdata)
-    Y_fitted_smooth=out_smooth.best_fit
-    R_sqr_smooth=1 - out_smooth.residual.var() / np.var(fit_ydata)
+gaussnum_smooth=len(funccenter_new_smooth)
+funcnum_smooth=gaussnum_smooth
+# initial guess x0F, lower bound lb, upper bound up
+x0f_smooth=np.zeros((funcnum_smooth,4))
+lb_smooth=np.zeros((funcnum_smooth,4))
+ub_smooth=np.zeros((funcnum_smooth,4))
+#initial guess for error function
+step1_smooth=StepModel(form='arctan', prefix='step1_')
+# pars.update(step2.guess(y,x=x))
+pars_smooth=step1_smooth.make_params()
+pars_smooth['step1_center'].set(e0+4, min=e0+3, max=e0+6)
+pars_smooth['step1_amplitude'].set(0.5, min=0.1, max=1)
+pars_smooth['step1_sigma'].set(0.5, min=0.3, max=0.8)
+mod_smooth=step1_smooth
+# initial guess for gaussian
+x0f_smooth [:funcnum_smooth,2]=funccenter_new_smooth[:]
+for n0 in range (0,funcnum_smooth):
+    x0f_smooth[n0,0:2]=[0.5,0.5]
+    lb_smooth[n0,:]=[0.2,0.2,x0f_smooth[n0,2]-1,0]
+    ub_smooth[n0,:]=[3,0.7,x0f_smooth[n0,2]+1,0.1]
+    gauss_smooth=GaussianModel(prefix='g%s_'%int(n0+1))
+    pars_smooth.update(gauss_smooth.make_params())
+    pars_smooth['g%s_amplitude'%int(n0+1)].set(x0f_smooth[n0][0], min=lb_smooth[n0][0],max=ub_smooth[n0][0])
+    pars_smooth['g%s_sigma'%int(n0+1)].set(x0f_smooth[n0][1], min=lb_smooth[n0][1],max=ub_smooth[n0][1])
+    pars_smooth['g%s_center'%int(n0+1)].set(x0f_smooth[n0][2], min=lb_smooth[n0][2],max=ub_smooth[n0][2])
+    mod_smooth+=gauss_smooth          
+# fitting the functions
+init_smooth = mod_smooth.eval(pars_smooth, x=fit_xdata)
+out_smooth = mod_smooth.fit(fit_ydata, pars_smooth, x=fit_xdata)
+Y_fitted_smooth=out_smooth.best_fit
+R_sqr_smooth=1 - out_smooth.residual.var() / np.var(fit_ydata)
 
 if R_sqr_smooth>R_sqr:
     # reading fitted peaks parameters from second fitting attempt
@@ -483,11 +483,9 @@ if R_sqr_smooth>R_sqr:
     #plot results
     fig=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k') 
     plot_components = True
-    
     plt.plot(xdata, ydata, 'b',label='Experimental Data')
     #plt.plot(fit_xdata, init, 'k--') #plot with initial guess
     plt.plot(fit_xdata, out_smooth.best_fit, 'r-', label='Fitted data')
-    
     if plot_components:
         comps = out_smooth.eval_components(x=fit_xdata)
         plt.plot(fit_xdata,comps['step1_'], 'k--',label='Step Function')
@@ -501,14 +499,12 @@ if R_sqr_smooth>R_sqr:
     plt.ylabel('Intensity')
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     fig.show()
-    fig_filename = path_out+"//%s_fitted_peaks.png"%filename_without_extension
+    fig_name=r'%s_fitted_peaks.png'%filename_without_extension
+    fig_filename = path_out+'//'+fig_name
     fig.savefig(fig_filename,bbox_inches='tight')
     
-    
     print("Goodness of fit (R-squared) is: %s" %R_sqr_smooth)
-    
     log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr_smooth)
-    
     log_file.flush()
     
     # write fitted peaks to output file 
@@ -524,10 +520,9 @@ axis=1)
     stop = timeit.default_timer()
     running_time=(stop-start)/60
     print ("\nRunning time is: "+ str(round(running_time,3)) + "minutes") 
-    
     log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
-    
     log_file.close()
+    
 else:
     # reading fitted peaks parameters from second fitting attempt
     v=[]
@@ -553,11 +548,9 @@ else:
     #plot results
     fig=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k') 
     plot_components = True
-    
     plt.plot(xdata, ydata, 'b',label='Experimental Data')
     #plt.plot(fit_xdata, init, 'k--') #plot with initial guess
     plt.plot(fit_xdata, out.best_fit, 'r-', label='Fitted data')
-    
     if plot_components:
         comps = out.eval_components(x=fit_xdata)
         plt.plot(fit_xdata,comps['step1_'], 'k--',label='Step Function')
@@ -571,14 +564,12 @@ else:
     plt.ylabel('Intensity')
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     fig.show()
-    fig_filename = path_out+"//%s_fitted_peaks.png"%filename_without_extension
+    fig_name=r'%s_fitted_peaks.png'%filename_without_extension
+    fig_filename = path_out+'//'+fig_name    
     fig.savefig(fig_filename,bbox_inches='tight')
     
-    
     print("Goodness of fit (R-sqaured) is: %s" %R_sqr)
-    
     log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr)
-    
     log_file.flush()
     
     # write fitted peaks to output file 
@@ -595,6 +586,52 @@ else:
     running_time=(stop-start)/60
     print ("\nRunning time is: "+ str(round(running_time,3)) + "minutes") 
     log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
-    log_file.close()
     
-    print("\nLE2 outputs are in \n%s"%path_out)
+    
+html_infile_name=working_dir+r"//..//E2//template.html"
+html_outfile_name=path_out+r"//%s_E2_report.html"%filename_without_extension
+
+html_line1 =r"This program ran at "+date_time+r" on the "+host+r" host system"
+
+# The resolution of the images depends on the graphics hardware and settings.
+# The html template scales the images so the image resolution is not so important
+# Image scaling is not part of html 5 format and at the time of writing html 5
+# was not working in all browsers so the template is not in html 5.
+# These are also described in the README file.
+
+feature=1
+
+with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as html_out:
+    n=0
+    for line in html_in:
+        if '***' in line and n==3:
+            s="%0.3f"%(R_sqr)
+            html_out.write(line.replace("***",s))
+            n+=1
+        elif '***' in line and n==2:
+            html_out.write(line.replace("***",fig_name))
+            n+=1            
+        elif '***' in line and n==1:
+            html_out.write(line.replace("***",html_line1))            
+            n+=1
+        elif '***' in line and n==0:
+            html_out.write(line.replace("***",description))
+            n+=1
+        elif '+*+*+*' in line:
+            line=""
+            total_rows=len(fitted_peaks_param.axes[0])
+            total_cols=len(fitted_peaks_param.axes[1])
+            n=0
+            for c in range(1,total_cols):
+                row_line="<tr> <td> g%d </td> "%(n)
+                for r in range(total_rows):
+                    row_line+=" <td> %s </td> "%( fitted_peaks_param.iloc[r,c])
+                row_line+=" </tr>"
+                html_out.write(row_line)
+                n+=1
+        else:
+            html_out.write(line.strip())
+
+print("\n~ path_out, path to directory where E2 outputs are: {}".format(path_out))
+log_file.write("\n\n~ path_out, path to directory where E2 outputs are: {}".format(path_out))
+log_file.close()

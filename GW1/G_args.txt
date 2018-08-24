@@ -1,0 +1,10 @@
+Arguments for liquid state
+geom_file_name=U://XAS_analysis//GTE1//Imidazole_geom.xyz
+orca_param=
+orca_executable=C:\Orca\orca
+experimental_spectra=U://XAS_analysis//E2//N1s_Imidazole_ISEELS.txt
+experimental_energy_column_number=0
+experimental_intensity_column_number=2
+experimental_number_columns=6
+experimental_header_skip=38
+element_calculate=N

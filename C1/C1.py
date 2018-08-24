@@ -11,18 +11,19 @@ start = timeit.default_timer()
 import os
 import numpy as np
 import subprocess as sp
+import matplotlib
 import matplotlib.pyplot as plt
 #import scipy.signal
 import datetime
 import argparse
 import sys
-#import socket
+import socket
 from collections import OrderedDict
 import shutil
 
 
 # handle the input flags
-description='LC1: Compares experimental spectra with theorectically calculated data for liquid samples.'
+description='C1: Compares experimental spectra with theorectically calculated data.'
 parser = argparse.ArgumentParser(description)
 
 parser.add_argument('in_experiment_file',
@@ -51,7 +52,7 @@ parser.add_argument("-offset",
 parser.add_argument("-orca",
                     dest="orca_executable",
                     required=False,
-                    help="path to the orca executable; C:\Orca\orca.exe is the default path",
+                    help="path to the orca executable; C:\Orca\orca is the default path",
                     metavar="FILE")
 
 parser.add_argument('in_theoretical_file',
@@ -65,73 +66,108 @@ parser.add_argument('in_fitted_peaks_file',
     default=sys.stdin, metavar="FILE")
 
 parser.add_argument("-path_out",
-                    dest="LC1_path_out",
+                    dest="path_out",
                     type=str,
                     required=False,
                     help="directory where output is written")
-
+#edge data is in a directory up
 '''parser.add_argument('in_edge_data_file',
     type=argparse.FileType('r'),
     help="Edge data from experimental spectra datafile to be read in.",
     default=sys.stdin, metavar="FILE")'''
 
-
 args = parser.parse_args()
 
-skip = int(args.offset)
+if args.n_columns -1 < args.column_energy:
+    sys.exit("ERROR; There are not enough colums in the data for the energy column to exist.")
+    
+if args.n_columns -1 < args.column_intensity:
+    sys.exit("ERROR; There are not enough colums in the data for the intensity column to exist.")
 
-path_exp, file_exp = os.path.split(args.in_experiment_file.name)
-index_of_dot = file_exp.index(".") 
-file_exp_without_extension = file_exp[:index_of_dot]
-
+if args.offset is None:
+    sys.exit("ERROR; User defined files need to have an offset value provided.")
 
 #setting input and output paths
+path_exp, file_exp = os.path.split(args.in_experiment_file.name)
+
+index_of_dot = file_exp.index(".") 
+
+file_exp_without_extension = file_exp[:index_of_dot]
+
 working_dir=os.getcwd()
+
 date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+
 resultsdir = r"C1_"+file_exp_without_extension+r"_"+date_time
 
-path_in=path_exp+r'//..//LC1'
-if args.LC1_path_out is not None:
-    path_out=args.LC1_path_out+r"//"+resultsdir
-if args.LC1_path_out is None:
+path_in=path_exp+r'//..//C1'
+if args.path_out is not None:
+    path_out=args.path_out+r"//"+resultsdir
+if args.path_out is None:
     path_out=path_in+r"//"+resultsdir
 os.makedirs(path_out)
+
 
 
 log_file_name = path_out+r"//log.txt"
 log_file=open(log_file_name, "w") 
 log_file.write(description+"\n\n")
-#host=socket.gethostbyaddr(socket.gethostname())[0]
-#log_file.write(r"This program ran at "+date_time+r" on the "+host+r" host system.")
-log_file.write(r"This program ran at "+date_time+r" on the host system.")
+try:
+    host=socket.gethostbyaddr(socket.gethostname())[0]
+except socket.herror:
+    host=''
+    
+log_file.write(r"This program ran at "+date_time+r" on the "+host+r" host system.")
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+try:
+    # doesn't even have to be reachable
+    s.connect(('10.255.255.255', 1))
+    IP = s.getsockname()[0]
+except:
+    IP = '127.0.0.1'
+finally:
+    s.close()
+    
+print("IP: ",IP)
+log_file.write("\nSystem's IP address is: "+IP)
 log_file.write("\n\n")
 
-#html_line1 =r"This program ran at "+date_time+r" on the "+host+r" host system"
-html_line1 =r"This program ran at "+date_time+r" on the host system"
+
+html_line1 =r"This program ran at "+date_time+r" on the "+host+r" host systemand the IP address is "+IP
 
 
+
+#print args
 print("\n~ Experimental spectra file details: {}".format(args.in_experiment_file))
 log_file.write("\n\n~ Experimental spectra file details: {}".format(args.in_experiment_file))
+
 
 print("\n~ Theoretical spectra file details: {}".format(args.in_theoretical_file))
 log_file.write("\n\n~ Theoretical spectra file details: {}".format(args.in_theoretical_file))
 
+
 print("\n~ Peaks fitted to the theoretical spectra file details: {}".format(args.in_fitted_peaks_file))
 log_file.write("\n\n~ Peaks fitted to the theoretical spectra file details: {}".format(args.in_fitted_peaks_file))
 
+log_file.write('\n\nPython {0} and {1}'.format((sys.version).split('|')[0],(sys.version).split('|')[1]))
 
-ORCA=r"C:\Orca\orca.exe"
+log_file.write('\n\nMatplotlib version is: '+matplotlib.__version__)
+
+log_file.write('\n\numpy version is: '+np.__version__)
+
+
+
+ORCA=r"C:\Orca\orca"
 
 if args.orca_executable is None:
     print("The default path for orca, C:\Orca\orca.exe, is used.")
-    log_file.write("\n\nThe default path for orca, C:\Orca\orca.exe, is used.")
+    log_file.write("\n\nThe default path for orca, C:\Orca\orca, is used.")
 
 if args.orca_executable is not None:
     ORCA=args.orca_executable
     print("This does not use the default path for orca, instead it used this path: ", ORCA)
     log_file.write("\n\nThis does not use the default path for orca, instead it used this path: %s"%ORCA)
 
-    
 
 
 exp_data_file=args.in_experiment_file.name
@@ -140,42 +176,43 @@ fitted_peaks_param=args.in_fitted_peaks_file.name
 file_theory_read=args.in_theoretical_file.name
 path_theory, file_theory = os.path.split(file_theory_read)
 theory_data_file=path_out+"//%s.abs.dat" %file_theory
-theory_data_filename=path_out+r"//"+file_theory
+theory_data_filename=path_out+r"//%s" %file_theory
 tddft_output_file=r"%s" %theory_data_filename
-norm_translated_theory_data=path_out+r"/NormTranslatedTheoryData.txt"
+norm_translated_theory_data=path_out+r"//NormTranslatedTheoryData.txt"
 
+html_infile_name=working_dir+r"//..//C1//template.html"
+html_outfile_name=path_out+r"//%s_C1_report.html"%file_exp_without_extension
 
-html_infile_name=path_in+r"//template.html"
-html_outfile_name=path_out+r"//report.html"
 
 print("theory_data_file: ",theory_data_file)
 
 
 ###move theory data file to results directory
-path_out_LES, theoretical_file_name=os.path.split(args.in_theoretical_file.name)
+path_theory, theoretical_file_name=os.path.split(args.in_theoretical_file.name)
 shutil.copy(args.in_theoretical_file.name,path_out)
 
 ###Extract Experimental data
 #put experimental data into array
 exp_data=np.array([])
 with open (exp_data_file) as exp_data_file:
-    lines_after_heading=exp_data_file.readlines()[skip:] 
+    lines_after_heading=exp_data_file.readlines()[int(args.offset):] 
     for line in lines_after_heading:
         line=line.split()
         exp_data=np.append(exp_data,line)
     exp_data=exp_data.reshape(int(len(exp_data)/args.n_columns),args.n_columns)
 exp_data_file.close()
+
 #xdata and ydata
 exp_ycol=args.column_intensity
-#exp_xdata=exp_data[:,args.column_energy].astype(float) #xdata is always the first column
-exp_xdata_row=exp_data[:,args.column_energy]
+
+exp_xdata_s=exp_data[:,args.column_energy]
 exp_xdata=np.array([])
-for x in exp_xdata_row:
+for x in exp_xdata_s:
     exp_xdata=np.append(exp_xdata,float(x.replace(",","")))
-#exp_ydata=exp_data[:,exp_ycol].astype(float) # ask user for the column where the ydata is 
-exp_ydata_row=exp_data[:,exp_ycol]
+
+exp_ydata_s=exp_data[:,exp_ycol]
 exp_ydata=np.array([])
-for y in exp_ydata_row:
+for y in exp_ydata_s:
     exp_ydata=np.append(exp_ydata,float(y.replace(",","")))
 norm_exp_ydata=(exp_ydata-min(exp_ydata))/(max(exp_ydata)-min(exp_ydata))
 
@@ -189,6 +226,8 @@ with open(edge_data_table,"r") as edge_data_table:
         edge_data=np.append(edge_data,line)
     edge_data=edge_data.reshape(int(len(edge_data)/5),5)
     edge_data_table.close()
+
+
 ##determine fitting range to be used when plotting 
 #determine e0 requried for fitting range
 dif1=np.diff(exp_ydata)/np.diff(exp_xdata)
@@ -198,6 +237,7 @@ e0=exp_xdata[e0_pos]
 e_edge=abs(edge_data[:,4].astype(float)-e0)
 e1_pos=np.where(e_edge==min(e_edge))[0][0]
 element=edge_data[e1_pos][0]
+
 #determine fitting range
 fit_range=[5,8]
 fit_pos_i_ls=abs(exp_xdata-e0+fit_range[0])
@@ -218,7 +258,7 @@ with open(fitted_peaks_param) as fit_param:
 for element in peak_param:
     if "center" in element:
         first_exp_peak_center=min(element)
-###
+
 
 ###Extract theoretical data
 #run tddft calc
@@ -275,6 +315,7 @@ with open (tddft_output_file, "r") as tddft_output_file:
             states_lines.append(line)
     
     tddft_output_file.close()
+
 #Function to split read lines into blocks
 #The function was adapted from here https://codereview.stackexchange.com/questions/179530/
 #split-list-of-integers-at-certain-value-efficiently
@@ -315,18 +356,19 @@ for state,chunk in zip(states,states_blocks):
 
 #put theoretical data into array 
 theory_data=np.array([])
-#with open (theory_data_file) as theory_data_file:
 with open (theory_data_file) as theory_data_file:
     for line in theory_data_file:
         line=line.split()
         theory_data=np.append(theory_data,line)
     theory_data=theory_data.reshape(int(len(theory_data)/5),5)#6 is the number of columns and it can change 
 theory_data_file.close()
+
 #xdata and ydata
 theory_ycol=1
 theory_xdata=theory_data[:,0].astype(float) 
 theory_ydata=theory_data[:,theory_ycol].astype(float) 
 norm_theory_ydata=(theory_ydata-min(theory_ydata))/(max(theory_ydata)-min(theory_ydata))
+
 
 ##this is done to determine the center of the first peak in the theoretical spectrum
 #determine fitting range
@@ -337,6 +379,7 @@ fit_pos_f_ls=abs(theory_xdata-(e0-12)-fit_range[1])
 fit_pos_f=np.where(fit_pos_f_ls==min(fit_pos_f_ls))[0][0]
 fit_theory_xdata=theory_xdata[fit_pos_i:fit_pos_f].astype(float)
 fit_theory_ydata=norm_theory_ydata[fit_pos_i:fit_pos_f].astype(float)
+
 #determination of number of gaussian and their initial position guesses
 #smooth_ydata=scipy.signal.savgol_filter(fit_theory_ydata,11,2)
 dif2=np.diff(fit_theory_ydata)/np.diff(fit_theory_xdata)
@@ -345,6 +388,7 @@ posit=np.array((np.where((dif2[1:]<0)*(dif2[0:-1]>0))),dtype='int')+1
 posit=np.unique(np.sort(np.append(posit,np.array((np.where((dif2[1:]>0)*(dif2[0:-1]<0))),dtype='int')+1)))
 posit=posit[posit>e0_pos2]
 funccenter=fit_theory_xdata[posit]
+
 #remove extraneous peaks
 b=[]
 b_new=[]
@@ -373,7 +417,7 @@ for i in funccenter:
                 if str(k[0]) in j[3]:
                     if len(j)>5:
                         if k[1]+k[2] in j[5]:
-                            if k[3]=='py':
+                            if k[3]=='pz':
                                 if k[4]>=5:
                                     peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
                     else:
@@ -475,11 +519,8 @@ fig_trans.savefig(path_out+r'//ComparisonOfNormalizedAndTranslatedExperimentalAn
 stop = timeit.default_timer()
 running_time=(stop-start)/60
 print ("Running time is: "+ str(round(running_time,3)) + "minutes") 
-
 log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
-
-log_file.close()
-
+log_file.flush()
 
 
 # The resolution of the images depends on the graphics hardware and settings.
@@ -532,4 +573,7 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
                 html_out.write(new_line)
         else:
             html_out.write(line.strip())
-print("\nLC1 outputs are in \n%s"%path_out)
+        
+print("\n~ path_out, path to where C1 outputs are: {}".format(path_out))
+log_file.write("\n~ path_out, path to where C1 outputs are: {}".format(path_out))
+log_file.close()

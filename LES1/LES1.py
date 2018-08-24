@@ -122,11 +122,11 @@ print("\n\nSTART: \n")
 log_file.write("\n\nSTART: \n")
 log_file.flush()
 
-ORCA=r"C:\Orca\orca.exe"
+ORCA=r"C:\Orca\orca"
 
 if args.orca_executable is None:
-    print("The default path for orca, C:\Orca\orca.exe, is used.")
-    log_file.write("\n\nThe default path for orca, C:\Orca\orca.exe, is used.")
+    print("The default path for orca, C:\Orca\orca, is used.")
+    log_file.write("\n\nThe default path for orca, C:\Orca\orca, is used.")
 
 if args.orca_executable is not None:
     ORCA=args.orca_executable
@@ -341,5 +341,9 @@ print("\tSingle Point time is: "+ str(round(sp_time,3)) + " minutes")
 print("\tTime-Dependent Density Functional Theory calculation time is: "+ str(round(tddft_time,3)) + " minutes")
 log_file.write("\n\tSingle Point Energy time is: "+ str(round(sp_time,3)) + " minutes")
 log_file.write("\n\tTime-Dependent Density Functional Theory calculation time is: "+ str(round(tddft_time,3)) + " minutes")
+
+print("\n~ path for directory where outputs are: {}".format(path_out))
+log_file.write("\n~ path for directory where outputs are: {}".format(path_out))
+
+
 log_file.close()            
-print("\nLES outputs are in \n%s"%path_out)

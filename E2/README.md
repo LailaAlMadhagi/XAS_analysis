@@ -26,7 +26,6 @@ INFORMATION ON THE E2 (EXPERIMENTAL PEAK FITTING) CODE
 
 usage:  
 
-#(E2.py [-h] [-ft {Athena,user_defined}] [-offset OFFSET] FILE column_energy column_intensity n_columns)#Not using ft anymore
 
 E2.py [-h] [-offset OFFSET] [-path_out] FILE column_energy column_intensity n_columns
 
@@ -51,7 +50,6 @@ optional arguments:
 
   -h, --help            show this help message and exit
   
-  (-ft {Athena,user_defined}, --file_type {Athena,user_defined}) not used anymore
 						
   -offset OFFSET        The number of lines in the input spectra file that are
                         to be skipped before the data is read in.
@@ -62,7 +60,7 @@ EXAMPLE USAGE
 
 1, minimal needed to run (defaults assume it is a gas):
 
-E2.py  C:\Users\userid\Desktop\analysis\ImidazoleExperiment\N1s_Imidazole_ISEELS.txt 0 2 6 -offset 38
+E2.py  C:\Users\userid\Desktop\data\Imidazole\N1s_Imidazole_ISEELS.txt 0 2 6 -offset 38
 
 BACKGROUND
 
