@@ -50,7 +50,7 @@ arguments_d={'geom_directory':[],'orca_param':[],'orca_executable':[],
              'experimental_intensity_column_number':[],'experimental_number_columns':[],
              'experimental_header_skip':[],'element_calculate':[],'results_dir':path_out,
              'geom_file_name':[],'tddft_out_file':[],'fitted_peaks_params':[],
-             'number of processors':[]}
+             'number_of_processors':[]}
 
 with open (args.in_args.name,'r') as args_f:
     lines=args_f.readlines()[1:]
@@ -93,7 +93,7 @@ for file in os.listdir(arguments_d['geom_directory']):
                             '-orca',str(arguments_d['orca_executable']),
                             '-path_out',str(arguments_d['results_dir']),
                             '-element',str(arguments_d['element_calculate']),
-                            '-pal',str(arguments_d['number of processors'])],stdout=sp.PIPE, stderr=sp.PIPE)
+                            '-pal',str(arguments_d['number_of_processors'])],stdout=sp.PIPE, stderr=sp.PIPE)
             LES1_output, LES1_err = LES1_p.communicate()
             LES1_p_status=LES1_p.wait()
             LES1_path_out=((LES1_output.decode('utf-8').split('\n')[-2]).replace('\r','').replace('\n','')).split(': ')[1]

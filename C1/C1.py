@@ -145,6 +145,17 @@ log_file.write("\n\n~ Experimental spectra file details: {}".format(args.in_expe
 print("\n~ Theoretical spectra file details: {}".format(args.in_theoretical_file))
 log_file.write("\n\n~ Theoretical spectra file details: {}".format(args.in_theoretical_file))
 
+ORCA=r"C://Orca//orca"
+
+if args.orca_executable is None or args.orca_executable=='':
+    print("The default path for orca, C://Orca//orca, is used.")
+    log_file.write("\n\nThe default path for orca, C://Orca//orca, is used.")
+
+if args.orca_executable is not None and args.orca_executable!='':
+    ORCA=args.orca_executable
+    print("This does not use the default path for orca, instead it used this path: "+ORCA)
+    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: "+ORCA)
+
 
 print("\n~ Peaks fitted to the theoretical spectra file details: {}".format(args.in_fitted_peaks_file))
 log_file.write("\n\n~ Peaks fitted to the theoretical spectra file details: {}".format(args.in_fitted_peaks_file))
@@ -154,19 +165,6 @@ log_file.write('\n\nPython {0} and {1}'.format((sys.version).split('|')[0],(sys.
 log_file.write('\n\nMatplotlib version is: '+matplotlib.__version__)
 
 log_file.write('\n\numpy version is: '+np.__version__)
-
-
-
-ORCA=r"C:\Orca\orca"
-
-if args.orca_executable is None:
-    print("The default path for orca, C:\Orca\orca.exe, is used.")
-    log_file.write("\n\nThe default path for orca, C:\Orca\orca, is used.")
-
-if args.orca_executable is not None:
-    ORCA=args.orca_executable
-    print("This does not use the default path for orca, instead it used this path: ", ORCA)
-    log_file.write("\n\nThis does not use the default path for orca, instead it used this path: %s"%ORCA)
 
 
 
