@@ -81,7 +81,7 @@ file_geom_without_extension = file_geom[:index_of_dot]
 date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 resultsdir = r"GTE1_"+file_geom_without_extension+r"_"+date_time
 
-
+script_path=os.path.dirname(os.path.abspath(__file__))
 path_in=working_dir
 if args.path_out is not None:
     path_out=args.path_out+r"//"+resultsdir
@@ -167,7 +167,7 @@ freq_output_file=path_out+r"//freq.out"
 opt_error_file=path_out+r"//opt_error.txt"
 freq_error_file=path_out+r"//freq_error.txt"
 working_dir=os.getcwd()
-edge_data_file=working_dir+r"//..//edge_data.txt"
+edge_data_file=script_path+r"//..//edge_data.txt"
 
 orbital_energies_array=np.array([])
 all_orbital_window_array=[]
@@ -198,6 +198,7 @@ log_file.flush()
 
 #list of elements from geom file
 elements_geom_in=[]
+
 with open (geom_file,'r') as geom_in:
     for line in geom_in:
         elements_geom_in.append(line[0])
@@ -237,10 +238,18 @@ opt_file.close()
 # run Opt calculation
 opt_out=open(opt_output_file, "w") 
 opt_err=open(opt_error_file,"w") 
-p=sp.Popen([str(ORCA),opt_input_file], stdout=opt_out, stderr=opt_err)
-p_status=p.wait()
-opt_out.close()
-opt_err.close()
+try:
+    p=sp.Popen([str(ORCA),opt_input_file], stdout=opt_out, stderr=opt_err)
+    p_status=p.wait()
+    opt_out.close()
+    opt_err.close()
+except Exception as e:
+    exc_type,exc_obj,exc_tb=sys.exc_info()
+    line = exc_tb.tb_lineno
+    fname=exc_tb.tb_next.tb_frame.f_code.co_filename
+    sys.exit("Error calling ORCA using subprocess. Error type is {0}, check line {1} in code".format(exc_type,line))
+
+  
 
 # The log_file write times out after about an hour. We close it and then
 # open them again because this loop can take a long time to run
@@ -272,11 +281,18 @@ while (finding==-1):
                                 line=line.strip()
                                 line=line.replace(line,"*xyzfile 0 1 "+str(opt_geom_file)+"\n")   
                         opt_file.write(line)
-                    opt_file.close()    
-                opt_err=open(opt_error_file,"w") 
-                p=sp.Popen([str(ORCA),opt_input_file], stdout=opt_out_file, stderr=opt_err)
-                p_status=p.wait()
-                opt_err.close()           
+                    opt_file.close()
+                opt_err=open(opt_error_file,"w")                     
+                try:
+                    p=sp.Popen([str(ORCA),opt_input_file], stdout=opt_out_file, stderr=opt_err)
+                    p_status=p.wait()
+                    opt_err.close()
+                except Exception as e:
+                    exc_type,exc_obj,exc_tb=sys.exc_info()
+                    line = exc_tb.tb_lineno
+                    fname=exc_tb.tb_next.tb_frame.f_code.co_filename
+                    sys.exit("Error calling ORCA using subprocess. Error type is {0}, check line {1} in code".format(exc_type,line))
+
             else:
                 print('Geometry optimized successfully')
                 log_file.write('Geometry optimized successfully\n')
@@ -325,10 +341,17 @@ freq_file.close()
 #run Freq calc
 freq_out=open(freq_output_file, "w") 
 freq_err=open(freq_error_file,"w") 
-p=sp.Popen([str(ORCA),freq_input_file], stdout=freq_out, stderr=freq_err)
-p_status=p.wait()
-freq_out.close()
-freq_err.close()
+try:
+    p=sp.Popen([str(ORCA),freq_input_file], stdout=freq_out, stderr=freq_err)
+    p_status=p.wait()
+    freq_out.close()
+    freq_err.close()
+except Exception as e:
+    exc_type,exc_obj,exc_tb=sys.exc_info()
+    line = exc_tb.tb_lineno
+    fname=exc_tb.tb_next.tb_frame.f_code.co_filename
+    sys.exit("Error calling ORCA using subprocess. Error type is {0}, check line {1} in code".format(exc_type,line))
+
 log_file.close()
 log_file=open(log_file_name, "w")
 #check Freq calc
@@ -351,10 +374,17 @@ while (finding==0):
                                 line=line.replace(line,"*xyzfile 0 1 "+str(opt_geom_file)+"\n")
                         opt_file.write(line)
                 with open (opt_error_file,"w") as opt_err, open (opt_output_file, "w") as opt_out:
-                    p=sp.Popen([str(ORCA),opt_input_file], stdout=opt_out, stderr=opt_err)
-                    p_status=p.wait()
-                    opt_err.close()
-                    opt_out.close()
+                    try:
+                        p=sp.Popen([str(ORCA),opt_input_file], stdout=opt_out, stderr=opt_err)
+                        p_status=p.wait()
+                        opt_err.close()
+                        opt_out.close()
+                    except Exception as e:
+                        exc_type,exc_obj,exc_tb=sys.exc_info()
+                        line = exc_tb.tb_lineno
+                        fname=exc_tb.tb_next.tb_frame.f_code.co_filename
+                        sys.exit("Error calling ORCA using subprocess. Error type is {0}, check line {1} in code".format(exc_type,line))
+
                 with open(freq_input_file,'r+') as freq_file:
                     a=freq_file.readlines()
                     freq_file.seek(0)
@@ -366,9 +396,16 @@ while (finding==0):
                                 line=line.replace(line,"*xyzfile 0 1 "+str(opt_geom_file)+"\n")
                         freq_file.write(line)
                 freq_err=open(freq_error_file,"w")
-                p=sp.Popen([str(ORCA),freq_input_file], stdout=freq_out_file, stderr=freq_err)
-                p_status=p.wait()
-                freq_err.close()
+                try:
+                    p=sp.Popen([str(ORCA),freq_input_file], stdout=freq_out_file, stderr=freq_err)
+                    p_status=p.wait()
+                    freq_err.close()
+                except Exception as e:
+                    exc_type,exc_obj,exc_tb=sys.exc_info()
+                    line = exc_tb.tb_lineno
+                    fname=exc_tb.tb_next.tb_frame.f_code.co_filename
+                    sys.exit("Error calling ORCA using subprocess. Error type is {0}, check line {1} in code".format(exc_type,line))
+
             elif finding !=0:
                 print('Optimized geom is at global minimum')
                 log_file.write('Optimized geom is at global minimum\n')
@@ -442,11 +479,18 @@ for j in final_orbital_window_array:
         tddft_input.close()
     #run tddft calculations
     tddft_out=open(tddft_output_file, "w") 
-    tddft_err=open(tddft_error_file,"w") 
-    p=sp.Popen([str(ORCA),tddft_input_file], stdout=tddft_out, stderr=tddft_err)
-    p_status=p.wait()
-    tddft_out.close()
-    tddft_err.close()
+    tddft_err=open(tddft_error_file,"w")
+    try:
+        p=sp.Popen([str(ORCA),tddft_input_file], stdout=tddft_out, stderr=tddft_err)
+        p_status=p.wait()
+        tddft_out.close()
+        tddft_err.close()
+    except Exception as e:
+        exc_type,exc_obj,exc_tb=sys.exc_info()
+        line = exc_tb.tb_lineno
+        fname=exc_tb.tb_next.tb_frame.f_code.co_filename
+        sys.exit("Error calling ORCA using subprocess. Error type is {0}, check line {1} in code".format(exc_type,line))
+
 
 log_file.close()
 log_file=open(log_file_name, "w")
@@ -470,6 +514,8 @@ log_file.write("\n\tOptimisation time is: "+ str(round(opt_time,3)) + " minutes"
 log_file.write("\n\tFrequency calculation time is: "+ str(round(freq_time,3)) + " minutes")
 log_file.write("\n\tTime-Dependent Density Functional Theory calculation time is: "+ str(round(tddft_time,3)) + " minutes")
 
+print ("GTE1 Process Ended Successfully")
+log_file.write("GTE1 Process Ended Successfully")
 print("\n~ path for directory where outputs are: {}".format(path_out))
 log_file.write("\n~ path for directory where outputs are: {}".format(path_out))
 

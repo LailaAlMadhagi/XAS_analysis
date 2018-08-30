@@ -84,8 +84,9 @@ filename_without_extension = file_exp[:index_of_dot]
 date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 resultsdir = r"E2_"+filename_without_extension+r"_"+date_time
 
+script_path=os.path.dirname(os.path.abspath(__file__))    
 working_dir=os.getcwd()
-
+path_in=working_dir
 if args.n_columns -1 < args.column_energy:
     sys.exit("ERROR; There are not enough colums in the data for the energy column to exist.")
     
@@ -98,7 +99,7 @@ if args.offset is None:
 if args.path_out is not None:
     path_out=args.path_out+r'//'+resultsdir
 if args.path_out is None:
-    path_out=path_exp+r'//'+resultsdir
+    path_out=path_in+r'//'+resultsdir
 os.makedirs(path_out)
 
 log_file_name = path_out+r"//%s_E2_log.txt"%filename_without_extension
@@ -173,7 +174,7 @@ if "{}".format(args.file_type) == 'user_defined':
 
 log_file.flush()
 
-edge_data_table=working_dir+r"//..//edge_data.txt"
+edge_data_table=script_path+r"//..//edge_data.txt"
 
 spectra_file=path_exp+r'//'+file_exp
 fitted_peak=path_out+r"//%s_fitted_peaks.txt" %filename_without_extension
@@ -588,7 +589,7 @@ else:
     log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
     
     
-html_infile_name=working_dir+r"//..//E2//template.html"
+html_infile_name=script_path+r"//..//E2//template.html"
 html_outfile_name=path_out+r"//%s_E2_report.html"%filename_without_extension
 
 html_line1 =r"This program ran at "+date_time+r" on the "+host+r" host system"
@@ -623,7 +624,7 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
             total_cols=len(fitted_peaks_param.axes[1])
             n=0
             for c in range(1,total_cols):
-                row_line="<tr> <td> g%d </td> "%(n)
+                row_line="<tr> <td> %s </td> "%(fitted_peaks_param.columns[c])
                 for r in range(total_rows):
                     row_line+=" <td> %s </td> "%( fitted_peaks_param.iloc[r,c])
                 row_line+=" </tr>"
@@ -631,7 +632,8 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
                 n+=1
         else:
             html_out.write(line.strip())
-
+print ("E2 Process Ended Successfully")
+log_file.write("E2 Process Ended Successfully")
 print("\n~ path_out, path to directory where E2 outputs are: {}".format(path_out))
 log_file.write("\n\n~ path_out, path to directory where E2 outputs are: {}".format(path_out))
 log_file.close()

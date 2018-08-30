@@ -21,7 +21,7 @@ import socket
 
 
 # handle the input flags
-description='LES: Liquid Excited State calulation'
+description='LES1: Liquid Excited State calulation'
 parser = argparse.ArgumentParser(description)
 
 
@@ -87,13 +87,14 @@ LES_date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 working_dir=os.getcwd()
 
 if args.geom_file_name is not None:
-    resultsdir = r"LES_"+args.geom_file_name+r"_"+LES_date_time
+    resultsdir = r"LES1_"+args.geom_file_name+r"_"+LES_date_time
     geom_file=args.in_geom_dir+r'//'+args.geom_file_name
 if args.geom_file_name is None:
-    geom_file=args.in_geom_dir+r'//'+os.listdir(args.in_geom_dir)[1]
-    resultsdir = r"LES_"+geom_file.split('//')[1]+r'_'+LES_date_time
+    geom_file=args.in_geom_dir+r'//'+os.listdir(args.in_geom_dir)[0]
+    resultsdir = r"LES1_"+geom_file.split('//')[1]+r'_'+LES_date_time
   
-# set in and out paths    
+# set in and out paths   
+script_path=os.path.dirname(os.path.abspath(__file__))    
 path_in=working_dir
 if args.LES_path_out is not None:
     path_out=args.LES_path_out+r"//"+resultsdir
@@ -105,10 +106,27 @@ os.makedirs(path_out)
 log_file_name = path_out+r"//log.txt"
 log_file=open(log_file_name, "w") 
 log_file.write(description+"\n\n")
-#host=socket.gethostbyaddr(socket.gethostname())[0]
-#log_file.write(r"This program ran at "+LES_date_time+r" on the "+host+r" host system.")
-log_file.write(r"This program ran at "+LES_date_time+r" on the host system.")
+try:
+    host=socket.gethostbyaddr(socket.gethostname())[0]
+except socket.herror:
+    host=''
+log_file.write(r"This program ran at "+SES_date_time+r" on the "+host+r" host system.")
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+try:
+    # doesn't even have to be reachable
+    s.connect(('10.255.255.255', 1))
+    IP = s.getsockname()[0]
+except:
+    IP = '127.0.0.1'
+finally:
+    s.close()
+    
+print("IP: ",IP)
+
+log_file.write("\n System's IP address is: "+IP)
 log_file.write("\n\n")
+
 
 print("\n~ Molecular geometry file details: {}".format(args.in_geom_dir))
 log_file.write("\n\n~ Molecular geometry file details: {}".format(args.in_geom_dir))
@@ -151,7 +169,7 @@ sp_input_file=path_out+r"//sp.inp"
 new_sp_input_file=path_out+r"//new_sp.inp"
 sp_output_file=path_out+r"//sp.out"
 sp_error_file=path_out+r"//sp_error.txt"
-edge_data_file=working_dir+r"//..//edge_data.txt"
+edge_data_file=script_path+r"//..//edge_data.txt"
 orbital_energies_array=np.array([])
 all_orbital_window_array=[]
 final_orbital_window_array=[]
@@ -225,10 +243,18 @@ sp_file.close()
 # run sp calculation
 sp_out=open(sp_output_file, "w") 
 sp_err=open(sp_error_file,"w") 
-sp_p=sp.Popen([str(ORCA),sp_input_file], stdout=sp_out, stderr=sp_err)
-sp_p_status=sp_p.wait()
-sp_out.close()
-sp_err.close()
+try:
+    sp_p=sp.Popen([str(ORCA),sp_input_file], stdout=sp_out, stderr=sp_err)
+    sp_p_status=sp_p.wait()
+    sp_out.close()
+    sp_err.close()
+except Exception as e:
+    exc_type,exc_obj,exc_tb=sys.exc_info()
+    line = exc_tb.tb_lineno
+    fname=exc_tb.tb_next.tb_frame.f_code.co_filename
+    sys.exit("Error calling ORCA using subprocess. Error type is {0}, check line {1} in code".format(exc_type,line))
+
+
 log_file.close()
 log_file=open(log_file_name, "w")
 
@@ -334,10 +360,16 @@ for j in final_orbital_window_array:
     #run tddft calculations
     tddft_out=open(tddft_output_file, "w") 
     tddft_err=open(tddft_error_file,"w") 
-    tddft_p=sp.Popen([str(ORCA),tddft_input_file], stdout=tddft_out, stderr=tddft_err)
-    tddft_p_status=tddft_p.wait()
-    tddft_out.close()
-    tddft_err.close()
+    try:
+        tddft_p=sp.Popen([str(ORCA),tddft_input_file], stdout=tddft_out, stderr=tddft_err)
+        tddft_p_status=tddft_p.wait()
+        tddft_out.close()
+        tddft_err.close()
+    except Exception as e:
+        exc_type,exc_obj,exc_tb=sys.exc_info()
+        line = exc_tb.tb_lineno
+        fname=exc_tb.tb_next.tb_frame.f_code.co_filename
+        sys.exit("Error calling ORCA using subprocess. Error type is {0}, check line {1} in code".format(exc_type,line))
 
 log_file.close()
 log_file=open(log_file_name, "w")
@@ -355,6 +387,8 @@ print("\tTime-Dependent Density Functional Theory calculation time is: "+ str(ro
 log_file.write("\n\tSingle Point Energy time is: "+ str(round(sp_time,3)) + " minutes")
 log_file.write("\n\tTime-Dependent Density Functional Theory calculation time is: "+ str(round(tddft_time,3)) + " minutes")
 
+print ("LES1 Process Ended Successfully")
+log_file.write("LES1 Process Ended Successfully")
 print("\n~ path for directory where outputs are: {}".format(path_out))
 log_file.write("\n~ path for directory where outputs are: {}".format(path_out))
 

@@ -10,6 +10,7 @@ import argparse
 import sys
 import os
 import datetime
+import socket
 import subprocess as sp
 import numpy as np
 
@@ -30,10 +31,9 @@ args = parser.parse_args()
 
 path_args, args_file = os.path.split(args.in_args.name)
 working_dir=os.getcwd()
-parent_dir=path_args+r'//..'
 GW_date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 resultsdir = r"Results_dir_"+GW_date_time
-
+script_path=os.path.dirname(os.path.abspath(__file__))    
 path_in=working_dir
 path_out=path_in+r'//'+resultsdir
 os.makedirs(path_out)
@@ -42,6 +42,25 @@ os.makedirs(path_out)
 log_file_name = path_out+r"//GW_log.txt"
 log_file=open(log_file_name, "w") 
 log_file.write(description+"\n\n")
+try:
+    host=socket.gethostbyaddr(socket.gethostname())[0]
+except socket.herror:
+    host=''
+log_file.write(r"This program ran at "+GW_date_time+r" on the "+host+r" host system.")
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+try:
+    # doesn't even have to be reachable
+    s.connect(('10.255.255.255', 1))
+    IP = s.getsockname()[0]
+except:
+    IP = '127.0.0.1'
+finally:
+    s.close()
+    
+print("IP: ",IP)
+log_file.write("\nSystem's IP address is: "+IP)
+log_file.write("\n\n")
+
 
 arguments_d={'geom_file_name':[],'orca_param':[],'orca_executable':[],
              'experimental_spectra':[],'experimental_energy_column_number':[],
@@ -56,7 +75,7 @@ with open (args.in_args.name,'r') as args_f:
 args_f.close()
 
 #run E2:
-E2_p=sp.Popen(['python',str(parent_dir+r'//E2//E2.py'),
+E2_p=sp.Popen(['python',str(script_path+r'//E2//E2.py'),
                 str(arguments_d['experimental_spectra']),
                 str(arguments_d['experimental_energy_column_number']),
                 str(arguments_d['experimental_intensity_column_number']),
@@ -65,7 +84,13 @@ E2_p=sp.Popen(['python',str(parent_dir+r'//E2//E2.py'),
                 '-path_out',str(arguments_d['results_dir'])],stdout=sp.PIPE, stderr=sp.PIPE)
 E2_output, E2_err = E2_p.communicate()
 E2_p_status=E2_p.wait()
+
+if "E2 Process Ended Successfully" not in E2_output.decode('utf-8'):
+    sys.exit("Error calling running E2 script. E2 error is: "+E2_err.decode('utf-8'))
+
 E2_path_out=((E2_output.decode('utf-8').split('\n')[-2]).replace('\r','').replace('\n','')).split(': ')[1]
+
+
 log_file.write('E2 output is: '+E2_output.decode('utf-8'))
 log_file.write("\n\n")
 log_file.write('E2 err is: '+E2_err.decode('utf-8'))
@@ -79,16 +104,22 @@ theory_ydata_all=np.array([])
 theory_ydata_avg=np.array([])
 
 
-
 #run GTE1
-GTE1_p=sp.Popen(['python',str(parent_dir+r'//GTE1//GTE1.py'),
+GTE1_p=sp.Popen(['python',str(script_path+r'//GTE1//GTE1.py'),
                 str(arguments_d['geom_file_name']),
                 '-orca',str(arguments_d['orca_executable']),
                 '-path_out',str(arguments_d['results_dir']),
                 '-element',str(arguments_d['element_calculate'])],stdout=sp.PIPE, stderr=sp.PIPE)
+
 GTE1_output, GTE1_err = GTE1_p.communicate()
 GTE1_p_status=GTE1_p.wait()
+
+if "GTE1 Process Ended Successfully" not in GTE1_output.decode('utf-8'):
+    sys.exit("Error calling running GTE1 script. GTE1 error is: "+GTE1_err.decode('utf-8'))
+
 GTE1_path_out=((GTE1_output.decode('utf-8').split('\n')[-2]).replace('\r','').replace('\n','')).split(': ')[1]
+
+   
 log_file.write('GTE1 output is: '+GTE1_output.decode('utf-8'))
 log_file.write("\n\n")
 log_file.write('GTE1 err is: '+GTE1_err.decode('utf-8'))
@@ -106,7 +137,7 @@ for file in os.listdir(E2_path_out):
 
 
 #run C1
-C1_p=sp.Popen(['python',str(parent_dir+r'//C1//C1.py'),
+C1_p=sp.Popen(['python',str(script_path+r'//C1//C1.py'),
                 str(arguments_d['experimental_spectra']),
                 str(arguments_d['experimental_energy_column_number']),
                 str(arguments_d['experimental_intensity_column_number']),
@@ -118,10 +149,16 @@ C1_p=sp.Popen(['python',str(parent_dir+r'//C1//C1.py'),
                 '-path_out',str(arguments_d['results_dir'])],stdout=sp.PIPE, stderr=sp.PIPE)
 C1_output, C1_err = C1_p.communicate()
 C1_p_status=C1_p.wait()
+
+if "C1 Process Ended Successfully" not in C1_output.decode('utf-8'):
+    sys.exit("Error calling running C1 script. C1 error is: "+C1_err.decode('utf-8'))
+
 C1_path_out=((C1_output.decode('utf-8').split('\n')[-2]).replace('\r','').replace('\n','')).split(': ')[1]
+
 log_file.write('C1 output is: '+C1_output.decode('utf-8'))
 log_file.write("\n\n")
 log_file.write('C1 err is: '+C1_err.decode('utf-8'))
 log_file.write("\n\n")
 
-log_file.close()            
+log_file.close()
+           

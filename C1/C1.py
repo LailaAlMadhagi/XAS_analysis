@@ -100,6 +100,7 @@ date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
 resultsdir = r"C1_"+file_exp_without_extension+r"_"+date_time
 
+script_path=os.path.dirname(os.path.abspath(__file__))    
 path_in=path_exp+r'//..//C1'
 if args.path_out is not None:
     path_out=args.path_out+r"//"+resultsdir
@@ -169,7 +170,7 @@ log_file.write('\n\numpy version is: '+np.__version__)
 
 
 exp_data_file=args.in_experiment_file.name
-edge_data_table=working_dir+r"//..//edge_data.txt"
+edge_data_table=script_path+r"//..//edge_data.txt"
 fitted_peaks_param=args.in_fitted_peaks_file.name
 file_theory_read=args.in_theoretical_file.name
 path_theory, file_theory = os.path.split(file_theory_read)
@@ -178,8 +179,8 @@ theory_data_filename=path_out+r"//%s" %file_theory
 tddft_output_file=r"%s" %theory_data_filename
 norm_translated_theory_data=path_out+r"//NormTranslatedTheoryData.txt"
 
-html_infile_name=working_dir+r"//..//C1//template.html"
-html_outfile_name=path_out+r"//%s_C1_report.html"%file_exp_without_extension
+html_infile_name=script_path+r"//..//C1//template.html"
+html_outfile_name=script_path+r"//%s_C1_report.html"%file_exp_without_extension
 
 
 print("theory_data_file: ",theory_data_file)
@@ -260,8 +261,14 @@ for element in peak_param:
 
 ###Extract theoretical data
 #run tddft calc
-p=sp.Popen([str(ORCA+'_mapspc'),tddft_output_file,'ABS','-eV','-x0%s'%str(int(min(fit_exp_xdata)-15)),'-x1%s'%str(int(max(fit_exp_xdata))),'-n500','-w0.6'])
-p_status=p.wait()
+try:
+    p=sp.Popen([str(ORCA+'_mapspc'),tddft_output_file,'ABS','-eV','-x0%s'%str(int(min(fit_exp_xdata)-15)),'-x1%s'%str(int(max(fit_exp_xdata))),'-n500','-w0.6'])
+    p_status=p.wait()
+except Exception as e:
+    exc_type,exc_obj,exc_tb=sys.exc_info()
+    line = exc_tb.tb_lineno
+    fname=exc_tb.tb_next.tb_frame.f_code.co_filename
+    sys.exit("Error calling ORCA using subprocess. Error type is {0}, check line {1} in code".format(exc_type,line))
 
 #read orbital energy information from ouput file
 #might not this information now
@@ -571,7 +578,9 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
                 html_out.write(new_line)
         else:
             html_out.write(line.strip())
-        
+            
+print ("C1 Process Ended Successfully")
+log_file.write("C1 Process Ended Successfully")        
 print("\n~ path_out, path to where C1 outputs are: {}".format(path_out))
 log_file.write("\n~ path_out, path to where C1 outputs are: {}".format(path_out))
 log_file.close()
