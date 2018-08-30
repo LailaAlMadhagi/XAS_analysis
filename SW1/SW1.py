@@ -34,7 +34,7 @@ args = parser.parse_args()
 
 path_args, args_file = os.path.split(args.in_args.name)
 working_dir=os.getcwd()
-parent_dir=path_args+r'//..'
+script_path=os.path.dirname(os.path.abspath(__file__))    
 SW1_date_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 resultsdir = r"Results_dir_"+SW1_date_time
 
@@ -79,7 +79,7 @@ with open (args.in_args.name,'r') as args_f:
 args_f.close()
 
 #run E2:
-E2_p=sp.Popen(['python',str(parent_dir+r'//E2//E2.py'),
+E2_p=sp.Popen(['python',str(script_path+r'//E2//E2.py'),
                 str(arguments_d['experimental_spectra']),
                 str(arguments_d['experimental_energy_column_number']),
                 str(arguments_d['experimental_intensity_column_number']),
@@ -119,7 +119,7 @@ while loop <loop_break:
             arguments_d['hydrogen_opt']=str(loop)  
             arguments_d['geom_file_name']=geom_filenames[0]#NEED TO change so that it is the opt geom
         #run SES1
-        SES1_p=sp.Popen(['python',str(parent_dir+r'//SES1//SES1.py'),
+        SES1_p=sp.Popen(['python',str(script_path+r'//SES1//SES1.py'),
                         str(arguments_d['geom_directory']),
                         '-geom_file_name',str(arguments_d['geom_file_name']),
                         '-orca',str(arguments_d['orca_executable']),
@@ -146,7 +146,7 @@ while loop <loop_break:
             if file.endswith('peak_params.txt'): 
                 arguments_d['fitted_peaks_params']=os.path.join(E2_path_out,file)
         #run C1
-        C1_p=sp.Popen(['python',str(parent_dir+r'//C1//C1.py'),
+        C1_p=sp.Popen(['python',str(script_path+r'//C1//C1.py'),
                         str(arguments_d['experimental_spectra']),
                         str(arguments_d['experimental_energy_column_number']),
                         str(arguments_d['experimental_intensity_column_number']),
