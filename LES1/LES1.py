@@ -110,7 +110,7 @@ try:
     host=socket.gethostbyaddr(socket.gethostname())[0]
 except socket.herror:
     host=''
-log_file.write(r"This program ran at "+SES_date_time+r" on the "+host+r" host system.")
+log_file.write(r"This program ran at "+LES_date_time+r" on the "+host+r" host system.")
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 try:

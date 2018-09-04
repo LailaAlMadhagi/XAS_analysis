@@ -93,7 +93,7 @@ if args.n_columns -1 < args.column_energy:
 if args.n_columns -1 < args.column_intensity:
     sys.exit("ERROR; There are not enough colums in the data for the intensity column to exist.")
 
-if args.offset is None:
+if args.offset is None or args.offset=='':
     sys.exit("ERROR; Need to have an offset value provided.")
         
 if args.path_out is not None:

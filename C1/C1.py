@@ -180,7 +180,7 @@ tddft_output_file=r"%s" %theory_data_filename
 norm_translated_theory_data=path_out+r"//NormTranslatedTheoryData.txt"
 
 html_infile_name=script_path+r"//..//C1//template.html"
-html_outfile_name=script_path+r"//%s_C1_report.html"%file_exp_without_extension
+html_outfile_name=path_out+r"//%s_C1_report.html"%file_exp_without_extension
 
 
 print("theory_data_file: ",theory_data_file)

@@ -1,8 +1,8 @@
 Arguments for Solid state
-geom_directory=C://Users//dmg81179//Desktop//XAS_Analysis//SES1
+geom_directory=/Users/lailaal-madhagi/Desktop/XAS_Analysis//SES1
 orca_param=
-orca_executable=
-experimental_spectra=C://Users//dmg81179//Desktop//XAS_Analysis//E2//Imidazole_solid_APS.txt
+orca_executable=/Users/lailaal-madhagi/Library/Orca401/orca
+experimental_spectra=/Users/lailaal-madhagi/Desktop/XAS_Analysis//E2//Imidazole_solid_APS.txt
 experimental_energy_column_number=0
 experimental_intensity_column_number=3
 experimental_number_columns=7

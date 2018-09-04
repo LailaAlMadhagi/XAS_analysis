@@ -1,8 +1,8 @@
 Arguments for liquid state
-geom_file_name=/Users/lailaal-madhagi/Desktop/Git_repositry/XAS_analysis/GTE1//Imidazole_geom.xyz
+geom_file_name=/Users/lailaal-madhagi/Desktop/XAS_Analysis/GTE1//Imidazole_geom.xyz
 orca_param=
 orca_executable=/Users/lailaal-madhagi/Library/Orca401/orca
-experimental_spectra=/Users/lailaal-madhagi/Desktop/Git_repositry/XAS_analysis/E2//N1s_Imidazole_ISEELS.txt
+experimental_spectra=/Users/lailaal-madhagi/Desktop/XAS_Analysis//E2//N1s_Imidazole_ISEELS.txt
 experimental_energy_column_number=0
 experimental_intensity_column_number=2
 experimental_number_columns=6
