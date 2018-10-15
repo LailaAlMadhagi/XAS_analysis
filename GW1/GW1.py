@@ -134,7 +134,7 @@ GTE1_path_out=((GTE1_output.decode('utf-8').split('\n')[-2]).replace('\r','').re
 for file in os.listdir(GTE1_path_out):
     if file.endswith('.out') and arguments_d['element_calculate'] in file:
         arguments_d['tddft_out_file']=os.path.join(GTE1_path_out,file)
-#add peak_params file to arguments dirctionary
+#add peak_params file to arguments dictionary
 for file in os.listdir(E2_path_out):
     if file.endswith('peak_params.txt'): 
         arguments_d['fitted_peaks_params']=os.path.join(E2_path_out,file)
@@ -151,8 +151,9 @@ C1_p=sp.Popen(['python',str(script_path+r'//..//C1//C1.py'),
                 str(arguments_d['tddft_out_file']),
                 str(arguments_d['fitted_peaks_params']),
                 '-path_out',str(arguments_d['results_dir'])],stdout=sp.PIPE, stderr=sp.PIPE)
-C1_output, C1_err = C1_p.communicate()
 C1_p_status=C1_p.wait()
+C1_output, C1_err = C1_p.communicate()
+
 log_file.write('C1 output is: '+C1_output.decode('utf-8'))
 log_file.write("\n\n")
 log_file.write('C1 err is: '+C1_err.decode('utf-8'))

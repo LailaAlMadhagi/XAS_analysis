@@ -165,7 +165,7 @@ log_file.write('\n\nPython {0} and {1}'.format((sys.version).split('|')[0],(sys.
 
 log_file.write('\n\nMatplotlib version is: '+matplotlib.__version__)
 
-log_file.write('\n\numpy version is: '+np.__version__)
+log_file.write('\n\nNumpy version is: '+np.__version__)
 
 
 
@@ -271,7 +271,7 @@ except Exception as e:
     sys.exit("Error calling ORCA using subprocess. Error type is {0}, check line {1} in code".format(exc_type,line))
 
 #read orbital energy information from ouput file
-#might not this information now
+#might not need this information now
 """ 
 orbital_energies_array=np.array([])
 with open(theory_data_file, 'r+') as tddft_output_file:
@@ -414,19 +414,51 @@ for j in excited_states_ls:
         if str(k[0]) in j[2]:
             if k[3]=='s':
                 if k[4]>=5:
-                    j.append(k[1]+k[2])                     
+                    j.append(k[1]+k[2])
+
+"""
+excited_states_dict=OrderedDict()
+for elem in excited_states_ls:
+    if elem[0] not in excited_states_dict:
+        excited_states_dict[elem[0]]=[]
+        excited_states_dict[elem[0]].append(elem[1:])
+    else:
+        excited_states_dict[elem[0]].append(elem[1:])  
+
+"""                   
 for i in funccenter:
     for j in excited_states_ls:
+        excited_states_assign=[]
+        #if excited_states_dict[j][0][0]-0.5 <= i <= excited_states_dict[j][0][0]+0.5:
         if j[1]-0.5 <= i <= j[1]+0.5:
             for k in Loewdin_population_per:
-                if str(k[0]) in j[3]:
-                    if len(j)>5:
-                        if k[1]+k[2] in j[5]:
-                            if k[3]=='pz':
-                                if k[4]>=5:
-                                    peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
-                    else:
-                        pass
+                #if str(k[0]) in excited_states_dict[j][0][2] and len(excited_states_dict[j][0])>4 and k[1]+k[2] in excited_states_dict[j][0][4]:
+                if str(k[0]) == j[3].replace('a','') and len(j)>5 and k[1]+k[2] in j[5]:
+                    excited_states_assign.append(k)
+                    #if len(j)>5:
+                     #   if k[1]+k[2] in j[5]:
+                    mydict=OrderedDict()
+                    for elem in excited_states_assign:
+                        if elem[0] not in mydict:
+                            mydict[elem[0]]=[]
+                            mydict[elem[0]].append(elem[1:])
+                        else:
+                            mydict[elem[0]].append(elem[1:])
+                    keys=list(mydict.keys())
+                    for z in range(len(keys)):
+                        thiskey=keys[z]
+                        for m in mydict[thiskey]:
+                            if m[2]=='s'and m[3]==0.0:
+                                for m in mydict[thiskey]:
+                                    #if m[2]=='px' or m[2]=='py' or m[2]=='pz':
+                                    if (m[2]=='py' and m[3]>=5) or (m[2]=='pz'and m[3]>=5):
+                                        peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
+
+                            #if k[3]=='pz':
+                             #   if k[4]>=5:
+                    #else:
+                    #    pass
+
 
 peak_assignment_ls_f=[]
 if len(peak_assignment_ls)>3:
@@ -469,7 +501,7 @@ plt.ylabel('Intensity',{'fontsize':'22'})
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
 plt.xticks(fontsize = 18)
 plt.yticks(fontsize = 18)
-fig_raw.savefig(path_out+r'//ComparisonOfRawExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
+fig_raw.savefig(path_out+r'//Raw_Exp-Theory.png',bbox_inches='tight')
 
 fig_norm=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -479,7 +511,7 @@ plt.ylabel('Intensity',{'fontsize':'22'})
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
 plt.xticks(fontsize = 18)
 plt.yticks(fontsize = 18)
-fig_norm.savefig(path_out+r'//ComparisonOfNormalizedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
+fig_norm.savefig(path_out+r'//Norm_Exp-Theory.png',bbox_inches='tight')
 
 fig_trans=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -493,9 +525,9 @@ plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
 plt.xticks(fontsize = 18)
 plt.yticks(fontsize = 18)
 fig_trans.show()
-fig_trans.savefig(path_out+r'//ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectra.png',bbox_inches='tight')
+fig_trans.savefig(path_out+r'//Norm_Trans_Exp-Theory.png',bbox_inches='tight')
 
-fig_trans=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
+fig_trans_peaks=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
 plt.plot(trans_theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectrum')
 ax = plt.gca()
@@ -518,8 +550,8 @@ for element in peak_assignment_d:
                  xytext=(x_annotate+0, y_annotate+0.1),size=18,va="bottom", ha="center",
                 arrowprops=dict(arrowstyle="->"))
     feature+=1
-fig_trans.show()
-fig_trans.savefig(path_out+r'//ComparisonOfNormalizedAndTranslatedExperimentalAndTheoreticalSpectraWithPeakAssignment.png',bbox_inches='tight')
+fig_trans_peaks.show()
+fig_trans_peaks.savefig(path_out+r'//Norm_Trans_Exp-Theory_PeakAssign.png',bbox_inches='tight')
 
 stop = timeit.default_timer()
 running_time=(stop-start)/60
@@ -548,20 +580,6 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
         elif '***' in line and n==0:
             html_out.write(line.replace("***",description))
             n+=1
-        elif '+*+*+*' in line:
-            #print("before: ",line)
-            line=""
-            #html_out.write(line.replace("+*+*+*","\n\n"))
-            print("after: ",line)
-            #s0=1
-            for element in peak_assignment_d:
-                #print("1: ",element)                
-                for item in peak_assignment_d[element]:
-                    peak_assign_string=""
-                    peak_assign_string+='<tr> <td>%s</td> <td>%s</td> <td>%s</td> <td>%s</td> <td>%s</td> </tr>\n' %(feature,item[2],item[1],item[3],round(item[4],3))
-                    html_out.write(peak_assign_string)
-                    #print("2: ",peak_assign_string)
-                feature+=1
         elif '+++' in line:
             line=""
             s0=0
@@ -578,7 +596,24 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
                 html_out.write(new_line)
         else:
             html_out.write(line.strip())
-            
+        """    
+        elif '+*+*+*' in line:
+            #print("before: ",line)
+            line=""
+            #html_out.write(line.replace("+*+*+*","\n\n"))
+            print("after: ",line)
+            #s0=1
+            for element in peak_assignment_d:
+                #print("1: ",element)                
+                for item in peak_assignment_d[element]:
+                    peak_assign_string=""
+                    peak_assign_string+='<tr> <td>%s</td> <td>%s</td> <td>%s</td> <td>%s</td> <td>%s</td> </tr>\n' %(feature,item[2],item[1],item[3],round(item[4],3))
+                    html_out.write(peak_assign_string)
+                    #print("2: ",peak_assign_string)
+                feature+=1
+        """        
+
+           
 print ("C1 Process Ended Successfully")
 log_file.write("C1 Process Ended Successfully")        
 print("\n~ path_out, path to where C1 outputs are: {}".format(path_out))

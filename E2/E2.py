@@ -240,7 +240,7 @@ funccenter=fit_xdata[posit]
 b=[]
 b_new=[]
 for i in range(0,len(funccenter)-1):
-    if funccenter[i+1]-funccenter[i]>0.5:
+    if funccenter[i+1]-funccenter[i]>0.8:
         b.append(i)
         b.append(i+1)
 for j in b:
@@ -355,7 +355,7 @@ funccenter_smooth=fit_xdata[posit_smooth]
 b_smooth=[]
 b_new_smooth=[]
 for i in range(0,len(funccenter_smooth)-1):
-    if funccenter_smooth[i+1]-funccenter_smooth[i]>0.5:
+    if funccenter_smooth[i+1]-funccenter_smooth[i]>0.8:
         b_smooth.append(i)
         b_smooth.append(i+1)
 for j in b_smooth:
@@ -458,6 +458,7 @@ init_smooth = mod_smooth.eval(pars_smooth, x=fit_xdata)
 out_smooth = mod_smooth.fit(fit_ydata, pars_smooth, x=fit_xdata)
 Y_fitted_smooth=out_smooth.best_fit
 R_sqr_smooth=1 - out_smooth.residual.var() / np.var(fit_ydata)
+
 
 if R_sqr_smooth>R_sqr:
     # reading fitted peaks parameters from second fitting attempt
@@ -587,7 +588,8 @@ else:
     running_time=(stop-start)/60
     print ("\nRunning time is: "+ str(round(running_time,3)) + "minutes") 
     log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
-    
+    log_file.flush()
+    log_file.close()
     
 html_infile_name=script_path+r"//..//E2//template.html"
 html_outfile_name=path_out+r"//%s_E2_report.html"%filename_without_extension
@@ -632,6 +634,7 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
                 n+=1
         else:
             html_out.write(line.strip())
+log_file=open(log_file_name, "w")             
 print ("E2 Process Ended Successfully")
 log_file.write("E2 Process Ended Successfully")
 print("\n~ path_out, path to directory where E2 outputs are: {}".format(path_out))
