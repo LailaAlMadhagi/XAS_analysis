@@ -1,8 +1,8 @@
-Arguments for liquid state
-geom_file_name=C://Users//dmg81179//Desktop//Testing_XAS_Analysis_code//Imidazole_done//Imidazole_geom.xyz
+Arguments for Gas phase
+geom_file_name=/Users/lailaal-madhagi/Desktop/Imidazole_Gas_phase/Imidazole_geom.xyz
 orca_param=
-orca_executable=
-experimental_spectra=C://Users//dmg81179//Desktop//Testing_XAS_Analysis_code//Imidazole_done//N1s_Imidazole_ISEELS.txt
+orca_executable=/Users/lailaal-madhagi/Library/Orca401/orca
+experimental_spectra=/Users/lailaal-madhagi/Desktop/Imidazole_Gas_phase/N1s_Imidazole_ISEELS.txt
 experimental_energy_column_number=0
 experimental_intensity_column_number=2
 experimental_number_columns=6

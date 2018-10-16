@@ -493,13 +493,15 @@ if R_sqr_smooth>R_sqr:
         plt.plot(fit_xdata,comps['step1_'], 'k--',label='Step Function')
         for x in range (1,gaussnum_smooth+1):
             plt.plot(fit_xdata, comps['g%s_'%x], 'k--',label='Gaussian%s Function'%x)
-    plt.legend(loc='upper left')
-    ax = plt.gca()
-    ax.set_xlim([fit_xdata[0],fit_xdata[-1]+1])
-    ax.set_ylim([0,max(fit_ydata)+0.5])
     plt.xlabel('Energy/ eV')
     plt.ylabel('Intensity')
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    ax = plt.gca()
+    ax.set_xlim([fit_xdata[0],fit_xdata[-1]+1])
+    ax.set_ylim([0,max(fit_ydata)+0.5])
+    xmin, xmax = ax.get_xlim()
+    ymin, ymax = ax.get_ylim()
+    ax.set_aspect(abs((xmax-xmin)/(ymax-ymin)), adjustable='box-forced')
     fig.show()
     fig_name=r'%s_fitted_peaks.png'%filename_without_extension
     fig_filename = path_out+'//'+fig_name
@@ -524,6 +526,7 @@ axis=1)
     print ("\nRunning time is: "+ str(round(running_time,3)) + "minutes") 
     log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
     log_file.close()
+    R_sqr=R_sqr_smooth
     
 else:
     # reading fitted peaks parameters from second fitting attempt
@@ -558,13 +561,15 @@ else:
         plt.plot(fit_xdata,comps['step1_'], 'k--',label='Step Function')
         for x in range (1,gaussnum+1):
             plt.plot(fit_xdata, comps['g%s_'%x], 'k--',label='Gaussian%s Function'%x)
-    plt.legend(loc='upper left')
+    plt.xlabel('Energy/ eV')
+    plt.ylabel('Intensity')
+    plt.legend(loc='center left',fontsize='xx-small',bbox_to_anchor=(1, 0.5))
     ax = plt.gca()
     ax.set_xlim([fit_xdata[0],fit_xdata[-1]+1])
     ax.set_ylim([0,max(fit_ydata)+0.5])
-    plt.xlabel('Energy/ eV')
-    plt.ylabel('Intensity')
-    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    xmin, xmax = ax.get_xlim()
+    ymin, ymax = ax.get_ylim()
+    ax.set_aspect(abs((xmax-xmin)/(ymax-ymin)), adjustable='box-forced')
     fig.show()
     fig_name=r'%s_fitted_peaks.png'%filename_without_extension
     fig_filename = path_out+'//'+fig_name    
@@ -590,6 +595,7 @@ else:
     log_file.write("\n\nEND:\nRunning time is: "+ str(round(running_time,3)) + " minutes")
     log_file.flush()
     log_file.close()
+    R_sqr=R_sqr
     
 html_infile_name=script_path+r"//..//E2//template.html"
 html_outfile_name=path_out+r"//%s_E2_report.html"%filename_without_extension
@@ -612,7 +618,7 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
             html_out.write(line.replace("***",s))
             n+=1
         elif '***' in line and n==2:
-            html_out.write(line.replace("***",fig_name))
+            html_out.write(line.replace("***","%s"%fig_name))
             n+=1            
         elif '***' in line and n==1:
             html_out.write(line.replace("***",html_line1))            
@@ -634,7 +640,7 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
                 n+=1
         else:
             html_out.write(line.strip())
-log_file=open(log_file_name, "w")             
+log_file=open(log_file_name, "a")
 print ("E2 Process Ended Successfully")
 log_file.write("E2 Process Ended Successfully")
 print("\n~ path_out, path to directory where E2 outputs are: {}".format(path_out))

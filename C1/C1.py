@@ -506,6 +506,10 @@ fig_raw.savefig(path_out+r'//Raw_Exp-Theory.png',bbox_inches='tight')
 fig_norm=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
 plt.plot(theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectrum')
+ax = plt.gca()
+xmin, xmax = ax.get_xlim()
+ymin, ymax = ax.get_ylim()
+ax.set_aspect(abs((xmax-xmin)/(ymax-ymin)), adjustable='box-forced')
 plt.xlabel('Energy/ eV',{'fontsize':'22'})
 plt.ylabel('Intensity',{'fontsize':'22'})
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
@@ -519,11 +523,12 @@ plt.plot(trans_theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectru
 ax = plt.gca()
 ax.set_xlim([fit_exp_xdata[0],fit_exp_xdata[-1]+1])
 ax.set_ylim([0,max(fit_exp_ydata)+0.2])
-plt.xlabel('Energy/ eV',{'fontsize':'22'})
-plt.ylabel('Intensity',{'fontsize':'22'})
-plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
-plt.xticks(fontsize = 18)
-plt.yticks(fontsize = 18)
+xmin, xmax = ax.get_xlim()
+ymin, ymax = ax.get_ylim()
+ax.set_aspect(abs((xmax-xmin)/(ymax-ymin)), adjustable='box-forced')
+plt.xlabel('Energy/ eV')
+plt.ylabel('Intensity')
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),fontsize='xx-small')
 fig_trans.show()
 fig_trans.savefig(path_out+r'//Norm_Trans_Exp-Theory.png',bbox_inches='tight')
 
@@ -533,11 +538,12 @@ plt.plot(trans_theory_xdata, norm_theory_ydata, 'g--',label='Theoretical Spectru
 ax = plt.gca()
 ax.set_xlim([fit_exp_xdata[0],fit_exp_xdata[-1]+1])
 ax.set_ylim([0,max(fit_exp_ydata)+0.2])
-plt.xlabel('Energy/ eV',{'fontsize':'22'})
-plt.ylabel('Intensity',{'fontsize':'22'})
-plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
-plt.xticks(fontsize = 18)
-plt.yticks(fontsize = 18)
+xmin, xmax = ax.get_xlim()
+ymin, ymax = ax.get_ylim()
+ax.set_aspect(abs((xmax-xmin)/(ymax-ymin)), adjustable='box-forced')
+plt.xlabel('Energy/ eV')
+plt.ylabel('Intensity')
+plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),fontsize='xx-small')
 feature=1
 for element in peak_assignment_d:
     plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
@@ -547,7 +553,7 @@ for element in peak_assignment_d:
     x_annotate=element+transform
     y_annotate=float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])
     plt.annotate(peak_assign_string, xy=(x_annotate,y_annotate), 
-                 xytext=(x_annotate+0, y_annotate+0.1),size=18,va="bottom", ha="center",
+                 xytext=(x_annotate+0, y_annotate+0.1),size=8,va="bottom", ha="center",
                 arrowprops=dict(arrowstyle="->"))
     feature+=1
 fig_trans_peaks.show()
