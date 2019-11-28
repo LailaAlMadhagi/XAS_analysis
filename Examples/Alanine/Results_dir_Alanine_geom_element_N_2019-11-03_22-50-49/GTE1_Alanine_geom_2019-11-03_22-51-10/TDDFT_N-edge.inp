@@ -1,0 +1,14 @@
+#This is N K-edge calculation 
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+
+%tddft 
+orbwin[0]=2,2,-1,-1 
+nroots=20 
+maxdim=200 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Alanine//Results_dir_Alanine_geom_element_N_2019-11-03_22-50-49//GTE1_Alanine_geom_2019-11-03_22-51-10//opt.xyz 

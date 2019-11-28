@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 16.371 minutes
+	Optimisation time is: 3.527 minutes
+	Frequency calculation time is: 9.724 minutes
+	Time-Dependent Density Functional Theory calculation time is: 3.12 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Aniline//Results_dir_Aniline_geom_element_C_2019-11-04_19-38-59//GTE1_Aniline_geom_2019-11-04_19-39-56

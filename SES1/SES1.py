@@ -113,7 +113,7 @@ log_file_name = path_out+r"//log.txt"
 log_file=open(log_file_name, "w") 
 log_file.write(description+"\n\n")
 try:
-    host=socket.gethostbyaddr(socket.gethostname())[0]
+    host=socket.gethostbyname("")
 except socket.herror:
     host=''
 log_file.write(r"This program ran at "+SES_date_time+r" on the "+host+r" host system.")
@@ -207,12 +207,12 @@ with open(edge_data_file,"r") as edge_data_file:
     edge_data_file.close()
 
 
-if args.hydrogen_positions_Opt == 'None':
+if args.hydrogen_positions_Opt=='':
     #generate input file for Single point calculation
     # default case for ORCA SP parameters
        
     if args.file_orca_params is None:
-        sp_keywords_array=np.array(["!","B3LYP","D3","ma-def2-SVP","TIGHTSCF","Grid3", "FinalGrid5"])
+        sp_keywords_array=np.array(["!","B3LYP","RIJCOSX","D3","ma-def2-TZVP","def2/J","TIGHTSCF","Grid3", "FinalGrid5"])
         print("The default orca optimisation parameters are used from the -op flag.")
         log_file.write("\n\nThe default orca optimisation parameters are used from the -op flag.")
     log_file.flush()    
@@ -304,11 +304,11 @@ if args.hydrogen_positions_Opt == 'None':
     sp_timer = timeit.default_timer()
     sp_time=(sp_timer-start)/60
 
-elif args.hydrogen_positions_Opt != 'None':
+elif args.hydrogen_positions_Opt != '':
     #generate input file for hydrogen optimization calculation
     # default case for ORCA Opt parameters
     if args.file_orca_params is None:
-        opt_keywords_array=np.array(["!","B3LYP","D3","ma-def2-SVP","TIGHTSCF","Grid3", "FinalGrid5","Opt"])
+        opt_keywords_array=np.array(["!","B3LYP","RIJCOSX","D3","ma-def2-TZVP","def2/J","TIGHTSCF","Grid3", "FinalGrid5","Opt"])
         print("The default orca optimisation parameters are used from the -op flag.")
         log_file.write("\n\nThe default orca optimisation parameters are used from the -op flag.")
     log_file.flush()
@@ -498,7 +498,7 @@ for j in final_orbital_window_array:
     orbitals.append(j[-1])
     tddft_orbwin_string+="%s,%s" %(str(orbitals[0]),str(orbitals[1])) 
     tddft_orbwin_string+=",-1,-1"
-    tddft_calc_array=["\n%tddft",tddft_orbwin_string,"nroots=20","maxdim=200","end"]
+    tddft_calc_array=["\n%tddft",tddft_orbwin_string,"nroots=50","maxdim=500","end"]
     with open(tddft_input_file, "w") as tddft_input:
         tddft_input.writelines("#This is %s K-edge calculation \n" %j[0])
         for item in parallel_array:

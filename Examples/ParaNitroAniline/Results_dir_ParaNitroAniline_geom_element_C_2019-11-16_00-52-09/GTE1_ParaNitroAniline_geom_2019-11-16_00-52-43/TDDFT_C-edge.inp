@@ -1,0 +1,14 @@
+#This is C K-edge calculation 
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+
+%tddft 
+orbwin[0]=4,9,-1,-1 
+nroots=20 
+maxdim=200 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/ParaNitroAniline//Results_dir_ParaNitroAniline_geom_element_C_2019-11-16_00-52-09//GTE1_ParaNitroAniline_geom_2019-11-16_00-52-43//opt.xyz 

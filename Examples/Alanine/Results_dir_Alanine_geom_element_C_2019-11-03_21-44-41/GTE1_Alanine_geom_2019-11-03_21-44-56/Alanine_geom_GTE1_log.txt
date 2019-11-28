@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 16.81 minutes
+	Optimisation time is: 9.865 minutes
+	Frequency calculation time is: 5.424 minutes
+	Time-Dependent Density Functional Theory calculation time is: 1.521 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Alanine//Results_dir_Alanine_geom_element_C_2019-11-03_21-44-41//GTE1_Alanine_geom_2019-11-03_21-44-56

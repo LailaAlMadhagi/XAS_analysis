@@ -1,0 +1,91 @@
+GW1: Wrapper script for gas samples
+
+This program ran at 2019-11-10_22-29-08 on the 0.0.0.0 host system.
+System's IP address is: 192.168.1.125
+
+E2 output is: IP:  192.168.1.125
+E2: Experimental spectra peak fitting
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/1-3-5-2-4_Benzotrithiadiazepine/Benzotrithiadiazepine_C1s.txt' mode='r' encoding='UTF-8'>
+
+~ Column with energy values: 0
+
+~ Column with intensity values: 2
+
+~ Number of columns: 3
+
+~ Offset, number of lines to skip to get to the data: 18
+Goodness of fit (R-sqaured) is: 0.9982311968600974
+
+Running time is: 0.478minutes
+E2 Process Ended Successfully
+
+~ path_out, path to directory where E2 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/1-3-5-2-4_Benzotrithiadiazepine//Results_dir_Benzotrithiadiazepine_geom_element_C_2019-11-10_22-29-08//E2_Benzotrithiadiazepine_C1s_2019-11-10_22-29-10
+
+
+E2 err is: 
+
+GTE1 output is: IP:  192.168.1.125
+
+~ Molecular geometry file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/1-3-5-2-4_Benzotrithiadiazepine/Benzotrithiadiazepine_geom.xyz' mode='r' encoding='UTF-8'>
+
+~ Orca parameter file: None
+
+~ Excited state calculations are run for element: C
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+
+START: 
+
+The default gas orca optimisation parameters are used.
+
+
+Loop count is 1.
+ORCA TERMINATED NORMALLY
+Geometry optimized successfully
+
+End of Optimisation loop.
+
+ ********************** 
+
+Optimized geom is at global minimum
+
+
+END: 
+Running time is: 53.426 minutes
+	Optimisation time is: 13.317 minutes
+	Frequency calculation time is: 31.382 minutes
+	Time-Dependent Density Functional Theory calculation time is: 8.727 minutes
+GTE1 Process Ended Successfully
+
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/1-3-5-2-4_Benzotrithiadiazepine//Results_dir_Benzotrithiadiazepine_geom_element_C_2019-11-10_22-29-08//GTE1_Benzotrithiadiazepine_geom_2019-11-10_22-29-37
+
+
+GTE1 err is: 
+
+C1 output is: Mode is ABS
+Using eV units
+Cannot read the paras.inp file ... 
+    taking the line width parameter from the command line 
+Number of peaks            ...   20
+Start energy [eV]          ...   264.00
+Stop energy [eV]           ...   292.00
+Peak FWHM [eV]             ...     0.60
+Number of points           ...   500
+IP:  192.168.1.125
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/1-3-5-2-4_Benzotrithiadiazepine/Benzotrithiadiazepine_C1s.txt' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/1-3-5-2-4_Benzotrithiadiazepine//Results_dir_Benzotrithiadiazepine_geom_element_C_2019-11-10_22-29-08//GTE1_Benzotrithiadiazepine_geom_2019-11-10_22-29-37/TDDFT_C-edge.out' mode='r' encoding='UTF-8'>
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/1-3-5-2-4_Benzotrithiadiazepine//Results_dir_Benzotrithiadiazepine_geom_element_C_2019-11-10_22-29-08//E2_Benzotrithiadiazepine_C1s_2019-11-10_22-29-10/Benzotrithiadiazepine_C1s_peak_params.txt' mode='r' encoding='UTF-8'>
+theory_data_file:  /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/1-3-5-2-4_Benzotrithiadiazepine//Results_dir_Benzotrithiadiazepine_geom_element_C_2019-11-10_22-29-08//C1_Benzotrithiadiazepine_C1s_2019-11-10_23-23-03//TDDFT_C-edge.out.abs.dat
+Running time is: 0.337minutes
+C1 Process Ended Successfully
+
+~ path_out, path to where C1 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/1-3-5-2-4_Benzotrithiadiazepine//Results_dir_Benzotrithiadiazepine_geom_element_C_2019-11-10_22-29-08//C1_Benzotrithiadiazepine_C1s_2019-11-10_23-23-03
+
+
+C1 err is: 
+

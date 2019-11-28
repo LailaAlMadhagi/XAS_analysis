@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 8.588 minutes
+	Optimisation time is: 3.07 minutes
+	Frequency calculation time is: 3.925 minutes
+	Time-Dependent Density Functional Theory calculation time is: 1.594 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/DimethylCarbonate//Results_dir_DimethylCarbonate_geom_element_O_2019-11-10_19-14-55//GTE1_DimethylCarbonate_geom_2019-11-10_19-15-10

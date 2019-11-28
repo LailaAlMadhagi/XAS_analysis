@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 48.018 minutes
+	Optimisation time is: 8.999 minutes
+	Frequency calculation time is: 31.731 minutes
+	Time-Dependent Density Functional Theory calculation time is: 7.288 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/BenzylCarbamate//Results_dir_BenzylCarbamate_geom_element_N_2019-11-07_07-11-17//GTE1_BenzylCarbamate_geom_2019-11-07_07-11-29

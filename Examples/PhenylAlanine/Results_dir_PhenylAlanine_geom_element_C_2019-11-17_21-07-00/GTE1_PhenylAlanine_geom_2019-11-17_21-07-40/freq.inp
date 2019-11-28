@@ -1,0 +1,7 @@
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 Freq 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/PhenylAlanine//Results_dir_PhenylAlanine_geom_element_C_2019-11-17_21-07-00//GTE1_PhenylAlanine_geom_2019-11-17_21-07-40//opt.xyz 

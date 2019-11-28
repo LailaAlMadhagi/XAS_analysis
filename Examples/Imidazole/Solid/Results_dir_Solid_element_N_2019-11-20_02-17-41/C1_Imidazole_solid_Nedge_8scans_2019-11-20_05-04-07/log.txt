@@ -1,0 +1,24 @@
+C1: Compares experimental spectra with theorectically calculated data.
+
+This program ran at 2019-11-20_05-04-07 on the 0.0.0.0 host system.
+System's IP address is: 10.10.201.49
+
+
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/nobackup/fy11lham/Imidazole/Solid/Imidazole_solid_Nedge_8scans.txt' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_N_2019-11-20_02-17-41//SES_IMAZOL13_4Mol.xyz_2019-11-20_02-18-23/TDDFT_N-edge.out' mode='r' encoding='UTF-8'>
+
+This does not use the default path for orca, instead it used this path: /apps/applications/orca/4.0.0/1/default/bin/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_N_2019-11-20_02-17-41//E2_Imidazole_solid_Nedge_8scans_2019-11-20_02-17-57/Imidazole_solid_Nedge_8scans_peak_params.txt' mode='r' encoding='UTF-8'>
+
+Python 3.6.6  and Anaconda, Inc.
+
+Matplotlib version is: 2.1.2
+
+Numpy version is: 1.14.3
+
+END:
+Running time is: 46.397 minutesC1 Process Ended Successfully
+~ path_out, path to where C1 outputs are: /nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_N_2019-11-20_02-17-41//C1_Imidazole_solid_Nedge_8scans_2019-11-20_05-04-07

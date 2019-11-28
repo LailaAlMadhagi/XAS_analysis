@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 2.407 minutes
+	Optimisation time is: 0.971 minutes
+	Frequency calculation time is: 1.086 minutes
+	Time-Dependent Density Functional Theory calculation time is: 0.35 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/AceticAcid//Results_dir_AceticAcid_geom_element_C_2019-11-03_20-01-39//GTE1_AceticAcid_geom_2019-11-03_20-01-50

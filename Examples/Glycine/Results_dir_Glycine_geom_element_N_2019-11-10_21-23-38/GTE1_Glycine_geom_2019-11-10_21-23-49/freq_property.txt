@@ -1,0 +1,48 @@
+-------------------------------------------------------------
+----------------------- !PROPERTIES! ------------------------
+-------------------------------------------------------------
+------------------------ !PROPERTY! -------------------------
+   name:        SCF_Energy
+   comment:     The SCF energy
+   geom. index: 1
+   prop. index: 1
+        SCF Energy:     -284.2569741883
+------------------------ !PROPERTY! -------------------------
+   name:        THERMOCHEMISTRY_Energies
+   comment:     The Thermochemistry energies
+   geom. index: 1
+   prop. index: 1
+        Temperature (Kelvin)            :        298.1500000000
+        Pressure (atm)                  :          1.0000000000
+        Total Mass (AMU)               :         75.0670000000
+        Spin Degeneracy                :          1.0000000000
+        Electronic Energy (Hartree)    :       -284.2569741883
+        Translational Energy (Hartree) :          0.0014162714
+        Rotational Energy (Hartree)    :          0.0014162714
+        Vibrational Energy (Hartree)   :          0.0029891225
+        Here I should print the frequencies  :     
+        Zero Point Energy (Hartree)    :          0.0793347912
+        Inner Energy (Hartree)         :       -284.1718177318
+        Enthalpy (Hartree)             :       -284.1708735227
+        Electronic entropy             :          0.0000000000
+        Rotational entropy             :          0.0120730587
+        Vibrational entropy            :          0.0052090048
+        Translational entropy          :          0.0120730587
+        Entropy                        :          0.0357471344
+        Free Energy (Hartree)          :       -284.2066206571
+-------------------------------------------------------------
+----------------------- !GEOMETRIES! ------------------------
+-------------------------------------------------------------
+------------------------ !GEOMETRY! -------------------------
+    Number of atoms:    10        Geometry Index:    1
+    Coordinates:
+            C     -3.721424675002    0.100005984398    0.174243135346
+            N     -4.909064715176    0.837953083163   -0.221587073506
+            C     -2.470615529191    0.952620335615   -0.036265653304
+            H     -3.704151046157   -0.208545367568    1.236761516086
+            H     -3.624551429031   -0.826752771131   -0.414261600589
+            O     -2.494170944339    2.149803912200   -0.179144661139
+            O     -1.290401828953    0.284346469982   -0.008844921210
+            H     -4.700481950649    1.833384368903   -0.156451965305
+            H     -5.686528004808    0.637105542941    0.400271261782
+            H     -1.447469876695   -0.671641558503    0.074569961840

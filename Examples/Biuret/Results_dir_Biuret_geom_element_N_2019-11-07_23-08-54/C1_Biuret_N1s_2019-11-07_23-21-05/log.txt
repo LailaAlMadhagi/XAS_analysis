@@ -1,0 +1,24 @@
+C1: Compares experimental spectra with theorectically calculated data.
+
+This program ran at 2019-11-07_23-21-05 on the 0.0.0.0 host system.
+System's IP address is: 192.168.1.125
+
+
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Biuret/Biuret_N1s.txt' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Biuret//Results_dir_Biuret_geom_element_N_2019-11-07_23-08-54//GTE1_Biuret_geom_2019-11-07_23-09-30/TDDFT_N-edge.out' mode='r' encoding='UTF-8'>
+
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Biuret//Results_dir_Biuret_geom_element_N_2019-11-07_23-08-54//E2_Biuret_N1s_2019-11-07_23-08-55/Biuret_N1s_peak_params.txt' mode='r' encoding='UTF-8'>
+
+Python 3.6.4  and Anaconda, Inc.
+
+Matplotlib version is: 2.1.2
+
+Numpy version is: 1.14.0
+
+END:
+Running time is: 0.333 minutesC1 Process Ended Successfully
+~ path_out, path to where C1 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Biuret//Results_dir_Biuret_geom_element_N_2019-11-07_23-08-54//C1_Biuret_N1s_2019-11-07_23-21-05

@@ -1,0 +1,30 @@
+E2: Experimental spectra peak fitting
+
+This program ran at 2019-11-10_00-50-01 on the host system.
+ System's IP address is: 192.168.1.125
+
+
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/CarbonMonoxide/CarbonMonoxide_C1s.txt' mode='r' encoding='UTF-8'>
+
+~ Column with energy values: 0
+
+~ Column with intensity values: 2
+
+~ Number of columns: 3
+
+~ Offset, number of lines to skip to get to the data: 18
+
+Python 3.6.4  and Anaconda, Inc.
+
+Matplotlib version is: 2.1.2
+
+Scipy version is: 1.0.0
+
+Pandas version is: 0.22.0
+Goodness of fit (R-sqaured) is: 0.38755690151773436
+
+END:
+Running time is: 0.439 minutesE2 Process Ended Successfully
+
+~ path_out, path to directory where E2 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/CarbonMonoxide//Results_dir_CarbonMonoxide_geom_element_C_2019-11-10_00-49-59//E2_CarbonMonoxide_C1s_2019-11-10_00-50-01

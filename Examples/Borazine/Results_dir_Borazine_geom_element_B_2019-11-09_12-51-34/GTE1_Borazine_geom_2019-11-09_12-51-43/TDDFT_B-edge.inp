@@ -1,0 +1,14 @@
+#This is B K-edge calculation 
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+
+%tddft 
+orbwin[0]=3,5,-1,-1 
+nroots=20 
+maxdim=200 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Borazine//Results_dir_Borazine_geom_element_B_2019-11-09_12-51-34//GTE1_Borazine_geom_2019-11-09_12-51-43//opt.xyz 

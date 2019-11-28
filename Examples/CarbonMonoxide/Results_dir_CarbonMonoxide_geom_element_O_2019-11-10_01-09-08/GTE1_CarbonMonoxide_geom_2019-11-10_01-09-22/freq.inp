@@ -1,0 +1,7 @@
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 Freq 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/CarbonMonoxide//Results_dir_CarbonMonoxide_geom_element_O_2019-11-10_01-09-08//GTE1_CarbonMonoxide_geom_2019-11-10_01-09-22//opt.xyz 

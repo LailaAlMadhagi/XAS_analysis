@@ -12,6 +12,7 @@ import os
 import numpy as np
 import subprocess as sp
 import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 #import scipy.signal
 import datetime
@@ -49,11 +50,18 @@ parser.add_argument("-offset",
                     required=False,
                     help="The number of lines in the input spectra file that are to be skipped before the data is read in.")
 
+parser.add_argument("-state",
+                    dest="state",
+                    type=str,
+                    required=False,
+                    help="The state of matter.")
+
 parser.add_argument("-orca",
                     dest="orca_executable",
                     required=False,
                     help="path to the orca executable; C:\Orca\orca is the default path",
                     metavar="FILE")
+
 
 parser.add_argument('in_theoretical_file',
     type=argparse.FileType('r'),
@@ -114,7 +122,7 @@ log_file_name = path_out+r"//log.txt"
 log_file=open(log_file_name, "w") 
 log_file.write(description+"\n\n")
 try:
-    host=socket.gethostbyaddr(socket.gethostname())[0]
+    host=socket.gethostbyname("")
 except socket.herror:
     host=''
     
@@ -160,11 +168,11 @@ if args.orca_executable is not None and args.orca_executable!='':
 
 print("\n~ Peaks fitted to the theoretical spectra file details: {}".format(args.in_fitted_peaks_file))
 log_file.write("\n\n~ Peaks fitted to the theoretical spectra file details: {}".format(args.in_fitted_peaks_file))
-
-log_file.write('\n\nPython {0} and {1}'.format((sys.version).split('|')[0],(sys.version).split('|')[1]))
-
+try:
+    log_file.write('\n\nPython {0} and {1}'.format((sys.version).split('|')[0],(sys.version).split('|')[1]))
+except IndexError:
+    pass
 log_file.write('\n\nMatplotlib version is: '+matplotlib.__version__)
-
 log_file.write('\n\nNumpy version is: '+np.__version__)
 
 
@@ -253,10 +261,14 @@ with open(fitted_peaks_param) as fit_param:
        line=line.split()
        peak_param.append(line)
     fit_param.close()
+    
 
 for element in peak_param:
     if "center" in element:
+        #exp_peak_center=element[1:]
         first_exp_peak_center=min(element)
+
+        
 
 
 ###Extract theoretical data
@@ -298,6 +310,7 @@ with open(theory_data_file, 'r+') as tddft_output_file:
 #extract Loewdin orbital population analysis information and excited states information
 Loewdin_lines=[]
 states_lines=[]
+absorption_spectrum_lines=[]
 with open (tddft_output_file, "r") as tddft_output_file:
     copy=False
     for line in tddft_output_file:
@@ -308,6 +321,16 @@ with open (tddft_output_file, "r") as tddft_output_file:
         elif copy:
             line=line.split()
             Loewdin_lines.append(line)
+    tddft_output_file.seek(0)
+    copy=False
+    for line in tddft_output_file:
+        if "ABSORPTION SPECTRUM VIA TRANSITION ELECTRIC DIPOLE MOMENTS" in line.strip():
+            copy=True
+        elif "ABSORPTION SPECTRUM VIA TRANSITION VELOCITY DIPOLE MOMENTS" in line.strip():
+            copy=False
+        elif copy:
+            line=line.split()
+            absorption_spectrum_lines.append(line)
     tddft_output_file.seek(0)
     copy=False
     for line in tddft_output_file:
@@ -351,6 +374,8 @@ for chunk in Loewdin_blocks:
             Loewdin_population_per.append([int(states[j]),str(k[0]),str(k[1]),str(k[2]),float(k[j+3])])
             Loewdin_population_per=sorted(Loewdin_population_per)
             
+absorption_spectrum_lines=absorption_spectrum_lines[4:-2]   
+         
 states_lines=states_lines[4:-1]
 states=list(states_split(states_lines,'STATE'))
 states_blocks=list(block_split(states_lines, 'STATE'))
@@ -390,21 +415,23 @@ fit_theory_ydata=norm_theory_ydata[fit_pos_i:fit_pos_f].astype(float)
 dif2=np.diff(fit_theory_ydata)/np.diff(fit_theory_xdata)
 e0_pos2=next((i for i, x in enumerate(dif2) if x), None)
 posit=np.array((np.where((dif2[1:]<0)*(dif2[0:-1]>0))),dtype='int')+1
-posit=np.unique(np.sort(np.append(posit,np.array((np.where((dif2[1:]>0)*(dif2[0:-1]<0))),dtype='int')+1)))
+#posit=np.unique(np.sort(np.append(posit,np.array((np.where((dif2[1:]>0)*(dif2[0:-1]<0))),dtype='int')+1)))
+posit=np.unique(np.sort(np.append(posit,np.array((np.where((dif2[1:]>0)*(dif2[0:-1]<0))),dtype='int'))))
 posit=posit[posit>e0_pos2]
 funccenter=fit_theory_xdata[posit]
 
 #remove extraneous peaks
 b=[]
 b_new=[]
-for i in range(0,len(funccenter)-1):
-    if funccenter[i+1]-funccenter[i]>0.2:
-        b.append(i)
-        b.append(i+1)
-for j in b:
-    if j not in b_new:
-        b_new.append(j)
-funccenter=funccenter[b_new]
+if len(funccenter)!=1:
+    for i in range(0,len(funccenter)-1):
+        if funccenter[i+1]-funccenter[i]>0.2:
+            b.append(i)
+            b.append(i+1)
+    for j in b:
+        if j not in b_new:
+            b_new.append(j)
+    funccenter=funccenter[b_new]
 
 
 ###Peak assignement
@@ -416,6 +443,11 @@ for j in excited_states_ls:
                 if k[4]>=5:
                     j.append(k[1]+k[2])
 
+for line in excited_states_ls:
+    for l in absorption_spectrum_lines:
+        if str(line[0])==l[0]:
+            line.append(round(float(l[3]),4))                    
+    
 """
 excited_states_dict=OrderedDict()
 for elem in excited_states_ls:
@@ -429,46 +461,89 @@ for elem in excited_states_ls:
 for i in funccenter:
     for j in excited_states_ls:
         excited_states_assign=[]
+        if j[-1]>=0.001: 
         #if excited_states_dict[j][0][0]-0.5 <= i <= excited_states_dict[j][0][0]+0.5:
-        if j[1]-0.5 <= i <= j[1]+0.5:
-            for k in Loewdin_population_per:
-                #if str(k[0]) in excited_states_dict[j][0][2] and len(excited_states_dict[j][0])>4 and k[1]+k[2] in excited_states_dict[j][0][4]:
-                if str(k[0]) == j[3].replace('a','') and len(j)>5 and k[1]+k[2] in j[5]:
-                    excited_states_assign.append(k)
-                    #if len(j)>5:
-                     #   if k[1]+k[2] in j[5]:
-                    mydict=OrderedDict()
-                    for elem in excited_states_assign:
-                        if elem[0] not in mydict:
-                            mydict[elem[0]]=[]
-                            mydict[elem[0]].append(elem[1:])
-                        else:
-                            mydict[elem[0]].append(elem[1:])
-                    keys=list(mydict.keys())
-                    for z in range(len(keys)):
-                        thiskey=keys[z]
-                        for m in mydict[thiskey]:
-                            if m[2]=='s'and m[3]==0.0:
-                                for m in mydict[thiskey]:
+            if j[1]-0.5 <= i <= j[1]+0.5:
+                for k in Loewdin_population_per:
+                    #if str(k[0]) in excited_states_dict[j][0][2] and len(excited_states_dict[j][0])>4 and k[1]+k[2] in excited_states_dict[j][0][4]:
+                    if str(k[0]) == j[3].replace('a','') and len(j)>5 and k[1]+k[2] in str(j[5]):
+                        excited_states_assign.append(k)
+                        #if len(j)>5:
+                         #   if k[1]+k[2] in j[5]:
+                        mydict=OrderedDict()
+                        for elem in excited_states_assign:
+                            if elem[0] not in mydict:
+                                mydict[elem[0]]=[]
+                                mydict[elem[0]].append(elem[1:])
+                            else:
+                                mydict[elem[0]].append(elem[1:])
+                        keys=list(mydict.keys())
+                        for z in range(len(keys)):
+                            thiskey=keys[z]
+                            if any ('s' in lis for lis in mydict[thiskey]):
+                                if [mydict[thiskey][0][0],mydict[thiskey][0][1],'s',0.0] in mydict[thiskey]:
+                                    #if [mydict[thiskey][0][0],mydict[thiskey][0][1],'px',0.0] in mydict[thiskey]:
+                                    for m in mydict[thiskey]:
+                                        if (m[2]=='pz'and m[3]>=5) or (m[2]=='py'and m[3]>=5):
+                                            peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
+                            
+                            elif any ('s' not in lis for lis in mydict[thiskey]):
+                                if [mydict[thiskey][0][0],mydict[thiskey][0][1],'px',0.0] in mydict[thiskey]:
+                                    for m in mydict[thiskey]:
+                                        if (m[2]=='pz'and m[3]>=5) or (m[2]=='py'and m[3]>=5):
+                                            peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])  
+                            """pe
+                            if any ('s' in lis for lis in mydict[thiskey]):
+                                if [mydict[thiskey][0][0],mydict[thiskey][0][1],'s',0.0] in mydict[thiskey]:
+                                    if [mydict[thiskey][0][0],mydict[thiskey][0][1],'px',0.0] in mydict[thiskey]:
+                                        for m in mydict[thiskey]:
+                                            if (m[2]=='pz'and m[3]>=5) or (m[2]=='py'and m[3]>=5):
+                                                peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
+                            elif any ('s' not in lis for lis in mydict[thiskey]):
+                                if [mydict[thiskey][0][0],mydict[thiskey][0][1],'px',0.0] in mydict[thiskey]:
+                                    for m in mydict[thiskey]:
+                                        if (m[2]=='pz'and m[3]>=5) or (m[2]=='py'and m[3]>=5):
+                                            peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
+                                   
+                                    
+                                    for m in mydict[thiskey]:
+                                        if (m[2]=='py' and m[3]>=5) or (m[2]=='pz'and m[3]>=5):
+                                            peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
+                                    
+                                    if args.state=='g':
+                                        if (m[2]=='pz'and m[3]>=5):
+                                            peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
+                                    else:
                                     #if m[2]=='px' or m[2]=='py' or m[2]=='pz':
-                                    if (m[2]=='py' and m[3]>=5) or (m[2]=='pz'and m[3]>=5):
-                                        peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
+                                        if (m[2]=='py' and m[3]>=5) or (m[2]=='pz'and m[3]>=5):
+                                            peak_assignment_ls.append([float("%.2f"%i),j[1],j[2],j[5],j[3],j[4]])
+                                    """
 
-                            #if k[3]=='pz':
-                             #   if k[4]>=5:
-                    #else:
-                    #    pass
-
-
+"""
 peak_assignment_ls_f=[]
-if len(peak_assignment_ls)>3:
+if len(peak_assignment_ls)>2:
     for index, element in enumerate(peak_assignment_ls):
-        if element[1]==peak_assignment_ls[index-2][1]:
-                pass
+        if (element[0]==peak_assignment_ls[index-1][0] or element[1]==peak_assignment_ls[index-1][1]) and (element[-1]==peak_assignment_ls[index-1][-1]):
+            pass
+        elif (element[0]==peak_assignment_ls[index-2][0] or element[1]==peak_assignment_ls[index-2][1]) and (element[2]==peak_assignment_ls[index-2][2]) and (element[3]==peak_assignment_ls[index-2][3])and (element[-1]==peak_assignment_ls[index-2][-1]):
+            pass
         else:
             peak_assignment_ls_f.append(element)
 else:
     peak_assignment_ls_f=peak_assignment_ls
+
+if len(peak_assignment_ls)>3:
+    for index, element in enumerate(peak_assignment_ls):
+        if element[4]==peak_assignment_ls[index-1][4]:
+            pass
+        else:
+            if element[1]==peak_assignment_ls[index-1][1] and (element[-1]==peak_assignment_ls[index-1][-1]):
+                    pass
+            else:
+                peak_assignment_ls_f.append(element)
+else:
+    peak_assignment_ls_f=peak_assignment_ls
+
         
 peak_assignment_d=OrderedDict()
 for element in peak_assignment_ls_f:
@@ -476,13 +551,34 @@ for element in peak_assignment_ls_f:
         peak_assignment_d[element[0]]=[element[1:]]
     else:
         peak_assignment_d[element[0]].append(element[1:])
+"""
+peak_assignment_d=OrderedDict()
+for element in peak_assignment_ls:
+    if element[1] not in peak_assignment_d:
+        peak_assignment_d[element[1]]=[element]
+    else:
+        peak_assignment_d[element[1]].append(element)
+        
+peak_assignment_d_f=OrderedDict()
+for key in peak_assignment_d:
+    seen=set()
+    for element in peak_assignment_d[key]:
+        if tuple(element[2:]) not in seen:
+            seen.add(tuple(element[2:]))
+            if element[0] not in peak_assignment_d_f:
+                peak_assignment_d_f[element[0]]=[element[1:]]
+            else:
+                peak_assignment_d_f[element[0]].append(element[1:])
 
 ###
 #translate the energy scale for the theoretical data based on experimental data
-if peak_assignment_ls_f!=[]:
-    transform=float(first_exp_peak_center)-peak_assignment_ls_f[0][0]
-else:
+if len(peak_assignment_d_f)!=0:
+    for key in peak_assignment_d_f:
+        transform=float(first_exp_peak_center)-list(peak_assignment_d_f.keys())[0]
+elif len(peak_assignment_d_f)==0 and len(funccenter)!=0:
     transform=float(first_exp_peak_center)-min(funccenter)
+else:
+    transform=0
 trans_theory_xdata=theory_xdata+transform
 html_transform="%.3f" % transform
 
@@ -502,6 +598,7 @@ plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
 plt.xticks(fontsize = 18)
 plt.yticks(fontsize = 18)
 fig_raw.savefig(path_out+r'//Raw_Exp-Theory.png',bbox_inches='tight')
+#plt.close()
 
 fig_norm=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -516,6 +613,7 @@ plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),prop={'size': 22})
 plt.xticks(fontsize = 18)
 plt.yticks(fontsize = 18)
 fig_norm.savefig(path_out+r'//Norm_Exp-Theory.png',bbox_inches='tight')
+#plt.close()
 
 fig_trans=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -529,8 +627,9 @@ ax.set_aspect(abs((xmax-xmin)/(ymax-ymin)), adjustable='box-forced')
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),fontsize='xx-small')
-fig_trans.show()
 fig_trans.savefig(path_out+r'//Norm_Trans_Exp-Theory.png',bbox_inches='tight')
+#plt.close()
+
 
 fig_trans_peaks=plt.figure(num=None, figsize=(10, 8), dpi=600, facecolor='w', edgecolor='k')
 plt.plot(exp_xdata, norm_exp_ydata, 'b',label='Experimental Spectrum')
@@ -544,8 +643,9 @@ ax.set_aspect(abs((xmax-xmin)/(ymax-ymin)), adjustable='box-forced')
 plt.xlabel('Energy/ eV')
 plt.ylabel('Intensity')
 plt.legend(loc='center left', bbox_to_anchor=(1, 0.5),fontsize='xx-small')
+
 feature=1
-for element in peak_assignment_d:
+for element in peak_assignment_d_f:
     plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
     peak_assign_string=str(feature)
     #for item in peak_assignment_d[element]:
@@ -556,8 +656,24 @@ for element in peak_assignment_d:
                  xytext=(x_annotate+0, y_annotate+0.1),size=8,va="bottom", ha="center",
                 arrowprops=dict(arrowstyle="->"))
     feature+=1
-fig_trans_peaks.show()
+"""
+feature=0
+for element in peak_assignment_d:
+    plt.axvspan(element+transform,element+transform, facecolor='g', alpha=1)
+    peak_assign_string=str(feature+1)
+    #for item in peak_assignment_d[element]:
+        #peak_assign_string+='%s (%s > %s) (%s)\n' %(item[2],item[1],item[3],round(item[4],3))
+    x_annotate=element+transform
+    y_annotate=float(norm_theory_ydata[np.where(np.around(trans_theory_xdata,6)==round(element+transform,6))])
+    plt.annotate(peak_assign_string, xy=(x_annotate,y_annotate), 
+                 xytext=(x_annotate+0, y_annotate+0.1),size=8,va="bottom", ha="center",
+                arrowprops=dict(arrowstyle="->"))
+    feature+=len(peak_assignment_d[element])
+"""
+
 fig_trans_peaks.savefig(path_out+r'//Norm_Trans_Exp-Theory_PeakAssign.png',bbox_inches='tight')
+#plt.close()
+
 
 stop = timeit.default_timer()
 running_time=(stop-start)/60
@@ -588,18 +704,15 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
             n+=1
         elif '+++' in line:
             line=""
-            s0=0
-            for index, element in enumerate(peak_assignment_ls_f):
-                peak_number=0
-                if element[1]==peak_assignment_ls_f[index-1][1]:
-                    peak_number=str(s0)
-                else:
-                    s0+=1
-                    peak_number=str(s0)
-                s1="%.3f" % element[1]
-                new_line=""
-                new_line='<tr> <td> %d </td> <td> %s </td> <td> %s </td> <td> %s </td> <td> %s(%f) </td> </tr> \n' %(s0,s1,element[2],element[3],element[4],round(element[5],3))
-                html_out.write(new_line)
+            s0=1
+            for element in peak_assignment_d_f:
+                for segment in peak_assignment_d_f[element]:
+                    s1="%.3f" % segment[0]
+                    s2="%.3f" %(segment[0]+transform)
+                    new_line=""
+                    new_line='<tr> <td> %d </td> <td> %s </td> <td> %s </td> <td> %s </td> <td> %s </td> <td> %s(%f) </td> </tr> \n' %(s0,s1,s2,segment[1],segment[2],segment[3],round(segment[4],3))
+                    html_out.write(new_line)
+                s0+=1
         else:
             html_out.write(line.strip())
         """    

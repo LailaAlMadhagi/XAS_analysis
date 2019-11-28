@@ -1,0 +1,17 @@
+#This is C K-edge calculation 
+#This is a serial job 
+
+ 
+! B3LYP D3 ma-def2-SVP TIGHTSCF Grid3 FinalGrid5 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+
+%tddft 
+orbwin[0]=4,6,-1,-1 
+nroots=20 
+maxdim=200 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid//1Imdz_2W.xyz 

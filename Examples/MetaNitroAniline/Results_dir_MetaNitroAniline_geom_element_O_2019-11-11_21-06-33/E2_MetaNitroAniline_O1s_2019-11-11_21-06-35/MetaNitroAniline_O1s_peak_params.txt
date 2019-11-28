@@ -1,0 +1,6 @@
+parameter	g1	step
+amplitude	  2.626778	  0.893329
+sigma	  0.535163	  0.800000
+center	  530.900640	  536.556694
+fwhm	  1.260214	
+height	  1.958155	

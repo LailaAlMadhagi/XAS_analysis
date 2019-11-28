@@ -1,0 +1,30 @@
+E2: Experimental spectra peak fitting
+
+This program ran at 2019-11-25_00-05-55 on the host system.
+ System's IP address is: 10.10.201.175
+
+
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/nobackup/fy11lham/Imidazole/Solid/Imidazole_solid_Cedge_2scans.txt' mode='r' encoding='UTF-8'>
+
+~ Column with energy values: 0
+
+~ Column with intensity values: 3
+
+~ Number of columns: 7
+
+~ Offset, number of lines to skip to get to the data: 38
+
+Python 3.6.6  and Anaconda, Inc.
+
+Matplotlib version is: 2.1.2
+
+Scipy version is: 1.1.0
+
+Pandas version is: 0.23.0
+Goodness of fit (R-sqaured) is: 0.9779519695174116
+
+END:
+Running time is: 0.454 minutesE2 Process Ended Successfully
+
+~ path_out, path to directory where E2 outputs are: /nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_C_2019-11-25_00-05-43//E2_Imidazole_solid_Cedge_2scans_2019-11-25_00-05-55

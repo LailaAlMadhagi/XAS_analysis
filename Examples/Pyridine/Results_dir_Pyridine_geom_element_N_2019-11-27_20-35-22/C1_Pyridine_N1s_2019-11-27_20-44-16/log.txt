@@ -1,0 +1,24 @@
+C1: Compares experimental spectra with theorectically calculated data.
+
+This program ran at 2019-11-27_20-44-16 on the 0.0.0.0 host system.
+System's IP address is: 192.168.1.125
+
+
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Pyridine/Pyridine_N1s.nor' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Pyridine//Results_dir_Pyridine_geom_element_N_2019-11-27_20-35-22//GTE1_Pyridine_geom_2019-11-27_20-35-35/TDDFT_N-edge.out' mode='r' encoding='UTF-8'>
+
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Pyridine//Results_dir_Pyridine_geom_element_N_2019-11-27_20-35-22//E2_Pyridine_N1s_2019-11-27_20-35-24/Pyridine_N1s_peak_params.txt' mode='r' encoding='UTF-8'>
+
+Python 3.6.4  and Anaconda, Inc.
+
+Matplotlib version is: 2.1.2
+
+Numpy version is: 1.14.0
+
+END:
+Running time is: 0.355 minutesC1 Process Ended Successfully
+~ path_out, path to where C1 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Pyridine//Results_dir_Pyridine_geom_element_N_2019-11-27_20-35-22//C1_Pyridine_N1s_2019-11-27_20-44-16

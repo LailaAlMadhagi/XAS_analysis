@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 103.87 minutes
+	Optimisation time is: 19.488 minutes
+	Frequency calculation time is: 70.023 minutes
+	Time-Dependent Density Functional Theory calculation time is: 14.359 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzophenone//Results_dir_Benzophenone_geom_element_C_2019-11-05_23-12-41//GTE1_Benzophenone_geom_2019-11-05_23-12-55

@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 25.704 minutes
+	Optimisation time is: 6.617 minutes
+	Frequency calculation time is: 14.824 minutes
+	Time-Dependent Density Functional Theory calculation time is: 4.263 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Nitrobenzene//Results_dir_Nitrobenzene_geom_element_N_2019-11-11_22-18-54//GTE1_Nitrobenzene_geom_2019-11-11_22-19-15

@@ -1,0 +1,121 @@
+GW1: Wrapper script for gas samples
+
+This program ran at 2019-11-16_16-50-48 on the 0.0.0.0 host system.
+System's IP address is: 192.168.1.125
+
+E2 output is: IP:  192.168.1.125
+E2: Experimental spectra peak fitting
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol/Phenol_C1s.txt' mode='r' encoding='UTF-8'>
+
+~ Column with energy values: 0
+
+~ Column with intensity values: 2
+
+~ Number of columns: 3
+
+~ Offset, number of lines to skip to get to the data: 18
+Goodness of fit (R-sqaured) is: 0.9975313812195971
+
+Running time is: 0.771minutes
+E2 Process Ended Successfully
+
+~ path_out, path to directory where E2 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol//Results_dir_Phenol_geom_element_C_2019-11-16_16-50-48//E2_Phenol_C1s_2019-11-16_16-50-50
+
+
+E2 err is: /Users/lailaal-madhagi/Desktop/XAS_analysis/GW1//..//E2//E2.py:18: UserWarning: 
+This call to matplotlib.use() has no effect because the backend has already
+been chosen; matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+or matplotlib.backends is imported for the first time.
+
+The backend was *originally* set to 'MacOSX' by the following code:
+  File "/Users/lailaal-madhagi/Desktop/XAS_analysis/GW1//..//E2//E2.py", line 17, in <module>
+    import matplotlib.pyplot as plt
+  File "/Users/lailaal-madhagi/anaconda3/lib/python3.6/site-packages/matplotlib/pyplot.py", line 72, in <module>
+    from matplotlib.backends import pylab_setup
+  File "/Users/lailaal-madhagi/anaconda3/lib/python3.6/site-packages/matplotlib/backends/__init__.py", line 14, in <module>
+    line for line in traceback.format_stack()
+
+
+  matplotlib.use("Agg")
+
+
+GTE1 output is: IP:  192.168.1.125
+
+~ Molecular geometry file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol/Phenol_geom.xyz' mode='r' encoding='UTF-8'>
+
+~ Orca parameter file: None
+
+~ Excited state calculations are run for element: C
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+
+START: 
+
+The default gas orca optimisation parameters are used.
+
+
+Loop count is 1.
+ORCA TERMINATED NORMALLY
+Geometry optimized successfully
+
+End of Optimisation loop.
+
+ ********************** 
+
+Optimized geom is at global minimum
+
+
+END: 
+Running time is: 12.419 minutes
+	Optimisation time is: 2.715 minutes
+	Frequency calculation time is: 6.699 minutes
+	Time-Dependent Density Functional Theory calculation time is: 3.005 minutes
+GTE1 Process Ended Successfully
+
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol//Results_dir_Phenol_geom_element_C_2019-11-16_16-50-48//GTE1_Phenol_geom_2019-11-16_16-51-35
+
+
+GTE1 err is: 
+
+C1 output is: Mode is ABS
+Using eV units
+Cannot read the paras.inp file ... 
+    taking the line width parameter from the command line 
+Number of peaks            ...   20
+Start energy [eV]          ...   264.00
+Stop energy [eV]           ...   292.00
+Peak FWHM [eV]             ...     0.60
+Number of points           ...   500
+IP:  192.168.1.125
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol/Phenol_C1s.txt' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol//Results_dir_Phenol_geom_element_C_2019-11-16_16-50-48//GTE1_Phenol_geom_2019-11-16_16-51-35/TDDFT_C-edge.out' mode='r' encoding='UTF-8'>
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol//Results_dir_Phenol_geom_element_C_2019-11-16_16-50-48//E2_Phenol_C1s_2019-11-16_16-50-50/Phenol_C1s_peak_params.txt' mode='r' encoding='UTF-8'>
+theory_data_file:  /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol//Results_dir_Phenol_geom_element_C_2019-11-16_16-50-48//C1_Phenol_C1s_2019-11-16_17-04-01//TDDFT_C-edge.out.abs.dat
+Running time is: 0.217minutes
+C1 Process Ended Successfully
+
+~ path_out, path to where C1 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol//Results_dir_Phenol_geom_element_C_2019-11-16_16-50-48//C1_Phenol_C1s_2019-11-16_17-04-01
+
+
+C1 err is: /Users/lailaal-madhagi/Desktop/XAS_analysis/GW1//..//C1//C1.py:16: UserWarning: 
+This call to matplotlib.use() has no effect because the backend has already
+been chosen; matplotlib.use() must be called *before* pylab, matplotlib.pyplot,
+or matplotlib.backends is imported for the first time.
+
+The backend was *originally* set to 'MacOSX' by the following code:
+  File "/Users/lailaal-madhagi/Desktop/XAS_analysis/GW1//..//C1//C1.py", line 15, in <module>
+    import matplotlib.pyplot as plt
+  File "/Users/lailaal-madhagi/anaconda3/lib/python3.6/site-packages/matplotlib/pyplot.py", line 72, in <module>
+    from matplotlib.backends import pylab_setup
+  File "/Users/lailaal-madhagi/anaconda3/lib/python3.6/site-packages/matplotlib/backends/__init__.py", line 14, in <module>
+    line for line in traceback.format_stack()
+
+
+  matplotlib.use("Agg")
+
+

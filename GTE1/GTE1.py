@@ -32,15 +32,6 @@ parser.add_argument('in_geom_file',
     help="molecular geometry file to be read in",
     default=sys.stdin, metavar="FILE")
 
-'''parser.add_argument("-v", 
-                    "--verbose", 
-                    const=1, 
-                    default=0, 
-                    type=int, 
-                    nargs="?",
-                    help="increase verbosity: 0 = only warnings, 1 = info, 2 = debug, 3 = write to log file in results directory. No number means info. Default is no verbosity.")
-'''
-
 parser.add_argument("-opi", 
                     dest="file_orca_params", 
                     required=False,
@@ -96,7 +87,7 @@ log_file=open(log_file_name, "w")
 log_file.write(description+"\n\n")
 
 try:
-    host=socket.gethostbyaddr(socket.gethostname())[0]
+    host=socket.gethostbyname("")
 except socket.herror:
     host=''
 log_file.write(r"This program ran at "+date_time+r" on the "+host+r" host system.")

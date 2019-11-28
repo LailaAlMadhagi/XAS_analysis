@@ -4,7 +4,7 @@ Created on Tue May 22 17:16:41 2018
 email: fy11lham@leeds.ac.uk 
 This is a python code for peak fitting with some ideas from 
 Matlab code published in: Journal of Physics: Conference Series 712 (2016) 012070  
-Code last modified 23rd August 2018
+Code last modified 28th June 2019
 """
 
 import timeit
@@ -13,21 +13,17 @@ import datetime
 import os
 import numpy as np
 import scipy.signal
-#import matplotlib 
-#matplotlib.use('TkAgg')
 import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 from collections import OrderedDict
 import pandas as pd
 import argparse
 import sys
 import socket
-#import shutil
-
-#import pillow
 
 # functions used for fitting
-# from lmfit.models import StepModel, PseudoVoigtModel, GaussianModel
+# from lmfit.models import StepModel, GaussianModel
 from lmfit.models import GaussianModel, StepModel
 
 
@@ -54,14 +50,7 @@ parser.add_argument("column_intensity",
 parser.add_argument("n_columns",  
                     type=int, 
                     help="The number of columns in spectra file.")
-"""
-parser.add_argument('-ft',
-    '--file_type',
-    default='Athena',
-    choices=['Athena', 'user_defined'],
-#    required=False,
-    help="Select the default set of orca parameters for particular chemical states.")
-"""
+
 parser.add_argument("-offset", 
                     dest="offset",
                     type=int,
@@ -109,7 +98,7 @@ log_file=open(log_file_name, "w")
 
 log_file.write(description+"\n\n")
 try:
-    host=socket.gethostbyaddr(socket.gethostname())[0]
+    host=socket.gethostbyname("")
 except socket.herror:
     host=''
     
@@ -152,25 +141,14 @@ log_file.write("\n\n~ File type of spectral file : {}".format(args.file_type))
 print("\n~ Offset, number of lines to skip to get to the data: {}".format(args.offset))
 log_file.write("\n\n~ Offset, number of lines to skip to get to the data: {}".format(args.offset))
 
-log_file.write('\n\nPython {0} and {1}'.format((sys.version).split('|')[0],(sys.version).split('|')[1]))
+try:
+    log_file.write('\n\nPython {0} and {1}'.format((sys.version).split('|')[0],(sys.version).split('|')[1]))
+except IndexError:
+    pass
 log_file.write('\n\nMatplotlib version is: '+matplotlib.__version__)
 log_file.write('\n\nScipy version is: '+scipy.__version__)
 log_file.write('\n\nPandas version is: '+pd.__version__)
 log_file.flush()
-"""
-ftype ="{}".format(args.file_type)
-
-
-# the value 38 is the default number of lines to skip in the Athena file in 2018
-skip = 38
-
-if "{}".format(args.file_type) == 'Athena':
-    print("You are using an Athena spectrum file.\n")
-    log_file.write("\n\nYou are using an Athena spectrum file.\n")
-if "{}".format(args.file_type) == 'user_defined':
-    print("You are not using an Athena spectrum file, it is user defined.\n")
-    log_file.write("\nYou are not using an Athena spectrum file, it is user defined.\n")
-"""
 
 log_file.flush()
 
@@ -320,7 +298,7 @@ ub=np.zeros((funcnum,4))
 step1=StepModel(form='arctan', prefix='step1_')
 # pars.update(step2.guess(y,x=x))
 pars=step1.make_params()
-pars['step1_center'].set(e0+4, min=e0+3, max=e0+6)
+pars['step1_center'].set(e0+6, min=e0+3, max=e0+8)
 pars['step1_amplitude'].set(0.5, min=0.1, max=1)
 pars['step1_sigma'].set(0.5, min=0.3, max=0.8)
 mod=step1
@@ -437,7 +415,7 @@ ub_smooth=np.zeros((funcnum_smooth,4))
 step1_smooth=StepModel(form='arctan', prefix='step1_')
 # pars.update(step2.guess(y,x=x))
 pars_smooth=step1_smooth.make_params()
-pars_smooth['step1_center'].set(e0+4, min=e0+3, max=e0+6)
+pars_smooth['step1_center'].set(e0+6, min=e0+3, max=e0+8)
 pars_smooth['step1_amplitude'].set(0.5, min=0.1, max=1)
 pars_smooth['step1_sigma'].set(0.5, min=0.3, max=0.8)
 mod_smooth=step1_smooth
@@ -502,10 +480,12 @@ if R_sqr_smooth>R_sqr:
     xmin, xmax = ax.get_xlim()
     ymin, ymax = ax.get_ylim()
     ax.set_aspect(abs((xmax-xmin)/(ymax-ymin)), adjustable='box-forced')
-    fig.show()
+    #fig.show()
     fig_name=r'%s_fitted_peaks.png'%filename_without_extension
     fig_filename = path_out+'//'+fig_name
     fig.savefig(fig_filename,bbox_inches='tight')
+    #plt.close()
+
     
     print("Goodness of fit (R-squared) is: %s" %R_sqr_smooth)
     log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr_smooth)
@@ -529,7 +509,7 @@ axis=1)
     R_sqr=R_sqr_smooth
     
 else:
-    # reading fitted peaks parameters from second fitting attempt
+    # reading fitted peaks parameters from first fitting attempt
     v=[]
     for param in out.params.values():
         v.append("%s:  %f" % (param.name, param.value))
@@ -570,10 +550,12 @@ else:
     xmin, xmax = ax.get_xlim()
     ymin, ymax = ax.get_ylim()
     ax.set_aspect(abs((xmax-xmin)/(ymax-ymin)), adjustable='box-forced')
-    fig.show()
+    #fig.show()
     fig_name=r'%s_fitted_peaks.png'%filename_without_extension
     fig_filename = path_out+'//'+fig_name    
     fig.savefig(fig_filename,bbox_inches='tight')
+    #plt.close()
+
     
     print("Goodness of fit (R-sqaured) is: %s" %R_sqr)
     log_file.write("\nGoodness of fit (R-sqaured) is: %s" %R_sqr)
@@ -634,7 +616,7 @@ with open(html_infile_name, "r") as html_in, open(html_outfile_name, "w") as htm
             for c in range(1,total_cols):
                 row_line="<tr> <td> %s </td> "%(fitted_peaks_param.columns[c])
                 for r in range(total_rows):
-                    row_line+=" <td> %s </td> "%( fitted_peaks_param.iloc[r,c])
+                    row_line+=" <td> %0.3f </td> "%(float(fitted_peaks_param.iloc[r,c]))
                 row_line+=" </tr>"
                 html_out.write(row_line)
                 n+=1

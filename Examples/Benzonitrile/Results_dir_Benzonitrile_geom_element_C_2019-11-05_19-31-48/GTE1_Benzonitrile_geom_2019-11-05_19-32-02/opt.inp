@@ -1,0 +1,7 @@
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 Opt 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzonitrile/Benzonitrile_geom.xyz 

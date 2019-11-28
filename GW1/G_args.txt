@@ -1,10 +1,10 @@
 Arguments for Gas phase
-geom_file_name=/Users/lailaal-madhagi/Desktop/Imidazole_Gas_phase/Imidazole_geom.xyz
+geom_file_name=/Users/.../.../xx_geom.xyz
 orca_param=
-orca_executable=/Users/lailaal-madhagi/Library/Orca401/orca
-experimental_spectra=/Users/lailaal-madhagi/Desktop/Imidazole_Gas_phase/N1s_Imidazole_ISEELS.txt
+orca_executable=/Users/.../Applications/orca/orca
+experimental_spectra=/Users/.../.../xx_C1s.txt
 experimental_energy_column_number=0
 experimental_intensity_column_number=2
-experimental_number_columns=6
-experimental_header_skip=38
-element_calculate=N
+experimental_number_columns=3
+experimental_header_skip=19
+element_calculate=C

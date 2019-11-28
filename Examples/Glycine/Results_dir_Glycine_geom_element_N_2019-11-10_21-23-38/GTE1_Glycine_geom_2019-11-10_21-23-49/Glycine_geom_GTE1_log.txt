@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 7.198 minutes
+	Optimisation time is: 4.324 minutes
+	Frequency calculation time is: 2.27 minutes
+	Time-Dependent Density Functional Theory calculation time is: 0.604 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine//Results_dir_Glycine_geom_element_N_2019-11-10_21-23-38//GTE1_Glycine_geom_2019-11-10_21-23-49

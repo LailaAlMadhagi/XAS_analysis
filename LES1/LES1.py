@@ -90,7 +90,7 @@ if args.geom_file_name is not None:
     resultsdir = r"LES1_"+args.geom_file_name+r"_"+LES_date_time
     geom_file=args.in_geom_dir+r'//'+args.geom_file_name
 if args.geom_file_name is None:
-    geom_file=args.in_geom_dir+r'//'+os.listdir(args.in_geom_dir)[0]
+    geom_file=args.in_geom_dir+r'//'+[f for f in os.listdir(args.in_geom_dir) if f.endswith('.xyz')][0]
     resultsdir = r"LES1_"+geom_file.split('//')[1]+r'_'+LES_date_time
   
 # set in and out paths   
@@ -107,7 +107,7 @@ log_file_name = path_out+r"//log.txt"
 log_file=open(log_file_name, "w") 
 log_file.write(description+"\n\n")
 try:
-    host=socket.gethostbyaddr(socket.gethostname())[0]
+    host=socket.gethostbyname("")
 except socket.herror:
     host=''
 log_file.write(r"This program ran at "+LES_date_time+r" on the "+host+r" host system.")
@@ -164,7 +164,6 @@ if args.processors_number is not None and args.processors_number != '':
 
     
 # Here are all the files we need to create (except the log file which we are already using)
-
 sp_input_file=path_out+r"//sp.inp"
 new_sp_input_file=path_out+r"//new_sp.inp"
 sp_output_file=path_out+r"//sp.out"

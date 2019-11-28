@@ -1,0 +1,91 @@
+GW1: Wrapper script for gas samples
+
+This program ran at 2019-11-06_07-18-00 on the 0.0.0.0 host system.
+System's IP address is: 192.168.1.125
+
+E2 output is: IP:  192.168.1.125
+E2: Experimental spectra peak fitting
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzophenone/Benzophenone_O1s.txt' mode='r' encoding='UTF-8'>
+
+~ Column with energy values: 0
+
+~ Column with intensity values: 2
+
+~ Number of columns: 3
+
+~ Offset, number of lines to skip to get to the data: 18
+Goodness of fit (R-squared) is: 0.9966441700448678
+
+Running time is: 0.158minutes
+E2 Process Ended Successfully
+
+~ path_out, path to directory where E2 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzophenone//Results_dir_Benzophenone_geom_element_O_2019-11-06_07-18-00//E2_Benzophenone_O1s_2019-11-06_07-18-01
+
+
+E2 err is: 
+
+GTE1 output is: IP:  192.168.1.125
+
+~ Molecular geometry file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzophenone/Benzophenone_geom.xyz' mode='r' encoding='UTF-8'>
+
+~ Orca parameter file: None
+
+~ Excited state calculations are run for element: O
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+
+START: 
+
+The default gas orca optimisation parameters are used.
+
+
+Loop count is 1.
+ORCA TERMINATED NORMALLY
+Geometry optimized successfully
+
+End of Optimisation loop.
+
+ ********************** 
+
+Optimized geom is at global minimum
+
+
+END: 
+Running time is: 108.454 minutes
+	Optimisation time is: 20.357 minutes
+	Frequency calculation time is: 74.844 minutes
+	Time-Dependent Density Functional Theory calculation time is: 13.253 minutes
+GTE1 Process Ended Successfully
+
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzophenone//Results_dir_Benzophenone_geom_element_O_2019-11-06_07-18-00//GTE1_Benzophenone_geom_2019-11-06_07-18-09
+
+
+GTE1 err is: 
+
+C1 output is: Mode is ABS
+Using eV units
+Cannot read the paras.inp file ... 
+    taking the line width parameter from the command line 
+Number of peaks            ...   20
+Start energy [eV]          ...   510.00
+Stop energy [eV]           ...   538.00
+Peak FWHM [eV]             ...     0.60
+Number of points           ...   500
+IP:  192.168.1.125
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzophenone/Benzophenone_O1s.txt' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzophenone//Results_dir_Benzophenone_geom_element_O_2019-11-06_07-18-00//GTE1_Benzophenone_geom_2019-11-06_07-18-09/TDDFT_O-edge.out' mode='r' encoding='UTF-8'>
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzophenone//Results_dir_Benzophenone_geom_element_O_2019-11-06_07-18-00//E2_Benzophenone_O1s_2019-11-06_07-18-01/Benzophenone_O1s_peak_params.txt' mode='r' encoding='UTF-8'>
+theory_data_file:  /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzophenone//Results_dir_Benzophenone_geom_element_O_2019-11-06_07-18-00//C1_Benzophenone_O1s_2019-11-06_09-06-37//TDDFT_O-edge.out.abs.dat
+Running time is: 0.525minutes
+C1 Process Ended Successfully
+
+~ path_out, path to where C1 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzophenone//Results_dir_Benzophenone_geom_element_O_2019-11-06_07-18-00//C1_Benzophenone_O1s_2019-11-06_09-06-37
+
+
+C1 err is: 
+

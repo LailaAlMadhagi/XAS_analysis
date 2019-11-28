@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 6.566 minutes
+	Optimisation time is: 1.75 minutes
+	Frequency calculation time is: 3.801 minutes
+	Time-Dependent Density Functional Theory calculation time is: 1.014 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Diethylether//Results_dir_Diethylether_geom_element_C_2019-11-10_17-22-04//GTE1_Diethylether_geom_2019-11-10_17-22-15

@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 4.107 minutes
+	Optimisation time is: 1.702 minutes
+	Frequency calculation time is: 1.751 minutes
+	Time-Dependent Density Functional Theory calculation time is: 0.654 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Gas//Results_dir_Imidazole_geom_element_N_2019-11-03_16-54-11//GTE1_Imidazole_geom_2019-11-03_16-54-36

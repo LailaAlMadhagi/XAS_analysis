@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 18.126 minutes
+	Optimisation time is: 5.246 minutes
+	Frequency calculation time is: 9.415 minutes
+	Time-Dependent Density Functional Theory calculation time is: 3.466 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Dicyanoimidazole//Results_dir_Dicyanoimidazole_geom_element_C_2019-11-10_14-17-23//GTE1_Dicyanoimidazole_geom_2019-11-10_14-17-43

@@ -1,0 +1,7 @@
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 Freq 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine//Results_dir_Glycine_geom_element_N_2019-11-10_21-23-38//GTE1_Glycine_geom_2019-11-10_21-23-49//opt.xyz 

@@ -1,0 +1,85 @@
+SW1: Wrapper script for Solid samples
+
+This program ran at 2019-11-25_00-05-43 on the 0.0.0.0 host system.
+System's IP address is: 10.10.201.175
+
+E2 output is: IP:  10.10.201.175
+E2: Experimental spectra peak fitting
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/nobackup/fy11lham/Imidazole/Solid/Imidazole_solid_Cedge_2scans.txt' mode='r' encoding='UTF-8'>
+
+~ Column with energy values: 0
+
+~ Column with intensity values: 3
+
+~ Number of columns: 7
+
+~ Offset, number of lines to skip to get to the data: 38
+Goodness of fit (R-squared) is: 0.9779519695174116
+
+Running time is: 0.454minutes
+E2 Process Ended Successfully
+
+~ path_out, path to directory where E2 outputs are: /nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_C_2019-11-25_00-05-43//E2_Imidazole_solid_Cedge_2scans_2019-11-25_00-05-55
+
+
+E2 err is: 
+
+SES1 output is: IP:  10.10.201.175
+
+~ Molecular geometry file details: /nobackup/fy11lham/Imidazole/Solid
+
+~ Orca parameter file: None
+This does not use the default path for orca, instead it used this path: /apps/applications/orca/4.0.0/1/default/bin/orca
+
+
+START: 
+
+The default orca optimisation parameters are used from the -op flag.
+
+
+ORCA TERMINATED NORMALLY
+
+End of Single Point Energy Calculation.
+
+ ********************** 
+
+
+
+END: 
+Running time is: 206.999 minutes
+	Single Point time is: 27.344 minutes
+	Time-Dependent Density Functional Theory calculation time is: 179.654 minutes
+SES1 Process Ended Successfully
+
+~ path for directory where outputs are: /nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_C_2019-11-25_00-05-43//SES_IMAZOL13_4Mol.xyz_2019-11-25_00-06-11
+
+
+SES1 err is: 
+
+C1 output is: Mode is ABS
+Using eV units
+Cannot read the paras.inp file ... 
+    taking the line width parameter from the command line 
+Number of peaks            ...   50
+Start energy [eV]          ...   266.00
+Stop energy [eV]           ...   293.00
+Peak FWHM [eV]             ...     0.60
+Number of points           ...   500
+IP:  10.10.201.175
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/nobackup/fy11lham/Imidazole/Solid/Imidazole_solid_Cedge_2scans.txt' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_C_2019-11-25_00-05-43//SES_IMAZOL13_4Mol.xyz_2019-11-25_00-06-11/TDDFT_C-edge.out' mode='r' encoding='UTF-8'>
+This does not use the default path for orca, instead it used this path: /apps/applications/orca/4.0.0/1/default/bin/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_C_2019-11-25_00-05-43//E2_Imidazole_solid_Cedge_2scans_2019-11-25_00-05-55/Imidazole_solid_Cedge_2scans_peak_params.txt' mode='r' encoding='UTF-8'>
+theory_data_file:  /nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_C_2019-11-25_00-05-43//C1_Imidazole_solid_Cedge_2scans_2019-11-25_03-33-11//TDDFT_C-edge.out.abs.dat
+Running time is: 48.691minutes
+C1 Process Ended Successfully
+
+~ path_out, path to where C1 outputs are: /nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_C_2019-11-25_00-05-43//C1_Imidazole_solid_Cedge_2scans_2019-11-25_03-33-11
+
+
+C1 err is: 
+

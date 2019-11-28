@@ -38,6 +38,11 @@ arguments_d={'geom_file_name':[],'orca_param':[],'orca_executable':[],
 
 with open (args.in_args.name,'r') as args_f:
     lines=args_f.readlines()[1:]
+    a=len(lines)
+    while a > 9:
+        if 'element_calculate' not in lines[-1]:
+            lines=lines[:-1]
+        a-=1 
     for line in lines:
         arguments_d[line.split('=')[0]]=line.split('=')[1].replace('\n','')
 args_f.close()
@@ -61,9 +66,10 @@ log_file=open(log_file_name, "w")
 print (description)   
 log_file.write(description+"\n\n")
 try:
-    host=socket.gethostbyaddr(socket.gethostname())[0]
+    host=socket.gethostbyname("")
 except socket.herror:
     host=''
+
 log_file.write(r"This program ran at "+GW_date_time+r" on the "+host+r" host system.")
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 try:
@@ -146,7 +152,7 @@ C1_p=sp.Popen(['python',str(script_path+r'//..//C1//C1.py'),
                 str(arguments_d['experimental_energy_column_number']),
                 str(arguments_d['experimental_intensity_column_number']),
                 str(arguments_d['experimental_number_columns']),
-                '-offset',str(arguments_d['experimental_header_skip']),
+                '-offset',str(arguments_d['experimental_header_skip']),'-state',str('g'),
                 '-orca',str(arguments_d['orca_executable']),
                 str(arguments_d['tddft_out_file']),
                 str(arguments_d['fitted_peaks_params']),

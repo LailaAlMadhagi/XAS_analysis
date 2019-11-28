@@ -24,14 +24,14 @@ FILES INCLUDED
 							overwrite the default ocra values that are in this program.
 
 							
-INFORMATION ON THE LES1 (Liquid THEORETICAL EXCITED STATE CALCULATION) CODE
+INFORMATION ON THE SES1 (Solid THEORETICAL EXCITED STATE CALCULATION) CODE
 
 usage: 
 
-LES1.py [-h] [-geom_file_name FILE] [-opi FILE] [-orca] [-path_out] [-element] [-h_opt] [-pal] DIR
+SES1.py [-h] [-geom_file_name FILE] [-opi FILE] [-orca] [-path_out] [-element] [-h_opt] [-pal] DIR
 
 
-GTE1: Theoretical electron density function calulation
+SES1: Theoretical electron density function calulation
 
 positional arguments:
 
@@ -71,11 +71,11 @@ EXAMPLE USAGE
 
 1, minimal needed to run:
 
-GTE1.py C:\Users\userid\Desktop\data\Imidazole\Imidazole_geom.xyz
+SES1.py C:\Users\userid\Desktop\data\Imidazole\Imidazole_geom.xyz
 
 2, minimal needed to run with user defined orca parameters:
 
-GTE1.py C:\Users\userid\Desktop\data\Imidazole\Imidazole_geom.xyz -opi C:\Users\userid\Desktop\analysis\Imidazole\orca_parameters.txt
+SES1.py C:\Users\userid\Desktop\data\Imidazole\Imidazole_geom.xyz -opi C:\Users\userid\Desktop\analysis\Imidazole\orca_parameters.txt
 
 
 BACKGROUND

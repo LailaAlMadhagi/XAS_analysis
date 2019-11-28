@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 40.253 minutes
+	Optimisation time is: 7.801 minutes
+	Frequency calculation time is: 26.555 minutes
+	Time-Dependent Density Functional Theory calculation time is: 5.897 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/ParaNitroAniline//Results_dir_ParaNitroAniline_geom_element_N_2019-11-16_12-39-08//GTE1_ParaNitroAniline_geom_2019-11-16_12-39-32

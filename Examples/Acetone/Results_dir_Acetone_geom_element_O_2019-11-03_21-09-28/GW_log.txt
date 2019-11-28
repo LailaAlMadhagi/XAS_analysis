@@ -1,0 +1,91 @@
+GW1: Wrapper script for gas samples
+
+This program ran at 2019-11-03_21-09-28 on the 0.0.0.0 host system.
+System's IP address is: 192.168.1.125
+
+E2 output is: IP:  192.168.1.125
+E2: Experimental spectra peak fitting
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Acetone/Acetone_O1s.txt' mode='r' encoding='UTF-8'>
+
+~ Column with energy values: 0
+
+~ Column with intensity values: 2
+
+~ Number of columns: 3
+
+~ Offset, number of lines to skip to get to the data: 18
+Goodness of fit (R-sqaured) is: 0.9991020497636255
+
+Running time is: 0.317minutes
+E2 Process Ended Successfully
+
+~ path_out, path to directory where E2 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Acetone//Results_dir_Acetone_geom_element_O_2019-11-03_21-09-28//E2_Acetone_O1s_2019-11-03_21-09-30
+
+
+E2 err is: 
+
+GTE1 output is: IP:  192.168.1.125
+
+~ Molecular geometry file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Acetone/Acetone_geom.xyz' mode='r' encoding='UTF-8'>
+
+~ Orca parameter file: None
+
+~ Excited state calculations are run for element: O
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+
+START: 
+
+The default gas orca optimisation parameters are used.
+
+
+Loop count is 1.
+ORCA TERMINATED NORMALLY
+Geometry optimized successfully
+
+End of Optimisation loop.
+
+ ********************** 
+
+Optimized geom is at global minimum
+
+
+END: 
+Running time is: 3.523 minutes
+	Optimisation time is: 1.237 minutes
+	Frequency calculation time is: 1.841 minutes
+	Time-Dependent Density Functional Theory calculation time is: 0.445 minutes
+GTE1 Process Ended Successfully
+
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Acetone//Results_dir_Acetone_geom_element_O_2019-11-03_21-09-28//GTE1_Acetone_geom_2019-11-03_21-09-47
+
+
+GTE1 err is: 
+
+C1 output is: Mode is ABS
+Using eV units
+Cannot read the paras.inp file ... 
+    taking the line width parameter from the command line 
+Number of peaks            ...   20
+Start energy [eV]          ...   510.00
+Stop energy [eV]           ...   538.00
+Peak FWHM [eV]             ...     0.60
+Number of points           ...   500
+IP:  192.168.1.125
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Acetone/Acetone_O1s.txt' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Acetone//Results_dir_Acetone_geom_element_O_2019-11-03_21-09-28//GTE1_Acetone_geom_2019-11-03_21-09-47/TDDFT_O-edge.out' mode='r' encoding='UTF-8'>
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Acetone//Results_dir_Acetone_geom_element_O_2019-11-03_21-09-28//E2_Acetone_O1s_2019-11-03_21-09-30/Acetone_O1s_peak_params.txt' mode='r' encoding='UTF-8'>
+theory_data_file:  /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Acetone//Results_dir_Acetone_geom_element_O_2019-11-03_21-09-28//C1_Acetone_O1s_2019-11-03_21-13-19//TDDFT_O-edge.out.abs.dat
+Running time is: 0.349minutes
+C1 Process Ended Successfully
+
+~ path_out, path to where C1 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Acetone//Results_dir_Acetone_geom_element_O_2019-11-03_21-09-28//C1_Acetone_O1s_2019-11-03_21-13-19
+
+
+C1 err is: 
+

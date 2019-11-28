@@ -1,0 +1,7 @@
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 Freq 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Acetaldehyde//Results_dir_Acetaldehyde_geom_element_C_2019-11-03_18-34-06//GTE1_Acetaldehyde_geom_2019-11-03_18-34-39//opt.xyz 

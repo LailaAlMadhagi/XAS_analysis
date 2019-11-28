@@ -1,0 +1,10 @@
+#This is a serial job 
+
+ 
+! B3LYP D3 ma-def2-SVP TIGHTSCF Grid3 FinalGrid5 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid//1Imdz_2W.xyz 

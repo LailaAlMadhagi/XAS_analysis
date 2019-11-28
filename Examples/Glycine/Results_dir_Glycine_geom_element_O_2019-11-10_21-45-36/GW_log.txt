@@ -1,0 +1,95 @@
+GW1: Wrapper script for gas samples
+
+This program ran at 2019-11-10_21-45-36 on the 0.0.0.0 host system.
+System's IP address is: 192.168.1.125
+
+E2 output is: IP:  192.168.1.125
+E2: Experimental spectra peak fitting
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine/Glycine_O1s.txt' mode='r' encoding='UTF-8'>
+
+~ Column with energy values: 0
+
+~ Column with intensity values: 2
+
+~ Number of columns: 3
+
+~ Offset, number of lines to skip to get to the data: 19
+Goodness of fit (R-sqaured) is: 0.9961545421934404
+
+Running time is: 0.157minutes
+E2 Process Ended Successfully
+
+~ path_out, path to directory where E2 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine//Results_dir_Glycine_geom_element_O_2019-11-10_21-45-36//E2_Glycine_O1s_2019-11-10_21-45-37
+
+
+E2 err is: /Users/lailaal-madhagi/Desktop/XAS_analysis/GW1//..//E2//E2.py:194: RuntimeWarning: divide by zero encountered in true_divide
+  dif1=np.diff(ydata)/np.diff(xdata)
+
+
+GTE1 output is: IP:  192.168.1.125
+
+~ Molecular geometry file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine/Glycine_geom.xyz' mode='r' encoding='UTF-8'>
+
+~ Orca parameter file: None
+
+~ Excited state calculations are run for element: O
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+
+START: 
+
+The default gas orca optimisation parameters are used.
+
+
+Loop count is 1.
+ORCA TERMINATED NORMALLY
+Geometry optimized successfully
+
+End of Optimisation loop.
+
+ ********************** 
+
+Optimized geom is at global minimum
+
+
+END: 
+Running time is: 7.142 minutes
+	Optimisation time is: 4.477 minutes
+	Frequency calculation time is: 2.022 minutes
+	Time-Dependent Density Functional Theory calculation time is: 0.643 minutes
+GTE1 Process Ended Successfully
+
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine//Results_dir_Glycine_geom_element_O_2019-11-10_21-45-36//GTE1_Glycine_geom_2019-11-10_21-45-46
+
+
+GTE1 err is: 
+
+C1 output is: Mode is ABS
+Using eV units
+Cannot read the paras.inp file ... 
+    taking the line width parameter from the command line 
+Number of peaks            ...   20
+Start energy [eV]          ...   511.00
+Stop energy [eV]           ...   539.00
+Peak FWHM [eV]             ...     0.60
+Number of points           ...   500
+IP:  192.168.1.125
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine/Glycine_O1s.txt' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine//Results_dir_Glycine_geom_element_O_2019-11-10_21-45-36//GTE1_Glycine_geom_2019-11-10_21-45-46/TDDFT_O-edge.out' mode='r' encoding='UTF-8'>
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine//Results_dir_Glycine_geom_element_O_2019-11-10_21-45-36//E2_Glycine_O1s_2019-11-10_21-45-37/Glycine_O1s_peak_params.txt' mode='r' encoding='UTF-8'>
+theory_data_file:  /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine//Results_dir_Glycine_geom_element_O_2019-11-10_21-45-36//C1_Glycine_O1s_2019-11-10_21-52-55//TDDFT_O-edge.out.abs.dat
+Running time is: 0.302minutes
+C1 Process Ended Successfully
+
+~ path_out, path to where C1 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Glycine//Results_dir_Glycine_geom_element_O_2019-11-10_21-45-36//C1_Glycine_O1s_2019-11-10_21-52-55
+
+
+C1 err is: /Users/lailaal-madhagi/Desktop/XAS_analysis/GW1//..//C1//C1.py:239: RuntimeWarning: divide by zero encountered in true_divide
+  dif1=np.diff(exp_ydata)/np.diff(exp_xdata)
+
+

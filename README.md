@@ -13,13 +13,13 @@ E1: Experimental spectra background noise subtraction and normalization. This is
 
 E2: Experimental spectra peak fitting
 
-GTE1: Theoretical electron density function calulation for a gas
+GTE1: Theoretical electron density function calculation for a gas
 
-LES1: (Theoretical) excited state calulation for a liquid
+LES1: (Theoretical) excited state calculation for a liquid
 
-SES1: (Theoretical) excited state calulation for a solid
+SES1: (Theoretical) excited state calculation for a solid
 
-C1:  Compares experimental spectra with theorectically calculated data
+C1:  Compares experimental spectra with theoretically calculated data
 
 GW1:  Wrapper Script to run E2, GTE1 and C1 for a gas
 
@@ -28,7 +28,7 @@ LW1:  Wrapper Script to run E2, LES1 and C1 for a liquid
 SW1:  Wrapper Script to run E2, SES1 and C1 for a solid
 
 
-The data file edge_data.txt which is a text file containing edge data information (derived from "Journal of Physics: Conference Series 712 (2016) 012070" which is taken from the X-ray Data Booklet) is also stored in this directory as it is used by more than one script.
+The data file edge_data.txt which is a text file containing the natural line width table (obtained from Krause, M.O. and J.H. Oliver, Natural widths of atomic K and L levels, Kα X‐ray lines and several KLL Auger lines. Journal of Physical and Chemical Reference Data, 1979. 8(2): p. 329-338) is also stored in this directory as it is used by more than one script.
 
 NOTES TO DEVELOPERS
 There are 2 technical choices made during development that need explaining because of the limitations of varies systems at the time the software was developed.

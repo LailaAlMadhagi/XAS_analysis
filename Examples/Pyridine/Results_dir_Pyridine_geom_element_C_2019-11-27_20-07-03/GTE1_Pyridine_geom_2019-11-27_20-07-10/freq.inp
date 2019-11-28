@@ -1,0 +1,7 @@
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 Freq 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Pyridine//Results_dir_Pyridine_geom_element_C_2019-11-27_20-07-03//GTE1_Pyridine_geom_2019-11-27_20-07-10//opt.xyz 

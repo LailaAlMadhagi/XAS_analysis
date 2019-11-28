@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 6.317 minutes
+	Optimisation time is: 1.935 minutes
+	Frequency calculation time is: 2.945 minutes
+	Time-Dependent Density Functional Theory calculation time is: 1.437 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Pyrrole//Results_dir_Pyrrole_geom_element_N_2019-11-28_02-54-11//GTE1_Pyrrole_geom_2019-11-28_02-54-20

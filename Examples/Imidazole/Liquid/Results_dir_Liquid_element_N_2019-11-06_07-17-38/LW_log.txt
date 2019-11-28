@@ -1,0 +1,85 @@
+LW1: Wrapper script for Liquid samples
+
+This program ran at 2019-11-06_07-17-38 on the 0.0.0.0 host system.
+System's IP address is: 192.168.1.125
+
+E2 output is: IP:  192.168.1.125
+E2: Experimental spectra peak fitting
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid/Imidazole_35degC_Nedge_10scans_Average.txt' mode='r' encoding='UTF-8'>
+
+~ Column with energy values: 0
+
+~ Column with intensity values: 3
+
+~ Number of columns: 7
+
+~ Offset, number of lines to skip to get to the data: 38
+Goodness of fit (R-squared) is: 0.8941343322071127
+
+Running time is: 0.191minutes
+E2 Process Ended Successfully
+
+~ path_out, path to directory where E2 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid//Results_dir_Liquid_element_N_2019-11-06_07-17-38//E2_Imidazole_35degC_Nedge_10scans_Average_2019-11-06_07-17-39
+
+
+E2 err is: 
+
+LES1 output is: IP:  192.168.1.125
+
+~ Molecular geometry file details: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid
+
+~ Orca parameter file: None
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+
+START: 
+
+The default orca optimisation parameters are used from the -op flag.
+
+
+ORCA TERMINATED NORMALLY
+
+End of Single Point Energy Calculation.
+
+ ********************** 
+
+
+
+END: 
+Running time is: 12.168 minutes
+	Single Point time is: 1.033 minutes
+	Time-Dependent Density Functional Theory calculation time is: 11.134 minutes
+LES1 Process Ended Successfully
+
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid//Results_dir_Liquid_element_N_2019-11-06_07-17-38//LES1_1Imdz_2W.xyz_2019-11-06_07-17-50
+
+
+LES1 err is: 
+
+C1 output is: Mode is ABS
+Using eV units
+Cannot read the paras.inp file ... 
+    taking the line width parameter from the command line 
+Number of peaks            ...   20
+Start energy [eV]          ...   378.00
+Stop energy [eV]           ...   406.00
+Peak FWHM [eV]             ...     0.60
+Number of points           ...   500
+IP:  192.168.1.125
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid/Imidazole_35degC_Nedge_10scans_Average.txt' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid//Results_dir_Liquid_element_N_2019-11-06_07-17-38//LES1_1Imdz_2W.xyz_2019-11-06_07-17-50/TDDFT_N-edge.out' mode='r' encoding='UTF-8'>
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid//Results_dir_Liquid_element_N_2019-11-06_07-17-38//E2_Imidazole_35degC_Nedge_10scans_Average_2019-11-06_07-17-39/Imidazole_35degC_Nedge_10scans_Average_peak_params.txt' mode='r' encoding='UTF-8'>
+theory_data_file:  /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid//Results_dir_Liquid_element_N_2019-11-06_07-17-38//C1_Imidazole_35degC_Nedge_10scans_Average_2019-11-06_07-30-00//TDDFT_N-edge.out.abs.dat
+Running time is: 0.558minutes
+C1 Process Ended Successfully
+
+~ path_out, path to where C1 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid//Results_dir_Liquid_element_N_2019-11-06_07-17-38//C1_Imidazole_35degC_Nedge_10scans_Average_2019-11-06_07-30-00
+
+
+C1 err is: 
+

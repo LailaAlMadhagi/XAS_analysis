@@ -1,0 +1,7 @@
+
+
+END:
+Running time is: 165.699 minutes
+	Single Point Energy time is: 26.812 minutes
+	Time-Dependent Density Functional Theory calculation time is: 138.887 minutesSES1 Process Ended Successfully
+~ path for directory where outputs are: /nobackup/fy11lham/Imidazole/Solid//Results_dir_Solid_element_N_2019-11-20_02-17-41//SES_IMAZOL13_4Mol.xyz_2019-11-20_02-18-23

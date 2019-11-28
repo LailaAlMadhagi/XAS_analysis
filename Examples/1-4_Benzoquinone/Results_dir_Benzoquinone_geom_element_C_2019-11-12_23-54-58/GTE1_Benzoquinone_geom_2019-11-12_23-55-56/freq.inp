@@ -1,0 +1,7 @@
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 Freq 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/1-4_Benzoquinone//Results_dir_Benzoquinone_geom_element_C_2019-11-12_23-54-58//GTE1_Benzoquinone_geom_2019-11-12_23-55-56//opt.xyz 

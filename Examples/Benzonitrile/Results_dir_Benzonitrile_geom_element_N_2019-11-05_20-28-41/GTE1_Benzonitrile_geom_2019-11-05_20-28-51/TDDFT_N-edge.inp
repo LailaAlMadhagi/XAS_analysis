@@ -1,0 +1,14 @@
+#This is N K-edge calculation 
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+
+%tddft 
+orbwin[0]=0,0,-1,-1 
+nroots=20 
+maxdim=200 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzonitrile//Results_dir_Benzonitrile_geom_element_N_2019-11-05_20-28-41//GTE1_Benzonitrile_geom_2019-11-05_20-28-51//opt.xyz 

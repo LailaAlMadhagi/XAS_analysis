@@ -31,7 +31,7 @@ usage:
 LES1.py [-h] [-geom_file_name FILE] [-opi FILE] [-orca] [-path_out] [-element] [-pal] DIR
 
 
-GTE1: Theoretical electron density function calulation
+LES1: Theoretical electron density function calulation
 
 positional arguments:
 
@@ -68,11 +68,11 @@ EXAMPLE USAGE
 
 1, minimal needed to run:
 
-GTE1.py C:\Users\userid\Desktop\data\Imidazole\Imidazole_geom.xyz
+LES1.py C:\Users\userid\Desktop\data\Imidazole\Imidazole_geom.xyz
 
 2, minimal needed to run with user defined orca parameters:
 
-GTE1.py C:\Users\userid\Desktop\data\Imidazole\Imidazole_geom.xyz -opi C:\Users\userid\Desktop\analysis\Imidazole\orca_parameters.txt
+LES1.py C:\Users\userid\Desktop\data\Imidazole\Imidazole_geom.xyz -opi C:\Users\userid\Desktop\analysis\Imidazole\orca_parameters.txt
 
 
 BACKGROUND
@@ -83,7 +83,7 @@ https://orcaforum.cec.mpg.de/
 
 
 This program is the LES1 part of the computational pipeline or workflow. This is the Theory Excited State calculation pipeline for liquids. The computation is in 2 steps:
-1, Single Point Energy Calculation 2, Excited stated calculation or TDDFT calculation (Time Dependent Density Function Theory)
+1, Single Point Energy Calculation 2, Excited state calculation or TDDFT calculation (Time Dependent Density Function Theory)
 
 If the software finishes early and not all of the steps complete sucessfully there will be an error message printed. These error messages are:
 ERROR 1: ORCA did not terminate normally (to be implemented)

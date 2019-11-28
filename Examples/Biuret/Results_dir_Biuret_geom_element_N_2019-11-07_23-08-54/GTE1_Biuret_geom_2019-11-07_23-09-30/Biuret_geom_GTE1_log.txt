@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 11.574 minutes
+	Optimisation time is: 3.725 minutes
+	Frequency calculation time is: 6.066 minutes
+	Time-Dependent Density Functional Theory calculation time is: 1.783 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Biuret//Results_dir_Biuret_geom_element_N_2019-11-07_23-08-54//GTE1_Biuret_geom_2019-11-07_23-09-30

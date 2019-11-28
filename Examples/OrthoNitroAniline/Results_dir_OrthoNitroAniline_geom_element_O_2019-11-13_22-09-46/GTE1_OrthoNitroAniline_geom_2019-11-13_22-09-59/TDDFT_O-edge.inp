@@ -1,0 +1,14 @@
+#This is O K-edge calculation 
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+
+%tddft 
+orbwin[0]=0,1,-1,-1 
+nroots=20 
+maxdim=200 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/OrthoNitroAniline//Results_dir_OrthoNitroAniline_geom_element_O_2019-11-13_22-09-46//GTE1_OrthoNitroAniline_geom_2019-11-13_22-09-59//opt.xyz 

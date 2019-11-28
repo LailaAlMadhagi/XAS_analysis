@@ -41,6 +41,11 @@ arguments_d={'geom_directory':[],'orca_param':[],'orca_executable':[],
 
 with open (args.in_args.name,'r') as args_f:
     lines=args_f.readlines()[1:]
+    a=len(lines)
+    while a > 10:
+        if 'number_of_processors' not in lines[-1]:
+            lines=lines[:-1]
+        a-=1
     for line in lines:
         arguments_d[line.split('=')[0]]=line.split('=')[1].replace('\n','')
 args_f.close()
@@ -62,7 +67,7 @@ log_file=open(log_file_name, "w")
 print(description)
 log_file.write(description+"\n\n")
 try:
-    host=socket.gethostbyaddr(socket.gethostname())[0]
+    host=socket.gethostbyname("")
 except socket.herror:
     host=''
 log_file.write(r"This program ran at "+LW1_date_time+r" on the "+host+r" host system.")
@@ -108,8 +113,13 @@ theory_xdata_avg=np.array([])
 theory_ydata_all=np.array([])
 theory_ydata_avg=np.array([])
 
-loop=int(1)
+geom_filenames=[]
 for file in os.listdir(arguments_d['geom_directory']):
+    if not file.startswith('.') and file.endswith('.xyz'):
+        geom_filenames.append(file)
+
+loop=int(1)
+for file in geom_filenames:
     if not file.startswith('.') and os.path.isfile(os.path.join(arguments_d['geom_directory'], file)):
         if R_sqr<0.8:
             arguments_d['geom_file_name']=file

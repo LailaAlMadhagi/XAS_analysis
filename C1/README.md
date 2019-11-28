@@ -72,4 +72,4 @@ Images in this script are created and are referenced in an html report. The imag
   
 BACKGROUND  
 
-This program is the GC1 part of the Manual pipeline, which is explained the README file in the top directory of this project.The computation is done by comparing the experimental and theoretical spectra. The theoretical spectra is translated so that the first peak is aligned with the first peak in the experimental spectrum.   
+This program is the C1 part of the Manual pipeline, which is explained the README file in the top directory of this project.The computation is done by comparing the experimental and theoretical spectra. The theoretical spectra is translated so that the first peak is aligned with the first peak in the experimental spectrum.   

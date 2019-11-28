@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 12.419 minutes
+	Optimisation time is: 2.715 minutes
+	Frequency calculation time is: 6.699 minutes
+	Time-Dependent Density Functional Theory calculation time is: 3.005 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol//Results_dir_Phenol_geom_element_C_2019-11-16_16-50-48//GTE1_Phenol_geom_2019-11-16_16-51-35

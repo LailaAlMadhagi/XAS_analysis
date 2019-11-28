@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 19.309 minutes
+	Optimisation time is: 4.153 minutes
+	Frequency calculation time is: 12.07 minutes
+	Time-Dependent Density Functional Theory calculation time is: 3.087 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/piperidine//Results_dir_piperidine_geom_element_N_2019-11-27_18-37-27//GTE1_piperidine_geom_2019-11-27_18-37-34

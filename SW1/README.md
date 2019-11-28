@@ -21,7 +21,7 @@ INFORMATION ON THE SW1 (SOLID WRAPPER) CODE
 
 usage: 
 
-LW1.py [-h] FILE
+SW1.py [-h] FILE
 
 
 SW1: SOLID WRAPPER
@@ -42,7 +42,7 @@ EXAMPLE USAGE
 
 1, minimal needed to run:
 
-GW.py C:\Users\userid\Desktop\XAS_Analysis\SW\S_args.txt
+SW.py C:\Users\userid\Desktop\XAS_Analysis\SW\S_args.txt
 
 
 BACKGROUND

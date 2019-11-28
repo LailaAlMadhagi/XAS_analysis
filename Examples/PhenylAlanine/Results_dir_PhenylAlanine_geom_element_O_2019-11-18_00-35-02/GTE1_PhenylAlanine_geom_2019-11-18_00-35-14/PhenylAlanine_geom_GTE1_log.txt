@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 139.487 minutes
+	Optimisation time is: 67.765 minutes
+	Frequency calculation time is: 59.85 minutes
+	Time-Dependent Density Functional Theory calculation time is: 11.872 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/PhenylAlanine//Results_dir_PhenylAlanine_geom_element_O_2019-11-18_00-35-02//GTE1_PhenylAlanine_geom_2019-11-18_00-35-14

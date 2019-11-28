@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 26.901 minutes
+	Optimisation time is: 7.427 minutes
+	Frequency calculation time is: 14.695 minutes
+	Time-Dependent Density Functional Theory calculation time is: 4.778 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/2-1-3_Benzotrithiadizole//Results_dir_Benzotrithiadizole_geom_element_C_2019-11-13_23-15-39//GTE1_Benzotrithiadizole_geom_2019-11-13_23-15-53

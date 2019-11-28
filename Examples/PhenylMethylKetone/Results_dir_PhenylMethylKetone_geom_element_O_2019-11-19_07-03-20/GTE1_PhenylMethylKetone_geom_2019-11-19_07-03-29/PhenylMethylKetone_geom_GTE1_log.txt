@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 27.935 minutes
+	Optimisation time is: 5.948 minutes
+	Frequency calculation time is: 17.907 minutes
+	Time-Dependent Density Functional Theory calculation time is: 4.08 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/PhenylMethylKetone//Results_dir_PhenylMethylKetone_geom_element_O_2019-11-19_07-03-20//GTE1_PhenylMethylKetone_geom_2019-11-19_07-03-29

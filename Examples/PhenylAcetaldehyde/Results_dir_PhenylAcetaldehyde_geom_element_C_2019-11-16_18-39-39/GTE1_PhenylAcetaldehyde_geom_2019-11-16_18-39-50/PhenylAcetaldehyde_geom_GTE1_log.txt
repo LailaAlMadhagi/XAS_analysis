@@ -1,0 +1,8 @@
+
+
+END:
+Running time is: 30.193 minutes
+	Optimisation time is: 5.032 minutes
+	Frequency calculation time is: 20.028 minutes
+	Time-Dependent Density Functional Theory calculation time is: 5.133 minutesGTE1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/PhenylAcetaldehyde//Results_dir_PhenylAcetaldehyde_geom_element_C_2019-11-16_18-39-39//GTE1_PhenylAcetaldehyde_geom_2019-11-16_18-39-50

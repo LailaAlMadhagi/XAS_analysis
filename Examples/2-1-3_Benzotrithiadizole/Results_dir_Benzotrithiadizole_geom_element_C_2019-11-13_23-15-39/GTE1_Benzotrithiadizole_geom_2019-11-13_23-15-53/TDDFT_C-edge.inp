@@ -1,0 +1,14 @@
+#This is C K-edge calculation 
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+
+%tddft 
+orbwin[0]=3,8,-1,-1 
+nroots=20 
+maxdim=200 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/2-1-3_Benzotrithiadizole//Results_dir_Benzotrithiadizole_geom_element_C_2019-11-13_23-15-39//GTE1_Benzotrithiadizole_geom_2019-11-13_23-15-53//opt.xyz 

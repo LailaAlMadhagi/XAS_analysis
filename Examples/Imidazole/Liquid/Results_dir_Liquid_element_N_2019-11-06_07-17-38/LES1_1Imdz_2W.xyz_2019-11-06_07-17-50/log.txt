@@ -1,0 +1,7 @@
+
+
+END:
+Running time is: 12.168 minutes
+	Single Point Energy time is: 1.033 minutes
+	Time-Dependent Density Functional Theory calculation time is: 11.134 minutesLES1 Process Ended Successfully
+~ path for directory where outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Imidazole/Liquid//Results_dir_Liquid_element_N_2019-11-06_07-17-38//LES1_1Imdz_2W.xyz_2019-11-06_07-17-50

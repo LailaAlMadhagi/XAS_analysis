@@ -1,0 +1,7 @@
+! B3LYP 6-31G* TIGHTSCF Grid3 FinalGrid5 Freq 
+!NormalPrint 
+%output 
+Print[P_Basis] 2 
+Print[P_MOS] 1 
+end 
+*xyzfile 0 1 /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Phenol//Results_dir_Phenol_geom_element_O_2019-11-16_18-22-27//GTE1_Phenol_geom_2019-11-16_18-22-42//opt.xyz 

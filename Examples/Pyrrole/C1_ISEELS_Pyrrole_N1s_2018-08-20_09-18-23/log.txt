@@ -1,0 +1,14 @@
+C1: Compares experimental spectra with theorectically calculated data.
+
+This program ran at 2018-08-20_09-18-23 on the DIAMRD2482.dc.diamond.ac.uk host system.
+
+
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='U:/XAS_analysis/C1/ISEELS_Pyrrole_N1s.nor' mode='r' encoding='cp1252'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='U:/XAS_analysis/C1/TDDFT_N-edge.out' mode='r' encoding='cp1252'>
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='U:/XAS_analysis/C1/ISEELS_Pyrrole_N1s.nor_fitted_peaks_param.txt' mode='r' encoding='cp1252'>
+
+END:
+Running time is: 0.045 minutes

@@ -1,0 +1,24 @@
+C1: Compares experimental spectra with theorectically calculated data.
+
+This program ran at 2019-11-05_20-44-20 on the 0.0.0.0 host system.
+System's IP address is: 192.168.1.125
+
+
+
+~ Experimental spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzonitrile/Benzonitrile_N1s.txt' mode='r' encoding='UTF-8'>
+
+~ Theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzonitrile//Results_dir_Benzonitrile_geom_element_N_2019-11-05_20-28-41//GTE1_Benzonitrile_geom_2019-11-05_20-28-51/TDDFT_N-edge.out' mode='r' encoding='UTF-8'>
+
+This does not use the default path for orca, instead it used this path: /Users/lailaal-madhagi/Applications/orca/orca
+
+~ Peaks fitted to the theoretical spectra file details: <_io.TextIOWrapper name='/Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzonitrile//Results_dir_Benzonitrile_geom_element_N_2019-11-05_20-28-41//E2_Benzonitrile_N1s_2019-11-05_20-28-43/Benzonitrile_N1s_peak_params.txt' mode='r' encoding='UTF-8'>
+
+Python 3.6.4  and Anaconda, Inc.
+
+Matplotlib version is: 2.1.2
+
+Numpy version is: 1.14.0
+
+END:
+Running time is: 0.302 minutesC1 Process Ended Successfully
+~ path_out, path to where C1 outputs are: /Users/lailaal-madhagi/Desktop/Testing_XAS_Analysis_code/Benzonitrile//Results_dir_Benzonitrile_geom_element_N_2019-11-05_20-28-41//C1_Benzonitrile_N1s_2019-11-05_20-44-20

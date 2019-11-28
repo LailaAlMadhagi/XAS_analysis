@@ -1,6 +1,8 @@
 B3LYP
+RIJCOSX
 D3
-ma-def2-SVP
+ma-def2-TZVP
+def2/J
 TIGHTSCF
 Grid3
 FinalGrid5
